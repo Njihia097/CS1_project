@@ -60,13 +60,36 @@
           <span class="nav-link">Navigation</span>
         </li>
         <li class="nav-item menu-items">
-          <a class="nav-link" href="{{ url('/')}}">
+          <a class="nav-link" href="{{route('admin.adminHome')}}">
             <span class="menu-icon">
               <i class="mdi mdi-speedometer"></i>
             </span>
             <span class="menu-title">Dashboard</span>
           </a>
         </li>
+
+        <!-- Editor management -->
+        <li class="nav-item menu-items">
+          <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+            <span class="menu-icon">
+              <i class="mdi mdi-laptop"></i>
+            </span>
+            <span class="menu-title">Editor Management</span>
+            <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="ui-basic">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> 
+                <a class="nav-link" href="{{route('admin.editor-register')}}">Registration </a>
+              </li>
+              <li class="nav-item"> 
+                <a class="nav-link" href="#">Manage </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <!-- End of editor management -->
+
         <li class="nav-item menu-items">
           <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
             <span class="menu-icon">

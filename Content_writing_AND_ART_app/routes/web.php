@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
-use app\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Editor\EditorController;
 use App\Http\Controllers\Student\StudentController;
 
@@ -9,6 +10,9 @@ use App\Http\Controllers\Student\StudentController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+// Route::view('/home', 'adminHome');
 
 Route::middleware([
     'auth:sanctum',
@@ -20,8 +24,10 @@ Route::middleware([
     })->name('dashboard');
 });
 
+Route::get('/roles', [LoginController::class, 'authenticated']);
+
 Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/home', [AdminController::class,'adminHome'])->name('adminHome');
 });
 
 Route::middleware(['auth', 'role:editor'])->name('editor.')->prefix('editor')->group(function () {
@@ -29,6 +35,6 @@ Route::middleware(['auth', 'role:editor'])->name('editor.')->prefix('editor')->g
 });
 
 Route::middleware(['auth', 'role:student'])->name('student.')->prefix('student')->group(function () {
-    Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
+    Route::get('/home', [StudentController::class, 'studentHome'])->name('studentHome');
 });
 
