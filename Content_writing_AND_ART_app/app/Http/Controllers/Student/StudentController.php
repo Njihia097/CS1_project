@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    public function dashboard (Request $request) {
-        return view('student.dashboard');
+    public function studentHome (Request $request) {
+        return view('student.studentHome');
     }
 }
