@@ -80,7 +80,7 @@
           <div class="collapse" id="ui-basic">
             <ul class="nav flex-column sub-menu">
               <li class="nav-item"> 
-                <a class="nav-link" href="{{route('admin.editor-register')}}">Registration </a>
+                <a class="nav-link" href="{{route('admin.register-editor')}}">Registration </a>
               </li>
               <li class="nav-item"> 
                 <a class="nav-link" href="#">Manage </a>

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class EditorController extends Controller
 {
-    public function dashboard (Request $request) {
-        return view('editor.dashboard');
+    public function editorHome (Request $request) {
+        return view('editor.editorHome');
     }
 }
