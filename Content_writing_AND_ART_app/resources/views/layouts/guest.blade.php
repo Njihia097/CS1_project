@@ -18,8 +18,9 @@
         @livewireStyles
     </head>
     <body>
-        <div class="font-sans text-gray-900 antialiased">
+        <div class="font-sans antialiased text-gray-900">
             {{ $slot }}
+            @yield('content')
         </div>
 
         @livewireScripts
