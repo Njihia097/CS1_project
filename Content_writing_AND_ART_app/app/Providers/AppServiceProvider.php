@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Support\Facades\Event;
+use App\Notifications\PasswordSetupNotification;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +39,19 @@ class AppServiceProvider extends ServiceProvider
             return false;
         });
 
+       // Register closure-based event listener for the Verified event
+    Event::listen(Verified::class, function (Verified $event) {
+        $user = $event->user;
+        if ($user->hasRole('editor')) {
+            // Send password setup link
+            $token = app('auth.password.broker')->createToken($user);
+            $user->notify(new PasswordSetupNotification($token));
+        }
+    });
+
+
+
         
     }
 }
+
