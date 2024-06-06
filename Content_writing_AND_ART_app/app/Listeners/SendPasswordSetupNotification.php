@@ -26,7 +26,7 @@ class SendPasswordSetupNotification
     public function handle(Verified $event): void
     {
         
-       $user = User::find($event->user);
+       $user = $event->user;
         if($user && $user->hasRole('editor')) {
             //send password setup link
             $token = app('auth.password.broker')->createToken($user);
