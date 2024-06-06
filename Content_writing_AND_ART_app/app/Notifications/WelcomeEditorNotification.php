@@ -37,14 +37,19 @@ class WelcomeEditorNotification extends VerifyEmailNotification
      */
     public function toMail($notifiable): MailMessage
     {
-        $verificationUrl = $this->verificationUrl($notifiable);
+        // $verificationUrl = $this->verificationUrl($notifiable);
 
         return (new MailMessage)
-            ->subject('Welcome to the Team!')
-            ->greeting('Hello' . $notifiable->name . ',')
-            ->line('Thank you for joining our team. Please verify your email address by clicking the button below.')
-            ->action('Verify Email', $verificationUrl)
-            ->line('Thank you for your commitment to join our team!!');
+        ->subject('Welcome to Our Platform')
+        ->greeting('Hello ' . $notifiable->name . ',')
+        ->line('You have been registered as an editor on our platform.')
+        ->line('To complete your registration, please verify your email and set your password.')
+        ->line('Here are the steps:')
+        ->line('1. Click the "Verify Email" button below.')
+        ->line('2. On the verification page, click "Forgot your password?" to reset your password.')
+        ->line('3. Follow the instructions in the password reset email to set a new password.')
+        ->action('Verify Email', url('/email/verify'))
+        ->line('Thank you for joining us!');
     }
 
     /**
