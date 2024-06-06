@@ -70,51 +70,55 @@
 
         <!-- Editor management -->
         <li class="nav-item menu-items">
-          <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-            <span class="menu-icon">
-              <i class="mdi mdi-laptop"></i>
-            </span>
-            <span class="menu-title">Editor Management</span>
-            <i class="menu-arrow"></i>
-          </a>
-          <div class="collapse" id="ui-basic">
-            <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> 
-                <a class="nav-link" href="{{route('admin.register-editor')}}">Registration </a>
-              </li>
-              <li class="nav-item"> 
-                <a class="nav-link" href="#">Manage </a>
-              </li>
-            </ul>
-          </div>
-        </li>
-        <!-- End of editor management -->
+        <a class="cursor-pointer nav-link" data-toggle="collapsed" href="#editor-management" aria-expanded="false" aria-controls="editor-management">
+          <span class="menu-icon">
+            <i class="mdi mdi-laptop"></i>
+          </span>
+          <span class="menu-title">Editor Management</span>
+          <i class="menu-arrow mdi mdi-chevron-down"></i>
+        </a>
+        <div class="hidden collapse" id="editor-management">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Category</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Manage</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+        <!-- End of editor management -->      
 
         <li class="nav-item menu-items">
-          <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+          <a class="nav-link" data-toggle="collapse" href="#basic-ui-elements" aria-expanded="false" aria-controls="basic-ui-elements">
             <span class="menu-icon">
               <i class="mdi mdi-laptop"></i>
             </span>
             <span class="menu-title">Basic UI Elements</span>
             <i class="menu-arrow"></i>
           </a>
-          <div class="collapse" id="ui-basic">
+          <div class="collapse" id="basic-ui-elements">
             <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link"
-                  href="{{asset('admin/pages/ui-features/buttons.html')}}">Buttons</a></li>
-              <li class="nav-item"> <a class="nav-link"
-                  href="{{asset('admin/pages/ui-features/dropdowns.html')}}">Dropdowns</a></li>
-              <li class="nav-item"> <a class="nav-link"
-                  href="{{asset('admin/pages/ui-features/typography.html')}}">Typography</a></li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ asset('admin/pages/ui-features/buttons.html') }}">Buttons</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ asset('admin/pages/ui-features/dropdowns.html') }}">Dropdowns</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ asset('admin/pages/ui-features/typography.html') }}">Typography</a>
+              </li>
             </ul>
           </div>
         </li>
+        
         <li class="nav-item menu-items">
-          <a class="nav-link" href="{{asset('admin/pages/forms/basic_elements.html')}}">
+          <a class="nav-link" href="{{ route('admin.register-editor') }}">
             <span class="menu-icon">
               <i class="mdi mdi-playlist-play"></i>
             </span>
-            <span class="menu-title">Category</span>
+            <span class="menu-title">Registration </span>
           </a>
         </li>
         <li class="nav-item menu-items">

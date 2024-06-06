@@ -41,7 +41,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 // Resend Verification Email Route
 Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerification(); //Changed from sendEmailVerificationNotification()
+    $request->user()->sendEmailVerificationNotification(); //Changed from sendEmailVerification()
 
     return back()->with('message', 'verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send'); // Limit number of requests to 6 per minute
@@ -60,9 +60,10 @@ Route::get('/roles', [LoginController::class, 'authenticated']);
 
 Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->group(function () {
     Route::get('/home', [AdminController::class,'adminHome'])->name('adminHome');
-    Route::view('/register-editor', 'register-editor');
+    Route::get('/register-editor', [Admin_EditorController::class, 'view'])->name('register-editor');
     Route::post('/register-editor', [Admin_EditorController::class, 'store'])->name('register-editor');
 });
+
 
 Route::middleware(['auth', 'role:editor'])->name('editor.')->prefix('editor')->group(function () {
     Route::get('/home', [EditorController::class, 'editorHome'])->name('editorHome');
