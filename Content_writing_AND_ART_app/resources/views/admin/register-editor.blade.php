@@ -8,13 +8,27 @@
                 <div class="card-body">
                     <h4 class="card-title">Register an Editor</h4>
                     <p class="mb-2 card-description">Insert credentials of the desired editor here to register a new Editor </p>
+
+                        <!-- Display success message -->
+                   @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <!-- Display error message -->
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     
                     <form class="forms-sample" method="POST" action="{{ route('admin.register-editor') }}">
                         @csrf
 
                         <div class="form-group">
                             <label for="name">Full Name</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Insert the editor's full name" required>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Insert the editor's full name">
 
                             @if ($errors->has('name'))
                                 <span class="text-danger">
