@@ -61,6 +61,8 @@
     })
   </script> -->
 
+  <script src="{{ asset('js/inactivity.js')}}"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const toggleButton = document.querySelector('[data-toggle="collapsed"]');
