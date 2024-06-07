@@ -85,7 +85,7 @@
             <!-- Phone_no -->
         <div class="col-span-6 sm:col-span-4">
             <x-label for="phone" value="{{ __('Phone_no') }}" />
-            <x-input id="phone" type="text" class="block w-full mt-1" wire:model="state.phone" required autocomplete="phone" />
+            <x-input id="phone" type="text" class="block w-full mt-1" wire:model="state.phone" autocomplete="phone" />
             <x-input-error for="phone" class="mt-2" />
         </div>
     </x-slot>
