@@ -102,7 +102,19 @@
                                 {{ __('Profile') }}
                             </x-dropdown-link>
 
-                            <x-dropdown-link href="{{ route('admin.adminHome') }}">
+                            @php
+                            $dashboardRoute = '#';
+                            if (auth()->user()->hasRole('admin')) {
+                            $dashboardRoute = route('admin.adminHome');
+                            }
+                            elseif (auth()->user()->hasRole('editor')) {
+                            $dashboardRoute = route('editor.editorHome');
+                            } elseif (auth()->user()->hasRole('student')) {
+                            $dashboardRoute = route('student.studentHome');
+                            }
+                            @endphp
+
+                            <x-dropdown-link href="{{ $dashboardRoute }}">
                                 {{ __('Dashboard') }}
                             </x-dropdown-link>
 
