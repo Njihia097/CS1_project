@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Admin_EditorController;
+use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
@@ -25,6 +26,9 @@ Route::middleware([
 
 
 Route::get('/roles', [LoginController::class, 'authenticated']);
+
+Route::get('auth/google', [GoogleAuthController::class, 'redirect'])->name('google-auth');
+Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogle']);
 
 
 Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->group(function () {
