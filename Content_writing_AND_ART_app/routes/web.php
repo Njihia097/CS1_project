@@ -31,18 +31,27 @@ Route::get('auth/google', [GoogleAuthController::class, 'redirect'])->name('goog
 Route::get('auth/google/call-back', [GoogleAuthController::class, 'callbackGoogle']);
 
 
-Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->group(function () {
-    Route::get('/home', [AdminController::class,'adminHome'])->name('adminHome');
-    Route::get('/register-editor', [Admin_EditorController::class, 'view'])->name('register-editor');
-    Route::post('/register-editor', [Admin_EditorController::class, 'store'])->name('register-editor');
+Route::middleware(['auth',config('jetstream.auth_session'),'verified','role:admin'])
+    ->name('admin.')
+    ->prefix('admin')
+    ->group(function () {
+        Route::get('/home', [AdminController::class,'adminHome'])->name('adminHome');
+        Route::get('/register-editor', [Admin_EditorController::class, 'view'])->name('register-editor');
+        Route::post('/register-editor', [Admin_EditorController::class, 'store'])->name('register-editor');
 });
 
 
-Route::middleware(['auth', 'role:editor'])->name('editor.')->prefix('editor')->group(function () {
-    Route::get('/home', [EditorController::class, 'editorHome'])->name('editorHome');
+Route::middleware(['auth',config('jetstream.auth_session'),'verified','role:editor'])
+    ->name('editor.')
+    ->prefix('editor')
+    ->group(function () {
+        Route::get('/home', [EditorController::class, 'editorHome'])->name('editorHome');
 });
 
-Route::middleware(['auth', 'role:student'])->name('student.')->prefix('student')->group(function () {
-    Route::get('/home', [StudentController::class, 'studentHome'])->name('studentHome');
+Route::middleware(['auth',config('jetstream.auth_session'),'verified','role:student'])
+    ->name('student.')
+    ->prefix('student')
+    ->group(function () {
+        Route::get('/home', [StudentController::class, 'studentHome'])->name('studentHome');
 });
 
