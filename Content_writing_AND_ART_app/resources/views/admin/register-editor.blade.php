@@ -38,7 +38,7 @@
                         </div>
                         <div class="form-group">
                             <label for="email">Email address</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email">
 
                             @if ($errors->has('email'))
                                 <span class="text-danger">{{ $errors->first('email') }}</span>
@@ -47,7 +47,7 @@
 
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
-                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" required>
+                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone">
 
                             @if ($errors->has('phone'))
                                 <span class="text-danger">
