@@ -13,6 +13,21 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <style>
+            .active-link {
+                color: #1d4ed8; /* Tailwind blue-600 */
+                border-bottom-color: #1d4ed8; /* Tailwind blue-600 */
+            }
+        </style>
+        <style>
+            .gradient-text::first-letter {
+                font-size: 1.2em; /* Adjust size as needed */
+                background: -webkit-linear-gradient(45deg, #1e13be, #000000);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+        </style>
+
 
         <!-- Styles -->
         @livewireStyles
