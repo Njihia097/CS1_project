@@ -12,7 +12,7 @@ use App\Http\Controllers\Auth\LockScreenController;
 
 Route::middleware(['check.locked'])->get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 
 Route::middleware([
