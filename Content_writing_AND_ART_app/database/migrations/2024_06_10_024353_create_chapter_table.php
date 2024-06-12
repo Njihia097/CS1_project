@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chapter', function (Blueprint $table) {
-            $table->id();
             $table->id('ChapterID');
             $table->unsignedBigInteger('ContentID');
             $table->string('Title', 255);

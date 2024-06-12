@@ -8,7 +8,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Editor\EditorController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Auth\LockScreenController;
-use App\Http\Controllers\Student\StoryController;
+use App\Http\Controllers\Student\ContentController;
 
 
 Route::middleware(['check.locked'])->get('/', function () {
@@ -58,6 +58,6 @@ Route::middleware(['auth',config('jetstream.auth_session'),'verified','check.loc
     ->prefix('student')
     ->group(function () {
         Route::get('/home', [StudentController::class, 'studentHome'])->name('studentHome');
-        Route::get('/createStory', [StoryController::class, 'view'])->name('createStory');
+        Route::get('/createStory', [ContentController::class, 'view'])->name('createContent');
 });
 
