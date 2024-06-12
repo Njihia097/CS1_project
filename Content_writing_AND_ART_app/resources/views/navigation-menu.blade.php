@@ -69,7 +69,7 @@
                                 </x-slot>
 
                                 <x-slot name="content">
-                                    <x-dropdown-link href="#">
+                                    <x-dropdown-link href="{{ route('student.createStory')}}">
                                         {{ __('Create a new story') }}
                                     </x-dropdown-link>
                                     <x-dropdown-link href="#">
