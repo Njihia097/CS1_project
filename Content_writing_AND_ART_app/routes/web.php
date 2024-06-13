@@ -58,6 +58,7 @@ Route::middleware(['auth',config('jetstream.auth_session'),'verified','check.loc
     ->prefix('student')
     ->group(function () {
         Route::get('/home', [StudentController::class, 'studentHome'])->name('studentHome');
-        Route::get('/createStory', [ContentController::class, 'view'])->name('createContent');
+        Route::get('/createContent', [ContentController::class, 'view'])->name('createContent');
+        Route::post('/createContent', [ContentController::class, 'store'])->name('createContent');
 });
 
