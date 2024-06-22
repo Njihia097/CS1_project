@@ -16,7 +16,7 @@ class ContentController extends Controller
     public function view (Request $request)
     {
         $categories = CategoryContent::all();
-        return view('student.createContent', compact('categories'));
+        return view('student.Content-setup', compact('categories'));
     }
 
     public function store (Request $request)
@@ -63,8 +63,13 @@ class ContentController extends Controller
 
         }catch(Exception $e) {
             Log::error('Failed to create content:'. $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to create content. PPlease try again');
+            return redirect()->back()->with('error', 'Failed to create content. Please try again');
         }
 
+    }
+
+    public function show(Request $request) 
+    {
+        return view('student.createContent');
     }
 }

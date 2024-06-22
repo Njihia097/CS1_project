@@ -58,7 +58,8 @@ Route::middleware(['auth',config('jetstream.auth_session'),'verified','role:stud
     ->prefix('student')
     ->group(function () {
         Route::get('/home', [StudentController::class, 'studentHome'])->name('studentHome');
-        Route::get('/createContent', [ContentController::class, 'view'])->name('createContent');
-        Route::post('/createContent', [ContentController::class, 'store'])->name('createContent');
+        Route::get('/Content-setup', [ContentController::class, 'view'])->name('Content-setup');
+        Route::post('/Content-setup', [ContentController::class, 'store'])->name('Content-setup');
+        Route::get('/createContent', [ContentController::class, 'show'])->name('createContent');
 });
 
