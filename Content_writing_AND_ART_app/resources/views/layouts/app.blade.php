@@ -56,6 +56,6 @@
         @stack('modals')
 
         @livewireScripts
-        <script src="{{ asset('js/inactivity.js')}}"></script>
+        <!-- <script src="{{ asset('js/inactivity.js')}}"></script> -->
     </body>
 </html>

@@ -7,4 +7,4 @@
       </div>
     </div>
 </div>
-<script src="{{ asset('js/inactivity.js')}}"></script>
+<!-- <script src="{{ asset('js/inactivity.js')}}"></script> -->

@@ -61,7 +61,7 @@
     })
   </script> -->
 
-  <script src="{{ asset('js/inactivity.js')}}"></script>
+  <!-- <script src="{{ asset('js/inactivity.js')}}"></script> -->
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {

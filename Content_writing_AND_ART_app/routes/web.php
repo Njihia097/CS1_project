@@ -11,7 +11,7 @@ use App\Http\Controllers\Auth\LockScreenController;
 use App\Http\Controllers\Student\ContentController;
 
 
-Route::middleware(['check.locked'])->get('/', function () {
+Route::middleware(['auth',config('jetstream.auth_session')])->get('/', function () {
     return view('welcome');
 })->name('welcome');
 
@@ -35,8 +35,8 @@ Route::get('auth/google/call-back', [GoogleController::class, 'callbackGoogle'])
 Route::middleware('auth')->get('/lock-screen', [LockScreenController::class, 'showLockScreen'])->name('lock-screen');
 Route::middleware('auth')->post('/unclock', [LockScreenController::class, 'unlock'])->name('unlock');
 
-
-Route::middleware(['auth',config('jetstream.auth_session'),'verified','check.locked','role:admin'])
+// Removed -> ,'check.locked'
+Route::middleware(['auth',config('jetstream.auth_session'),'verified','role:admin'])
     ->name('admin.')
     ->prefix('admin')
     ->group(function () {
@@ -46,14 +46,14 @@ Route::middleware(['auth',config('jetstream.auth_session'),'verified','check.loc
 });
 
 
-Route::middleware(['auth',config('jetstream.auth_session'),'verified','check.locked','role:editor'])
+Route::middleware(['auth',config('jetstream.auth_session'),'verified','role:editor'])
     ->name('editor.')
     ->prefix('editor')
     ->group(function () {
         Route::get('/home', [EditorController::class, 'editorHome'])->name('editorHome');
 });
 
-Route::middleware(['auth',config('jetstream.auth_session'),'verified','check.locked','role:student'])
+Route::middleware(['auth',config('jetstream.auth_session'),'verified','role:student'])
     ->name('student.')
     ->prefix('student')
     ->group(function () {
