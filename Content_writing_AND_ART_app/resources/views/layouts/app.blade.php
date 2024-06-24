@@ -26,6 +26,12 @@
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
             }
+
+            .sticky{
+                position: fixed;
+                top: 0;
+                width: 100%;
+            }
         </style>
 
 
@@ -40,7 +46,7 @@
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="bg-white shadow">
+                <header class="bg-white shadow" id="appHeader">
                     <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
@@ -48,7 +54,7 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <main class="pt-16">
                 {{ $slot }}
             </main>
         </div>
@@ -57,5 +63,22 @@
 
         @livewireScripts
         <!-- <script src="{{ asset('js/inactivity.js')}}"></script> -->
+         <script>
+            window.onscroll = function() {
+                fixedHeader();
+            }
+            var header =document.getElementById('appHeader');
+            //get offset position of the navbar
+            var sticky = header.offsetTop;
+            //Add sticky class once header scoll position is reached
+            function fixedHeader() {
+                if (window.pageYOffset > sticky) {
+                    header.classList.add("sticky");
+                } else{
+                    header.classList.remove("sticky");
+                }
+            }
+
+         </script>
     </body>
 </html>

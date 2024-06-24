@@ -60,6 +60,7 @@ Route::middleware(['auth',config('jetstream.auth_session'),'verified','role:stud
         Route::get('/home', [StudentController::class, 'studentHome'])->name('studentHome');
         Route::get('/Content-setup', [ContentController::class, 'view'])->name('Content-setup');
         Route::post('/Content-setup', [ContentController::class, 'store'])->name('Content-setup');
-        Route::get('/createContent', [ContentController::class, 'show'])->name('createContent');
+        Route::get('/content/edit', [ContentController::class, 'edit'])->name('editContent');
+        //Route::get('/content/{id}/update', [ContentController::class, 'update'])->name('updateContent');
 });
 
