@@ -68,8 +68,9 @@ class ContentController extends Controller
 
     }
 
-    public function show(Request $request) 
+    public function edit(Request $request) 
     {
-        return view('student.createContent');
+        return view('student.editContent');
     }
+    
 }
