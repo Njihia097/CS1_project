@@ -11,12 +11,14 @@ class Content extends Model
     use HasFactory;
 
     protected $table = 'content';
+    protected $primaryKey = 'ContentID';
 
     protected $fillable = [
         'Title',
         'AuthorID',
         'CategoryID',
         'thumbnail',
+        'Description',
         'ContentBody',
         'IsChapter',
         'IsPubished',

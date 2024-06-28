@@ -12,7 +12,7 @@
         </div>
     @endif
 
-    <form method="POST" action="" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('student.Content-setup') }}" enctype="multipart/form-data">
         <div class="flex flex-col items-start justify-center mt-6 sm:flex-row">
             <!-- Cover Page Image -->
             <div class="mb-6 sm:mr-6 sm:mb-6">

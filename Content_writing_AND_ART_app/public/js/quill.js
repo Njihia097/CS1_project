@@ -93,8 +93,14 @@ const observer = new MutationObserver(mutations => {
 observer.observe(editor, { childList: true, subtree: true });
 
 // Save the content to the hidden input before form submission
-const form = document.querySelector('form');
-form.onsubmit = () => {
-    const contentDelta = quill.root.innerHTML;
+
+function setAction(action) {
+    document.getElementById('action').value = action;
+    saveContent();
+}
+
+function saveContent() {
+    const contentDelta =JSON.stringify(quill.getContents());
     document.getElementById('content-delta').value = contentDelta;
-};
+    document.getElementById('content-form').submit();
+}
