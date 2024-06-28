@@ -17,11 +17,12 @@ return new class extends Migration
             $table->unsignedBigInteger('AuthorID');
             $table->unsignedBigInteger('CategoryID');
             $table->string('thumbnail', 255)->nullable();
+            $table->string('Description', 255);
             $table->text('ContentBody')->nullable();
-            $table->boolean('IsChapter');
-            $table->boolean('IsPublished');
+            $table->boolean('IsChapter')->default(false);
+            $table->boolean('IsPublished')->default(false);
             $table->date('PublicationDate')->nullable();
-            $table->enum('Status', ['pending', 'approved', 'flagged', 'suspended']);
+            $table->enum('Status', ['draft', 'pending', 'approved', 'flagged', 'suspended']);
             $table->date('SuspendedUntil')->nullable();
             $table->timestamps(); 
             $table->json('content_delta')->nullable(); // JSON column for Quilljs content delta
