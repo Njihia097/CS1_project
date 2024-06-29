@@ -21,6 +21,46 @@ const quill = new Quill('#editor-container', {
     }
 });
 
+        // Load content from local storage if available
+        window.onload = function () {
+            if (localStorage.getItem('content_delta')) {
+                quill.setContents(JSON.parse(localStorage.getItem('content_delta')));
+            }
+            if (localStorage.getItem('title')) {
+                document.getElementById('title').value = localStorage.getItem('title');
+            }
+        };
+
+        // Save content to local storage on change
+        quill.on('text-change', function() {
+            localStorage.setItem('content_delta', JSON.stringify(quill.getContents()));
+        });
+
+        document.getElementById('title').addEventListener('input', function() {
+            localStorage.setItem('title', document.getElementById('title').value);
+        });
+
+        // Function to set the action and submit the form
+        function setAction(action) {
+            document.getElementById('action').value = action;
+            saveContent();
+        }
+
+        // Save the content to the hidden input before form submission
+        function saveContent() {
+            const contentDelta = JSON.stringify(quill.getContents());
+            document.getElementById('content-delta').value = contentDelta;
+            document.getElementById('content-form').submit();
+        }
+
+        // Auto-save content every 30 seconds
+        setInterval(function() {
+            if (document.getElementById('title').value.trim() !== '' || quill.getText().trim() !== '') {
+                saveContent();
+            }
+        }, 30000); // 30 seconds
+
+
 // Custom image handler
 function selectLocalImage() {
     const input = document.createElement('input');
@@ -94,13 +134,13 @@ observer.observe(editor, { childList: true, subtree: true });
 
 // Save the content to the hidden input before form submission
 
-function setAction(action) {
-    document.getElementById('action').value = action;
-    saveContent();
-}
+// function setAction(action) {
+//     document.getElementById('action').value = action;
+//     saveContent();
+// }
 
-function saveContent() {
-    const contentDelta =JSON.stringify(quill.getContents());
-    document.getElementById('content-delta').value = contentDelta;
-    document.getElementById('content-form').submit();
-}
+// function saveContent() {
+//     const contentDelta =JSON.stringify(quill.getContents());
+//     document.getElementById('content-delta').value = contentDelta;
+//     document.getElementById('content-form').submit();
+// }
