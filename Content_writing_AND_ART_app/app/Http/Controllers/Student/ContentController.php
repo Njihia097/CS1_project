@@ -10,7 +10,8 @@ use Illuminate\Http\Request;
 use App\Models\Content;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Storage;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 
 class ContentController extends Controller
@@ -93,30 +94,42 @@ class ContentController extends Controller
         try {
             $content = Content::findOrFail($id);
             $content->Title = $request->title;
+    
+            // Parse the JSON content delta
+            $contentDelta = json_decode($request->content_delta, true);
+    
+            // Extract pure text and media/embedded content
+            $pureText = $this->extractPureText($contentDelta);
+            $mediaContent = json_encode($this->extractMediaContent($contentDelta));
+    
+            // Generate file paths
+            $textFilePath = 'content/text/' . Str::uuid() . '.txt';
+            $mediaFilePath = 'content/media/' . Str::uuid() . '.json';
+    
+            // Store files
+            Storage::disk('local')->put($textFilePath, $pureText);
+            Storage::disk('local')->put($mediaFilePath, $mediaContent);
+    
 
-            // Save content in a file
-            $contentFilePath = 'content/' . $content->ContentID . '.json';
-            Storage::disk('local')->put($contentFilePath, $request->content_delta);
-            
+    
             if ($content->IsChapter) {
-                // Save content in the chapter table
                 $chapterNumber = $this->getNextChapterNumber($content->ContentID);
                 $chapter = new Chapter();
                 $chapter->ContentID = $content->ContentID;
                 $chapter->Title = $request->title ?: 'Part ' . $this->numberToWord($chapterNumber);
-                $chapter->Body = $contentFilePath; // Save file path in Body column
-                $chapter->content_delta = json_decode($request->content_delta);
+                $chapter->Body = $textFilePath;
+                $chapter->content_delta = $mediaFilePath;
                 $chapter->ChapterNumber = $chapterNumber;
-
+    
                 $chapter->save();
             } else {
-                // Save content in the content table
-                $content->ContentBody = $contentFilePath; // Save file path in ContentBody column
-                $content->content_delta = json_decode($request->content_delta);
+                  // Save file paths in the database
+                $content->ContentBody = $textFilePath;
+                $content->content_delta = $mediaFilePath;
                 $content->Status = $request->action === 'save' ? 'draft' : 'pending';
                 $content->IsPublished = $request->action === 'publish' ? true : false;
                 $content->PublicationDate = $request->action === 'publish' ? now() : null;
-
+    
                 $content->save();
             }
     
@@ -129,7 +142,7 @@ class ContentController extends Controller
 
         }
     }
-    
+        
     private function getNextChapterNumber($contentID)
     {
         $lastChapter = Chapter::where('ContentID', $contentID)->orderBy('ChapterNumber', 'desc')->first();
@@ -166,8 +179,29 @@ class ContentController extends Controller
 
     return (string)$number; // For numbers 1000 and above
 
-
-
     }
+
+    private function extractPureText(array $contentDelta)
+{
+    $pureText = '';
+    foreach ($contentDelta['ops'] as $op) {
+        if (isset($op['insert']) && is_string($op['insert'])) {
+            $pureText .= $op['insert'];
+        }
+    }
+    return $pureText;
+}
+
+private function extractMediaContent(array $contentDelta)
+{
+    $mediaContent = [];
+    foreach ($contentDelta['ops'] as $op) {
+        if (isset($op['insert']) && !is_string($op['insert'])) {
+            $mediaContent[] = $op;
+        }
+    }
+    return $mediaContent;
+}
+
     
 }
