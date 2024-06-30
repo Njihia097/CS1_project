@@ -42,6 +42,7 @@ function showSaved() {
     saveStatus.textContent = 'Saved!';
     saveStatus.classList.remove('text-red-500');
     saveStatus.classList.add('text-green-500');
+    isContentChanged = false;
 }
 
 // Load content from local storage if available
@@ -60,6 +61,7 @@ quill.on('text-change', function() {
     if (quill.getText().trim() !== '') {
         localStorage.setItem(`content_delta_${contentID}`, JSON.stringify(quill.getContents()));
         debounceSave();
+        isContentChanged = true;
     }
 });
 
@@ -67,6 +69,7 @@ document.getElementById('title').addEventListener('input', function() {
     if (document.getElementById('title').value.trim() !== '') {
         localStorage.setItem(`title_${contentID}`, document.getElementById('title').value);
         debounceSave();
+        isContentChanged = true;
     }
 });
 

@@ -52,7 +52,7 @@
                 <!-- Create Content Dropdown -->
                  @auth
                     @if (Auth::user()->hasRole('student'))
-                        <div class="relative ms-3">
+                        <div class="relative ms-3 z-1000">
                             <x-dropdown align="right" width="48">
                                 <x-slot name="trigger">
                                     <span class="inline-flex rounded-md">
