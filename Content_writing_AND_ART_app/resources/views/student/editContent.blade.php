@@ -5,63 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Content</title>
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <style>
-    #editor-container {
-        height: 63vh;
-        width: 100%;
-    }
+    <link rel="stylesheet" href="{{ asset('css/quill.css') }}" >
 
-    .ql-container {
-        border-color: white;
-    }
-
-    .ql-editor img {
-        padding: 1.5rem;
-        max-width: 150px;
-        height: 450px;
-        display: block;
-        margin: 0 auto;
-    }
-
-    .image-loader {
-        display: none;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
-    }
-
-    .image-loader.show {
-        display: block;
-    }
-
-    .ql-editor .caption {
-        display: block;
-        text-align: center;
-        font-style: italic;
-        font-size: 0.9em;
-        color: #555;
-        -ms-flex-align: center;
-        justify-content: center;
-    }
-
-    /* Sticky toolbar */
-    .ql-toolbar.ql-snow {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: white;
-    }
-
-    </style>
 </head>
-<body>
+<body onbeforeunload="return checkForUnsavedChanges()">
     <x-app-layout>
         <form method="POST" id="content-form" action="{{ route('student.updateContent', $content->ContentID) }}">
             @csrf
             @method('PUT')
-            <div class="fixed flex items-center justify-between w-full px-4 pt-2 mx-auto mt-0 bg-gray-100 max-w-7xl z-1000">
+            <div class="fixed z-40 flex items-center justify-between w-full px-4 pt-2 mx-auto mt-0 bg-gray-100 max-w-7xl">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <img src="{{ asset('cover_images/' . $content->thumbnail) }}" alt="Content's coverpage" class="object-contain w-20 h-20">
@@ -110,14 +62,28 @@
     </x-app-layout>
 
 
-    <div class="image-loader" id="image-loader">
-        <img src="/path/to/loader.gif" alt="Loading...">
-    </div>
+   
+       
+        <div class="image-loader" id="image-loader"></div>
+        
+    
+
 
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
     <script>
         const contentID = '{{ $content->ContentID }}';
+    </script>
+  
+    <script>
+        let isContentChanged = false;
+
+        // Function to check for unsaved changes
+        function checkForUnsavedChanges() {
+            if (isContentChanged) {
+                return "You have unsaved changes. Do you really want to leave?";
+            }
+        }
     </script>
     <script src="{{ asset('js/quill.js') }}"></script>
 
