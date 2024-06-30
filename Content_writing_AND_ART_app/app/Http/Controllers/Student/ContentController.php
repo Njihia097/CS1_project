@@ -61,7 +61,7 @@ class ContentController extends Controller
         ]);
 
         // Redirect to text formatting form
-        return redirect()->route('student.editContent', $content->id);
+        return redirect()->route('student.editContent', $content->ContentID);
        
 
 
@@ -182,26 +182,26 @@ class ContentController extends Controller
     }
 
     private function extractPureText(array $contentDelta)
-{
-    $pureText = '';
-    foreach ($contentDelta['ops'] as $op) {
-        if (isset($op['insert']) && is_string($op['insert'])) {
-            $pureText .= $op['insert'];
+    {
+        $pureText = '';
+        foreach ($contentDelta['ops'] as $op) {
+            if (isset($op['insert']) && is_string($op['insert'])) {
+                $pureText .= $op['insert'];
+            }
         }
+        return $pureText;
     }
-    return $pureText;
-}
 
-private function extractMediaContent(array $contentDelta)
-{
-    $mediaContent = [];
-    foreach ($contentDelta['ops'] as $op) {
-        if (isset($op['insert']) && !is_string($op['insert'])) {
-            $mediaContent[] = $op;
+    private function extractMediaContent(array $contentDelta)
+    {
+        $mediaContent = [];
+        foreach ($contentDelta['ops'] as $op) {
+            if (isset($op['insert']) && !is_string($op['insert'])) {
+                $mediaContent[] = $op;
+            }
         }
+        return $mediaContent;
     }
-    return $mediaContent;
-}
 
     
 }
