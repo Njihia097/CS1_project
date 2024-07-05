@@ -63,8 +63,8 @@
 
 
    
-       
         <div class="image-loader" id="image-loader"></div>
+ 
         
     
 

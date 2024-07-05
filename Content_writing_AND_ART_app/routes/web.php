@@ -62,5 +62,9 @@ Route::middleware(['auth',config('jetstream.auth_session'),'verified','role:stud
         Route::post('/Content-setup', [ContentController::class, 'store'])->name('Content-setup');
         Route::get('/content/{ContentID}/edit', [ContentController::class, 'edit'])->name('editContent');
         Route::put('/content/{ContentID}', [ContentController::class, 'update'])->name('updateContent');
+        Route::get('student/home/about', [StudentController::class, 'showAbout'])->name('home.about');
+        Route::get('/student/home/artwork', [StudentController::class, 'showArtwork'])->name('home.artwork');
+        Route::get('/student/home/readingList', [StudentController::class, 'showReadingList'])->name('home.readingList');
+        Route::get('/student/home/stories', [StudentController::class, 'showStories'])->name('home.stories');
 });
 
