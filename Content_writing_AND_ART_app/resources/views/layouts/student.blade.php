@@ -26,10 +26,10 @@
 
     <div class="bg-white border-t border-gray-200">
         <nav class="flex justify-around text-center">
-            <a href="#about" class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600 active-link">About</a>
-            <a href="#reading-list" class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600">Reading List</a>
-            <a href="#stories" class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600">Stories</a>
-            <a href="#artwork" class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600">Artwork</a>
+            <a href=" {{ route('student.home.about')}} " class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600 active-link">About</a>
+            <a href=" {{ route('student.home.readingList')}} " class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600">Reading List</a>
+            <a href=" {{ route('student.home.stories')}} " class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600">Stories</a>
+            <a href=" {{ route('student.home.artwork')}} " class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600">Artwork</a>
         </nav>
     </div>
 </div>
@@ -45,11 +45,16 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const links = document.querySelectorAll('nav a');
+            const currentUrl = window.location.href;
+
+            // Remove active-link class from all links
+            links.forEach(link => link.classList.remove('active-link'));
+
+            // Add active-link class to the current link based on URL
             links.forEach(link => {
-                link.addEventListener('click', function () {
-                    links.forEach(link => link.classList.remove('active-link'));
-                    this.classList.add('active-link');
-                });
+                if (link.href === currentUrl) {
+                    link.classList.add('active-link');
+                }
             });
         });
     </script>
