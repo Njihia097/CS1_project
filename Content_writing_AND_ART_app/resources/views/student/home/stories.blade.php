@@ -1,11 +1,111 @@
 <x-student-layout>
 @section('content')
 
-<div>
-    <h2>
-        About me Stories!!
-    </h2>
+
+<div class="flex justify-start p-4">
+    <div class="relative inline-block text-left">
+        <div>
+            <button id="filterButton" type="button" class="inline-flex justify-center w-full p-2 text-sm font-medium text-black bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none">
+                <i class="fa-solid fa-filter"></i>
+                <p class="ml-2 text-gray-800 text-md">Filter</p>
+            </button>
+        </div>
+        <div id="filterMenu" class="absolute left-0 z-50 hidden mt-2 origin-top-left bg-white border border-gray-200 rounded-md shadow-lg w-72 ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <div class="grid grid-cols-2 gap-4 p-4" role="menu" aria-orientation="vertical" aria-labelledby="filterButton">
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900">Type</h3>
+                    <label class="flex items-center mt-2">
+                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
+                        <span class="ml-2 text-gray-700">All</span>
+                    </label>
+                    <label class="flex items-center mt-2">
+                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
+                        <span class="ml-2 text-gray-700">Published</span>
+                    </label>
+                    <label class="flex items-center mt-2">
+                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
+                        <span class="ml-2 text-gray-700">Saved</span>
+                    </label>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900">Category</h3>
+                    <label class="flex items-center mt-2">
+                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
+                        <span class="ml-2 text-gray-700">Poem</span>
+                    </label>
+                    <label class="flex items-center mt-2">
+                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
+                        <span class="ml-2 text-gray-700">Fantasy</span>
+                    </label>
+                    <label class="flex items-center mt-2">
+                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
+                        <span class="ml-2 text-gray-700">Non-fiction</span>
+                    </label>
+                    <label class="flex items-center mt-2">
+                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
+                        <span class="ml-2 text-gray-700">Fiction</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+<div class="flex flex-col items-center bg-gray-200 border border-gray-400 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-200">
+    <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" src="/docs/images/blog/image-4.jpg" alt="">
+    <div class="flex flex-col justify-between p-4 leading-normal">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-black">The Great Story</h5>
+        <p class="mb-3 font-normal text-black">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+        <div class="flex items-center space-x-4">
+            <div class="flex items-center">
+                <i class="text-black fa-regular fa-comment"></i>
+                <span class="ml-1 text-black">10</span>
+            </div>
+            <div class="flex items-center">
+                <i class="text-black fa-regular fa-thumbs-up"></i>
+                <span class="ml-1 text-black">5</span>
+            </div>
+            <div class="flex items-center">
+                <i class="text-black fa-regular fa-thumbs-down"></i>
+                <span class="ml-1 text-black">2</span>
+            </div>
+            <div class="flex items-center">
+                 <i class="fa-solid fa-list"></i>
+                <span class="ml-1 text-black">2</span>
+            </div>
+           
+        </div>
+        <a href="#" class="inline-block px-6 py-2 mt-4 text-sm font-semibold text-center text-white bg-black rounded hover:bg-gray-700">Continue Writing</a>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterButton = document.getElementById('filterButton');
+        const filterMenu = document.getElementById('filterMenu');
+
+        filterButton.addEventListener('click', function () {
+            filterMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!filterButton.contains(event.target) && !filterMenu.contains(event.target)) {
+                filterMenu.classList.add('hidden');
+            }
+        });
+    });
+</script>
+<!-- <script>
+    document.getElementById('filterButton').addEventListener('click', function() {
+        document.getElementById('filterMenu').classList.toggle('hidden');
+    });
+</script> -->
+
+
+
+
 @endsection
 
 </x-student-layout>

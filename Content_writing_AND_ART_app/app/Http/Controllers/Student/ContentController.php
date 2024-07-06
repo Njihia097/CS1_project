@@ -60,8 +60,19 @@ class ContentController extends Controller
             'keywords' => $keywords,
         ]);
 
+        // If the content is a chapter, create an entry in the chapter table
+        if ($content->IsChapter) {
+            $nextChapterNumber = $this->getNextChapterNumber($content->ContentID);
+            $chapterTitle = 'Part ' . $this->numberToWord($nextChapterNumber);
+            Chapter::create([
+                'ContentID' => $content->ContentID,
+                'ChapterNumber' => $nextChapterNumber,
+                'Title' => $chapterTitle,  
+            ]);
+        }
+
         // Redirect to text formatting form
-        return redirect()->route('student.editContent', $content->ContentID);
+        return redirect()->route('student.editContent', $content->ContentID)->with('success', 'Content created successfully.');
        
 
 
@@ -75,12 +86,19 @@ class ContentController extends Controller
     public function edit($id)
     {
         $content = Content::findOrFail($id);
+        $chapterTitle = null;
+    
         if ($content->IsChapter) {
-            $nextChapterNumber = $this->getNextChapterNumber($content->ContentID);
-            $content->Title = 'Part ' . $this->numberToWord($nextChapterNumber);
+            $chapter = Chapter::where('ContentID', $content->ContentID)->first();
+            if ($chapter) {
+                $chapterTitle = $chapter->Title; // Correct field name should be Title
+            }
         }
-        return view('student.editContent', compact('content'));
+    
+        return view('student.editContent', compact('content', 'chapterTitle'));
     }
+    
+    
     
 
     public function update(Request $request, $id)
@@ -89,6 +107,7 @@ class ContentController extends Controller
             'title' => 'required|string|max:255',
             'content_delta' => 'required|string',
             'action' => 'required|string|in:save,publish',
+            'chapter_title' => 'nullable|string|max:255',
         ]);
     
         try {
@@ -113,15 +132,14 @@ class ContentController extends Controller
 
     
             if ($content->IsChapter) {
-                $chapterNumber = $this->getNextChapterNumber($content->ContentID);
-                $chapter = new Chapter();
-                $chapter->ContentID = $content->ContentID;
-                $chapter->Title = $request->title ?: 'Part ' . $this->numberToWord($chapterNumber);
-                $chapter->Body = $textFilePath;
-                $chapter->content_delta = $mediaFilePath;
-                $chapter->ChapterNumber = $chapterNumber;
-    
-                $chapter->save();
+                // Update the existing chapter
+                $chapter = Chapter::where('ContentID', $content->ContentID)->first();
+                if ($chapter) {
+                    $chapter->Title = $request->chapter_title ?: 'Part ' . $this->numberToWord($chapter->ChapterNumber);
+                    $chapter->Body = $textFilePath;
+                    $chapter->content_delta = $mediaFilePath;
+                    $chapter->save();
+                }
             } else {
                   // Save file paths in the database
                 $content->ContentBody = $textFilePath;

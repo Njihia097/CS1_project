@@ -21,6 +21,17 @@ const quill = new Quill('#editor-container', {
     }
 });
 
+const contentType = document.getElementById('content_type').value;
+const chapterTitleContainer = document.getElementById('chapter-title-container');
+const storyTitleContainer = document.getElementById('story-title-container');
+
+// Show the correct title input based on content type
+if (contentType === 'chapter') {
+    storyTitleContainer.style.display = 'none';
+} else {
+    chapterTitleContainer.style.display = 'none';
+}
+
 const saveLoader = document.getElementById('save-loader');
 const saveStatus = document.getElementById('save-status');
 
@@ -53,6 +64,9 @@ window.onload = function () {
     if (localStorage.getItem(`title_${contentID}`)) {
         document.getElementById('title').value = localStorage.getItem(`title_${contentID}`);
     }
+    if (localStorage.getItem(`chapter_title_${contentID}`)) {
+        document.getElementById('chapter_title').value = localStorage.getItem(`chapter_title_${contentID}`);
+    }
     showSaved();
 };
 
@@ -68,6 +82,14 @@ quill.on('text-change', function() {
 document.getElementById('title').addEventListener('input', function() {
     if (document.getElementById('title').value.trim() !== '') {
         localStorage.setItem(`title_${contentID}`, document.getElementById('title').value);
+        debounceSave();
+        isContentChanged = true;
+    }
+});
+
+document.getElementById('chapter_title').addEventListener('input', function() {
+    if (document.getElementById('chapter_title').value.trim() !== '') {
+        localStorage.setItem(`chapter_title_${contentID}`, document.getElementById('chapter_title').value);
         debounceSave();
         isContentChanged = true;
     }
@@ -98,6 +120,7 @@ function debounce(func, wait) {
         timeout = setTimeout(() => func.apply(this, arguments), wait);
     };
 }
+
 
 // Debounced save function
 const debounceSave = debounce(() => {

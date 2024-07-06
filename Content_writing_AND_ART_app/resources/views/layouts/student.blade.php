@@ -1,6 +1,6 @@
 <x-app-layout>
 
-<div class="relative w-full my-24 mt-4 overflow-hidden rounded shadow-2xl">
+<div class="relative w-full mt-4 overflow-hidden rounded shadow-2xl">
     <div class="relative w-full h-64 overflow-hidden bg-blue-600 top">
         <img src="https://images.unsplash.com/photo-1503264116251-35a269479413?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80" alt="" class="absolute z-0 object-cover object-center w-full h-full bg">
         <div class="relative flex flex-col items-center justify-center h-full text-white bg-black bg-opacity-50">
@@ -9,7 +9,7 @@
             <h4 class="text-sm font-semibold">Joined Since '19</h4>
             <div class="flex justify-around w-full mt-4 space-x-4 text-center">
                 <div>
-                    <h2 class="text-xl font-bold">20</h2>
+                    <h2 class="text-xl font-bold">1</h2>
                     <span class="text-gray-100">Stories + Poems</span>
                 </div>
                 <div>
@@ -17,7 +17,7 @@
                     <span class="text-gray-100">Art Works</span>
                 </div>
                 <div>
-                    <h2 class="text-xl font-bold">12</h2>
+                    <h2 class="text-xl font-bold">0</h2>
                     <span class="text-gray-100">Reading List</span>
                 </div>
             </div>
@@ -36,7 +36,7 @@
 
 
 
-    <div class="py-12">
+    <div class="pt-4">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             @yield('content')
         </div>

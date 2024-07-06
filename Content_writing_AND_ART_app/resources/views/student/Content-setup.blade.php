@@ -94,19 +94,20 @@
                     @endif
                 </div>
 
-                <!-- Chapter-wise -->
-                <div class="mt-4">
-                    <label for="is_chapter" class="inline-flex items-center">
-                        <input id="is_chapter" type="checkbox" name="is_chapter" title="Only check if your content will be based on chapters" class="text-indigo-600 border-gray-500 rounded shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-70">
-                        <span class="ml-2 text-sm text-gray-700">{{ __('Chapter-wise') }}</span>
-                    </label>
+            <!-- Chapter-wise -->
+            <div class="mt-4">
+                <input type="hidden" name="is_chapter" value="0">
+                <label for="is_chapter" class="inline-flex items-center">
+                    <input id="is_chapter" type="checkbox" name="is_chapter" value="1" title="Only check if your content will be based on chapters" class="text-indigo-600 border-gray-500 rounded shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-70">
+                    <span class="ml-2 text-sm text-gray-700">{{ __('Chapter-wise') }}</span>
+                </label>
 
-                    @if ($errors->has('is_chapter'))
-                        <span class="text-sm text-red-600">
-                            {{ $errors->first('is_chapter') }}
-                        </span>
-                    @endif
-                </div>
+                @if ($errors->has('is_chapter'))
+                    <span class="text-sm text-red-600">
+                        {{ $errors->first('is_chapter') }}
+                    </span>
+                @endif
+            </div>
 
                 <div class="flex justify-center mt-4">
                     <x-button>
