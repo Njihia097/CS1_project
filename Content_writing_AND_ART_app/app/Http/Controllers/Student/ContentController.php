@@ -221,5 +221,12 @@ class ContentController extends Controller
         return $mediaContent;
     }
 
+    public function show (Request $request) 
+    {
+        
+        return view('student.contentDetails');
+
+    }
+
     
 }
