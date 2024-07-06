@@ -65,7 +65,7 @@
                     <input type="text" name="title" id="title" 
                     value="{{ $content->Title }}" 
                     class="flex items-center justify-center w-2/4 mb-4 text-3xl font-semibold text-gray-700 border-none focus:outline-none" style="background: transparent;">
-                </div
+                </div>
               
 
                 <!-- Editor container -->
