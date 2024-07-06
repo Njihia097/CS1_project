@@ -28,7 +28,7 @@
         <nav class="flex justify-around text-center">
             <a href=" {{ route('student.home.about')}} " class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600 active-link">About</a>
             <a href=" {{ route('student.home.readingList')}} " class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600">Reading List</a>
-            <a href=" {{ route('student.home.stories')}} " class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600">Stories</a>
+            <a href=" {{ route('student.home.content')}} " class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600">Content</a>
             <a href=" {{ route('student.home.artwork')}} " class="py-4 text-gray-600 border-b-2 border-transparent hover:text-blue-600 hover:border-blue-600">Artwork</a>
         </nav>
     </div>
