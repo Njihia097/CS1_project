@@ -51,12 +51,14 @@
     </div>
 </div>
 
+@foreach ($contents as $content)
 
-<div class="flex flex-col items-center bg-gray-200 border border-gray-400 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-200">
-    <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" src="/docs/images/blog/image-4.jpg" alt="">
+
+<div class="flex flex-col items-center mb-4 bg-gray-200 border border-gray-400 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-200">
+    <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" src=" {{ asset('cover_images/' . $content->thumbnail) }} " alt=" {{ $content->Title}} ">
     <div class="flex flex-col justify-between p-4 leading-normal">
-        <h5 class="mb-2 text-2xl font-bold tracking-tight text-black">The Great Story</h5>
-        <p class="mb-3 font-normal text-black">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-black">{{ $content->Title}}</h5>
+        <p class="mb-3 font-normal text-black">{{ $content->Description}}</p>
         <div class="flex items-center space-x-4">
             <div class="flex items-center">
                 <i class="text-black fa-regular fa-comment"></i>
@@ -79,6 +81,7 @@
         <a href=" {{route('student.contentDetails')}} " class="inline-block px-6 py-2 mt-4 text-sm font-semibold text-center text-white bg-black rounded hover:bg-gray-700">Continue Writing</a>
     </div>
 </div>
+@endforeach
 
 
 <script>

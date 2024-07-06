@@ -65,7 +65,7 @@ Route::middleware(['auth',config('jetstream.auth_session'),'verified','role:stud
         Route::get('student/home/about', [StudentController::class, 'showAbout'])->name('home.about');
         Route::get('/student/home/artwork', [StudentController::class, 'showArtwork'])->name('home.artwork');
         Route::get('/student/home/readingList', [StudentController::class, 'showReadingList'])->name('home.readingList');
-        Route::get('/student/home/stories', [StudentController::class, 'showStories'])->name('home.stories');
-        Route::get('/student/contentDetails', [ContentController::class, 'show'])->name('contentDetails');
+        Route::get('/student/home/content', [StudentController::class, 'showContent'])->name('home.content');
+        Route::get('/student/contentDetails', [ContentController::class, 'showContentDetails'])->name('contentDetails');
 });
 
