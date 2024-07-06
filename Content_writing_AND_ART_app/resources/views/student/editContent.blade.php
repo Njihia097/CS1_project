@@ -41,15 +41,32 @@
             </div>
 
             @if(session('error'))
-            <div class="flex items-center justify-center text-sm text-red-600">
+            <div class="flex items-center justify-center text-sm text-green-600">
                 {{ session('error')}}
             </div>
             @endif
+            @if(session('success'))
+            <div class="flex items-center justify-center text-sm text-green-600">
+                {{ session('success')}}
+            </div>
+            @endif
             <div class="pt-16">
-                <!-- Title input field moved here -->
-                <div class="flex flex-col items-center justify-center w-full px-6 mt-6 mb-2">
-                    <input type="text" name="title" id="title" value="{{ $content->Title }}" class="flex items-center justify-center w-2/4 mb-4 text-3xl font-semibold text-gray-700 border-none focus:outline-none" style="background: transparent;">
+                    <!-- Title input field moved here -->
+                
+                <input type="hidden" id="content_type" value="{{ $content->IsChapter ? 'chapter' : 'story' }}">
+
+                <div class="flex flex-col items-center justify-center w-full px-6 mt-6 mb-2" id="chapter-title-container">
+                    <input type="text" name="chapter_title" id="chapter_title" 
+                    value="{{ $chapterTitle }}" 
+                    class="flex items-center justify-center w-2/4 mb-4 text-3xl font-semibold text-gray-700 border-none focus:outline-none" style="background: transparent;">
                 </div>
+
+                <div class="flex flex-col items-center justify-center w-full px-6 mt-6 mb-2" id="story-title-container">
+                    <input type="text" name="title" id="title" 
+                    value="{{ $content->Title }}" 
+                    class="flex items-center justify-center w-2/4 mb-4 text-3xl font-semibold text-gray-700 border-none focus:outline-none" style="background: transparent;">
+                </div
+              
 
                 <!-- Editor container -->
                 <div class="flex flex-col items-center px-6 mb-0">
