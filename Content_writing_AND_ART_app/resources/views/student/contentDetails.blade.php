@@ -117,7 +117,7 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="nav-table-of-contents" role="tabpanel">
-                            <button class="mb-3 btn btn-primary">+ New Part</button>
+                            <button class="mb-3 btn btn-primary" id="newPartButton">+ New Part</button>
                             <ul class="list-group" id="tableOfContents">
                                 <!-- List of parts will be inserted here dynamically -->
                             </ul>
@@ -136,6 +136,77 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
     <script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const contentId = '{{ $content->ContentID }}';
+        const isChapter = '{{ $content->IsChapter }}';
+
+        const tableOfContentsContainer = document.getElementById('tableOfContents');
+        const newPartButton = document.getElementById('newPartButton');
+
+        fetchContentDetails(contentId, isChapter);
+
+        async function fetchContentDetails(contentId, isChapter) {
+            try {
+                const response = await fetch(`/student/api/contentDetails/${contentId}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+
+                if (isChapter == 1) {
+                    displayChapters(data.chapters);
+                    newPartButton.style.display = 'block';
+                } else {
+                    displayStandaloneContent(data.content);
+                    newPartButton.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error fetching content details:', error);
+            }
+        }
+
+        function displayStandaloneContent(content) {
+            const listItem = createListItem(content.title, content.lastModified, 5, 10, 3); // Dummy data
+            tableOfContentsContainer.appendChild(listItem);
+        }
+
+        function displayChapters(chapters) {
+            chapters.forEach(chapter => {
+                const listItem = createListItem(chapter.title, chapter.lastModified, 5, 10, 3); // Dummy data
+                tableOfContentsContainer.appendChild(listItem);
+            });
+        }
+
+        function createListItem(title, date, comments, thumbsUp, thumbsDown) {
+            const listItem = document.createElement('li');
+            listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+            listItem.innerHTML = `
+                <div>
+                    <h5 class="mb-2">${title}</h5>
+                    <small>Last Modified: ${date}</small>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="badge bg-secondary rounded-pill">${thumbsUp} <i class="text-gray-900 fa-regular fa-thumbs-up"></i></span>
+                    <span class="badge bg-secondary rounded-pill">${thumbsDown} <i class="text-gray-900 fa-regular fa-thumbs-down"></i></span>
+                    <span class="badge bg-secondary rounded-pill">${comments} <i class="text-gray-900 fa-regular fa-comment"></i></span>
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="#">Edit</a></li>
+                            <li><a class="dropdown-item" href="#">Delete</a></li>
+                            <li><a class="dropdown-item" href="#">Move</a></li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            return listItem;
+        }
+    });
+</script>
+
+    <script>
        
 
        function previewCoverImage(event) {
@@ -152,30 +223,7 @@
             alert('Details saved!');
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load Table of Contents dynamically
-            const tableOfContents = [
-                {title: 'Part 1', date: 'May 14, 2024', views: 3, comments: 0, likes: 0},
-                {title: 'Part 2', date: 'May 14, 2024', views: 2, comments: 0, likes: 0}
-            ];
-            const tableOfContentsContainer = document.getElementById('tableOfContents');
-            tableOfContents.forEach(part => {
-                const listItem = document.createElement('li');
-                listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
-                listItem.innerHTML = `
-                    <div>
-                        <h5 class="mb-0">Greatness</h5>
-                        <small>Draft - 07/08/2024</small>
-                    </div>
-                    <div>
-                        <span class="badge bg-primary rounded-pill">4 <i class="bi bi-eye"></i></span>
-                        <span class="badge bg-secondary rounded-pill">6 <i class="bi bi-star"></i></span>
-                        <span class="badge bg-secondary rounded-pill">8 <i class="bi bi-chat"></i></span>
-                    </div>
-                `;
-                tableOfContentsContainer.appendChild(listItem);
-            });
-        });
+
     </script>
         <script>
         function updateCountdown() {
