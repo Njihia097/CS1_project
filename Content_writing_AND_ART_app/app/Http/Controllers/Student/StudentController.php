@@ -18,6 +18,14 @@ class StudentController extends Controller
     {
         return view('student.home.about');
     }
+    public function showReadingList (Request $request) 
+    {
+        return view('student.home.readingList');
+    }
+    public function showArtwork (Request $request) 
+    {
+        return view('student.home.artWork');
+    }
     public function showContent(Request $request)
     {
         $studentId = auth()->id();
@@ -55,7 +63,7 @@ class StudentController extends Controller
             }
         }
 
-        $contents = $query->get();
+        $contents = $query->orderBy('created_at','desc')->get();
 
         //Fetch the categories associated with the student's content
         $categories = CategoryContent::whereIn('CategoryID', $contents->pluck('CategoryID'))->get();

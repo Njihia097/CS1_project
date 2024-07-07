@@ -45,10 +45,10 @@
                 {{ session('error')}}
             </div>
             @endif
-            @if(session('success'))
-            <div class="flex items-center justify-center text-sm text-green-600">
-                {{ session('success')}}
-            </div>
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
             @endif
             <div class="pt-16">
                     <!-- Title input field moved here -->

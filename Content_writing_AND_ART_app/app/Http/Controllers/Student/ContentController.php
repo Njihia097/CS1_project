@@ -27,7 +27,7 @@ class ContentController extends Controller
         $request->validate([
             'cover_page' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:50',
+            'description' => 'nullable|string|max:150',
             'category' => 'required|exists:category_content,CategoryID',
             'keywords' => 'required|string',
             'is_chapter' => 'sometimes|boolean',
@@ -221,12 +221,67 @@ class ContentController extends Controller
         return $mediaContent;
     }
 
-    public function showContentDetails (Request $request) 
+    public function showContentDetails(Request $request, $contentId)
     {
-        
-        return view('student.contentDetails');
+        $content = Content::findOrFail($contentId);
+        $categories = CategoryContent::all();
+        $selectedCategoryId = $content->CategoryID;
+    
+        // Convert JSON keywords back to comma-separated string
+        $keywords = json_decode($content->keywords, true);
+        $keywordsString = implode(', ', $keywords);
 
+        // dd($categories);
+    
+        return view('student.contentDetails', compact('content', 'categories', 'selectedCategoryId', 'keywordsString'));
     }
+    
+    
+
+    public function saveContentDetails (Request $request, $contentId)
+    {
+        $content = Content::findOrFail($contentId);
+
+
+        $request->validate([
+            'cover_page' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:150',
+            'category' => 'required|exists:category_content,CategoryID',
+            'keywords' => 'required|string',
+            'is_chapter' => 'sometimes|boolean',
+        ]);
+
+        try {
+            // Manage file upload
+            if($request->hasFile('cover_page')) {
+                //delete the old thumbnail if it exists
+                if ($content->thumbnail && file_exists(public_path('cover_images/' . $content->thumbnail))) {
+                    unlink(public_path('cover_images/' . $content->thumbnail));
+                }
+
+                $coverImage = $request->file('cover_page');
+                $imageName = time().','.$coverImage->extension();
+                $coverImage->move(public_path('cover_images'), $imageName);
+                $content->thumbnail = $imageName;
+            }
+
+            // Convert keywords to JSON
+            $keywords = json_encode(array_map('trim', explode(',', $request->keywords)));
+
+            $content->Title = $request->title;
+            $content->CategoryID = $request->category;
+            $content->Description = $request->description;
+            $content->keywords = $keywords;
+
+
+            return redirect()->route('student.contentDetails', ['content' => $contentId])->with('success', 'Content details updated successfully.');
+        } catch (Exception $e) {
+            Log::error('Failed to update content: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to update content. Please try again.');
+        }
+    }
+        
 
     
 }

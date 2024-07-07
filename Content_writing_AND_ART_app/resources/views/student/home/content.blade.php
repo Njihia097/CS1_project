@@ -85,7 +85,7 @@
             </div>
            
         </div>
-        <a href=" {{route('student.contentDetails')}} " class="inline-block w-48 px-6 py-2 mt-4 text-sm font-semibold text-center text-white bg-black rounded hover:bg-gray-700">Continue Writing</a>
+        <a href=" {{route('student.contentDetails', ['content' => $content->ContentID]) }} " class="inline-block w-48 px-6 py-2 mt-4 text-sm font-semibold text-center text-white bg-black rounded hover:bg-gray-700">Continue Writing</a>
     </div>
 </div>
 </div>
