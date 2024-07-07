@@ -261,7 +261,7 @@ class ContentController extends Controller
                 }
 
                 $coverImage = $request->file('cover_page');
-                $imageName = time().','.$coverImage->extension();
+                $imageName = time().'.'.$coverImage->extension();
                 $coverImage->move(public_path('cover_images'), $imageName);
                 $content->thumbnail = $imageName;
             }
@@ -273,6 +273,8 @@ class ContentController extends Controller
             $content->CategoryID = $request->category;
             $content->Description = $request->description;
             $content->keywords = $keywords;
+
+            $content->save();
 
 
             return redirect()->route('student.contentDetails', ['content' => $contentId])->with('success', 'Content details updated successfully.');

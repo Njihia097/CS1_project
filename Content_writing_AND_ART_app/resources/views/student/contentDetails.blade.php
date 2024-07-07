@@ -23,6 +23,11 @@
                     {{ session('success') }}
                 </div>
             @endif
+            @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
             <div class="flex space-x-2">
                 <button type="submit" class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 disabled:opacity-50">Save</button>
                 <a href="{{ route('student.home.content') }}" class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-600 border border-transparent rounded-md hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 disabled:opacity-50">Cancel</a>
@@ -31,19 +36,19 @@
         
         
 
-        <div class="container pt-16 {{ (session('success')) ? 'pt-24': ''}}  mt-4">
+        <div class="container pt-16 {{ (session('success') || session('error')) ? 'pt-24': ''}}  mt-4">
             <div class="row">
                 <div class="col-md-3">
                     <div class="card">
                         <img src="{{ $content->thumbnail ? asset('cover_images/' . $content->thumbnail) : 'cover_image.jpg' }}" class="card-img-top" alt="Cover Image" id="coverImage">
                         <div class="text-center card-body">
-                            <button class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 disabled:opacity-50" 
+                            <button type="button" class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 disabled:opacity-50" 
                             onclick="document.getElementById('coverImageInput').click()">Change Cover</button>
-                            <input type="file" id="coverImageInput" name="cover_image" style="display:none" accept="image/*" onchange="previewCoverImage(event)">
+                            <input type="file" id="coverImageInput" name="cover_page" style="display:none" accept="image/*" onchange="previewCoverImage(event)">
                         </div>
                     </div>
                     <div class="flex justify-center">
-                        <button class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md sm:mb-2 hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50">
+                        <button type="button" class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md sm:mb-2 hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50">
                             View as reader
                         </button>
                     </div>
@@ -133,14 +138,14 @@
     <script>
        
 
-        function previewCoverImage(event) {
-            const reader = new FileReader();
-            reader.onload = function(){
-                const output = document.getElementById('coverImage');
-                output.src = reader.result;
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
+       function previewCoverImage(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('coverImage');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
 
         function saveDetails() {
             // Save the details using AJAX or form submission
