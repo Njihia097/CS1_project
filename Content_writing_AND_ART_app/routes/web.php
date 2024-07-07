@@ -68,5 +68,8 @@ Route::middleware(['auth',config('jetstream.auth_session'),'verified','role:stud
         Route::get('/home/content', [StudentController::class, 'showContent'])->name('home.content');
         Route::get('/contentDetails/{content}', [ContentController::class, 'showContentDetails'])->name('contentDetails');
         Route::post('/contentDetails/{content}', [ContentController::class, 'saveContentDetails'])->name('saveContentDetails');
+        Route::get('/api/contentDetails/{contentId}', [ContentController::class, 'getContentDetails']);
+
+
 });
 

@@ -221,22 +221,75 @@ class ContentController extends Controller
         return $mediaContent;
     }
 
-    public function showContentDetails(Request $request, $contentId)
-    {
-        $content = Content::findOrFail($contentId);
-        $categories = CategoryContent::all();
-        $selectedCategoryId = $content->CategoryID;
-    
-        // Convert JSON keywords back to comma-separated string
-        $keywords = json_decode($content->keywords, true);
-        $keywordsString = implode(', ', $keywords);
+ public function showContentDetails(Request $request, $contentId)
+{
+    $content = Content::with('chapters')->findOrFail($contentId);
+    $categories = CategoryContent::all();
+    $selectedCategoryId = $content->CategoryID;
 
-        // dd($categories);
+    // Convert JSON keywords back to comma-separated string
+    $keywords = json_decode($content->keywords, true);
+    $keywordsString = implode(', ', $keywords);
+
+    $chapters = $content->chapters->map(function($chapter) {
+        return [
+            'title' => $chapter->Title,
+            'lastModified' => $chapter->updated_at->diffForHumans(),
+            'comments' => 5, // Dummy data
+            'thumbsUp' => 10, // Dummy data
+            'thumbsDown' => 3, // Dummy data
+            'views' => 4, // Dummy data for views
+            'likes' => 6 // Dummy data for likes
+        ];
+    });
+
+    $contentDetails = [
+        'title' => $content->Title,
+        'lastModified' => $content->updated_at->diffForHumans(),
+        'comments' => 5, // Dummy data
+        'thumbsUp' => 10, // Dummy data
+        'thumbsDown' => 3 // Dummy data
+    ];
+
+    return view('student.contentDetails', compact('content', 'categories', 'selectedCategoryId', 'keywordsString', 'chapters', 'contentDetails'));
+}
+
     
-        return view('student.contentDetails', compact('content', 'categories', 'selectedCategoryId', 'keywordsString'));
+    public function getContentDetails($contentId)
+    {
+        $content = Content::with('chapters')->find($contentId);
+        
+        if (!$content) {
+            \Log::error("Content with ID $contentId not found");
+            return response()->json(['error' => 'Content not found'], 404);
+        }
+    
+        $chapters = $content->chapters->map(function($chapter) {
+            return [
+                'title' => $chapter->Title,
+                'lastModified' => $chapter->updated_at->diffForHumans(),
+                'comments' => 5, // Dummy data
+                'thumbsUp' => 10, // Dummy data
+                'thumbsDown' => 3 // Dummy data
+            ];
+        });
+    
+        $contentDetails = [
+            'title' => $content->Title,
+            'lastModified' => $content->updated_at->diffForHumans(),
+            'comments' => 5, // Dummy data
+            'thumbsUp' => 10, // Dummy data
+            'thumbsDown' => 3 // Dummy data
+        ];
+        \Log::info('Fetched content details:', ['content' => $contentDetails, 'chapters' => $chapters]);
+    
+        return response()->json([
+            'content' => $contentDetails,
+            'chapters' => $chapters
+        ]);
     }
-    
-    
+     
+
 
     public function saveContentDetails (Request $request, $contentId)
     {
