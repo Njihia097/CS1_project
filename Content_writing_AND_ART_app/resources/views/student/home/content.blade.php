@@ -10,52 +10,59 @@
                 <p class="ml-2 text-gray-800 text-md">Filter</p>
             </button>
         </div>
-        <div id="filterMenu" class="absolute left-0 z-50 hidden mt-2 origin-top-left bg-white border border-gray-200 rounded-md shadow-lg w-72 ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div class="grid grid-cols-2 gap-4 p-4" role="menu" aria-orientation="vertical" aria-labelledby="filterButton">
+        <div id="filterMenu" class="absolute left-0 z-50 hidden mt-2 origin-top-left bg-white border border-gray-200 rounded-md shadow-lg w-[32rem] ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <form id="filterForm" class="grid grid-cols-3 gap-6 p-6" role="menu" aria-orientation="vertical" aria-labelledby="filterButton" method="GET" action=" {{ route('student.home.content') }} ">
+                @csrf
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900">Type</h3>
                     <label class="flex items-center mt-2">
-                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
+                        <input type="checkbox" name="types[]" value="All" class="w-4 h-4 text-gray-600 form-checkbox">
                         <span class="ml-2 text-gray-700">All</span>
                     </label>
                     <label class="flex items-center mt-2">
-                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
+                        <input type="checkbox" name="types[]" value="Published" class="w-4 h-4 text-gray-600 form-checkbox">
                         <span class="ml-2 text-gray-700">Published</span>
                     </label>
                     <label class="flex items-center mt-2">
-                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
+                        <input type="checkbox" name="types[]" value="Saved" class="w-4 h-4 text-gray-600 form-checkbox">
                         <span class="ml-2 text-gray-700">Saved</span>
                     </label>
                 </div>
+
                 <div>
                     <h3 class="text-sm font-semibold text-gray-900">Category</h3>
+                    @foreach ($categories as $category)
+                        <label class="flex items-center mt-2">
+                            <input type="checkbox" name="categories[]" value="{{ $category->CategoryID}}" class="w-4 h-4 text-gray-600 form-checkbox">
+                            <span class="ml-2 text-gray-700">{{ $category->CategoryName}}</span>
+                        </label>
+                    @endforeach
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900">Content Structure</h3>
                     <label class="flex items-center mt-2">
-                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
-                        <span class="ml-2 text-gray-700">Poem</span>
+                        <input type="checkbox" name="structures[]" value="Stand-alone" class="w-4 h-4 text-gray-600 form-checkbox">
+                        <span class="ml-2 text-gray-700">Stand-alone</span>
                     </label>
                     <label class="flex items-center mt-2">
-                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
-                        <span class="ml-2 text-gray-700">Fantasy</span>
-                    </label>
-                    <label class="flex items-center mt-2">
-                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
-                        <span class="ml-2 text-gray-700">Non-fiction</span>
-                    </label>
-                    <label class="flex items-center mt-2">
-                        <input type="checkbox" class="w-4 h-4 text-gray-600 form-checkbox">
-                        <span class="ml-2 text-gray-700">Fiction</span>
+                        <input type="checkbox" name="structures[]" value="Chapter-wise" class="w-4 h-4 text-gray-600 form-checkbox">
+                        <span class="ml-2 text-gray-700">Chapter-wise</span>
                     </label>
                 </div>
-            </div>
+                <button type="submit" class="inline-block px-6 py-2 mt-4 text-sm font-semibold text-center text-white bg-black rounded hover:bg-gray-700">Apply Filters</button>
+            </form>
         </div>
     </div>
 </div>
 
+
+
 @foreach ($contents as $content)
 
-
-<div class="flex flex-col items-center mb-4 bg-gray-200 border border-gray-400 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-200">
-    <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" src=" {{ asset('cover_images/' . $content->thumbnail) }} " alt=" {{ $content->Title}} ">
+<div class="grid grid-cols-2 gap-2 sm:flex sm:flex-col">
+<div class="flex flex-col items-center p-2 mb-4 bg-gray-200 border border-gray-400 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-200">
+    <img class="object-cover w-full rounded-t-lg h-96 md:h-44 md:w-48 md:rounded-none md:rounded-s-lg" src=" {{ asset('cover_images/' . $content->thumbnail) }} " alt=" {{ $content->Title}} ">
     <div class="flex flex-col justify-between p-4 leading-normal">
         <h5 class="mb-2 text-2xl font-bold tracking-tight text-black">{{ $content->Title}}</h5>
         <p class="mb-3 font-normal text-black">{{ $content->Description}}</p>
@@ -78,8 +85,9 @@
             </div>
            
         </div>
-        <a href=" {{route('student.contentDetails')}} " class="inline-block px-6 py-2 mt-4 text-sm font-semibold text-center text-white bg-black rounded hover:bg-gray-700">Continue Writing</a>
+        <a href=" {{route('student.contentDetails')}} " class="inline-block w-48 px-6 py-2 mt-4 text-sm font-semibold text-center text-white bg-black rounded hover:bg-gray-700">Continue Writing</a>
     </div>
+</div>
 </div>
 @endforeach
 
