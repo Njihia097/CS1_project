@@ -9,10 +9,13 @@ use App\Http\Controllers\Editor\EditorController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Auth\LockScreenController;
 use App\Http\Controllers\Student\ContentController;
+use App\Http\Controllers\Student\HomeController;
 
+Route::get('/', [HomeController::class,'index']
+);
 
 Route::middleware(['auth',config('jetstream.auth_session')])->get('/', function () {
-    return view('welcome');
+    return view('home.userpage');
 })->name('welcome');
 
 
@@ -63,4 +66,12 @@ Route::middleware(['auth',config('jetstream.auth_session'),'verified','role:stud
         Route::get('/content/{ContentID}/edit', [ContentController::class, 'edit'])->name('editContent');
         Route::put('/content/{ContentID}', [ContentController::class, 'update'])->name('updateContent');
 });
+
+route::get('/view_artsale',[HomeController::class,'view_artsale']);
+
+route::get('/view_userpage',[HomeController::class,'view_userpage']);
+
+route::get('/view_blogpage',[HomeController::class,'view_blogpage']);
+
+route::get('/view_contact',[HomeController::class,'view_contact']);
 
