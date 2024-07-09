@@ -39,8 +39,10 @@ Route::middleware(['auth', 'verified', 'role:admin'])
     ->group(function () {
         Route::get('/home', [AdminController::class, 'adminHome'])->name('adminHome');
         Route::get('/register-editor', [Admin_EditorController::class, 'view'])->name('register-editor');
-
         Route::post('/register-editor', [Admin_EditorController::class, 'store'])->name('registerEditor');
+});
+
+
 
 // Editor routes
 Route::middleware(['auth', 'verified', 'role:editor'])
