@@ -82,21 +82,44 @@ class ContentController extends Controller
         }
 
     }
-
-    public function edit($id)
+    
+    public function edit($id, Request $request)
     {
+        \Log::info('Edit Method Called');
+        \Log::info('Content ID: ' . $id);
+        \Log::info('Request Data: ' . json_encode($request->all()));
+    
         $content = Content::findOrFail($id);
         $chapterTitle = null;
+        $chapterContent = null;
     
-        if ($content->IsChapter) {
-            $chapter = Chapter::where('ContentID', $content->ContentID)->first();
-            if ($chapter) {
-                $chapterTitle = $chapter->Title; // Correct field name should be Title
+        try {
+            if ($content->IsChapter || $request->has('chapterId')) {
+                $chapterId = $request->input('chapterId');
+                $chapter = Chapter::where('ChapterID', $chapterId)->first();
+                if ($chapter) {
+                    $chapterTitle = $chapter->Title;
+                    $chapterContent = [
+                        'body' => $chapter->Body ? Storage::disk('local')->get($chapter->Body) : '',
+                        'content_delta' => $chapter->content_delta ? Storage::disk('local')->get($chapter->content_delta) : ''
+                    ];
+                }
+            } else {
+                $contentBody = $content->ContentBody ? Storage::disk('local')->get($content->ContentBody) : '';
+                $contentDelta = $content->content_delta ? Storage::disk('local')->get($content->content_delta) : '';
+                $chapterContent = [
+                    'body' => $contentBody,
+                    'content_delta' => $contentDelta
+                ];
             }
+        } catch (Exception $e) {
+            \Log::error('Failed to retrieve content: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to retrieve content');
         }
     
-        return view('student.editContent', compact('content', 'chapterTitle'));
+        return view('student.editContent', compact('content', 'chapterTitle', 'chapterContent'));
     }
+    
     
     
     
@@ -268,6 +291,7 @@ class ContentController extends Controller
             return [
                 'title' => $chapter->Title,
                 'lastModified' => $chapter->updated_at->diffForHumans(),
+                'ChapterID' => $chapter->ChapterID,
                 'comments' => 5, // Dummy data
                 'thumbsUp' => 10, // Dummy data
                 'thumbsDown' => 3 // Dummy data
