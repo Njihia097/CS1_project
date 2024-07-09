@@ -15,6 +15,7 @@
             @method('PUT')
             <div class="fixed z-40 flex items-center justify-between w-full px-4 pt-2 mx-auto mt-0 bg-gray-100 max-w-7xl">
                 <div class="flex items-center">
+                    <a href="{{ route('student.contentDetails', ['content' => $content->ContentID])}}"><i class="text-3xl fa-solid fa-chevron-left size-8"></i></a> 
                     <div class="flex-shrink-0">
                         <img src="{{ asset('cover_images/' . $content->thumbnail) }}" alt="Content's coverpage" class="object-contain w-20 h-20">
                     </div>
@@ -41,7 +42,7 @@
             </div>
 
             @if(session('error'))
-            <div class="flex items-center justify-center text-sm text-green-600">
+            <div class="flex items-center justify-center text-sm text-red-600">
                 {{ session('error')}}
             </div>
             @endif

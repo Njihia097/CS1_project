@@ -39,8 +39,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])
     ->group(function () {
         Route::get('/home', [AdminController::class, 'adminHome'])->name('adminHome');
         Route::get('/register-editor', [Admin_EditorController::class, 'view'])->name('register-editor');
-        Route::post('/register-editor', [Admin_EditorController::class, 'store'])->name('register-editor');
-    });
+
+        Route::post('/register-editor', [Admin_EditorController::class, 'store'])->name('registerEditor');
 
 // Editor routes
 Route::middleware(['auth', 'verified', 'role:editor'])
@@ -57,7 +57,7 @@ Route::middleware(['auth', 'verified', 'role:student'])
     ->group(function () {
         Route::get('/home', [StudentController::class, 'studentHome'])->name('studentHome');
         Route::get('/Content-setup', [ContentController::class, 'view'])->name('Content-setup');
-        Route::post('/Content-setup', [ContentController::class, 'store'])->name('Content-setup');
+        Route::post('/Content-setup', [ContentController::class, 'store'])->name('ContentSetup');
         Route::get('/content/{ContentID}/edit', [ContentController::class, 'edit'])->name('editContent');
         Route::put('/content/{ContentID}', [ContentController::class, 'update'])->name('updateContent');
 

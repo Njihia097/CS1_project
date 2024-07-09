@@ -18,7 +18,7 @@
                 <!-- Logo -->
                 <a href="{{ route('welcome') }}" class="flex items-center">
                     <!-- SVG Logo with Application Name -->
-                    <svg class="h-10 mr-2 sm:h-10 md:h-12 lg:h-12 xl:h-16" viewBox="0 0 512 512">
+                    <svg class="h-10 mr-2 sm:h-10 md:h-10 lg:h-12 xl:h-12" viewBox="0 0 512 512">
                         <!-- Background Rectangle -->
                         <rect width="512" height="512" x="0" y="0" rx="80" fill="url(#linearGradient-iconWithBackground)" stroke="#000000" stroke-width="0" stroke-opacity="100%" paint-order="stroke"/>
 

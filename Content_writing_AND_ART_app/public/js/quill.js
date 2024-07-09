@@ -18,7 +18,8 @@ const quill = new Quill('#editor-container', {
         imageResize: {
             displaySize: true
         }
-    }
+    },
+    placeholder: 'Start writing here...',
 });
 
 const contentType = document.getElementById('content_type').value;
