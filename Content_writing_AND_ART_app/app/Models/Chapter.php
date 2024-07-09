@@ -10,7 +10,8 @@ class Chapter extends Model
     use HasFactory;
 
     protected $table = 'chapter';
-    protected $fillables = [
+    protected $primaryKey = 'ChapterID';
+    protected $fillable = [
         'ContentID',
         'Title',
         'Body',

@@ -54,8 +54,8 @@
                 <div class="mt-4">
                     <x-label for="description" value="{{ __('Description') }}" />
                     <textarea class="block w-full h-[50px] md:h-[100px] lg:h-[100px] resize-none rounded border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700"
-                     id="description" name="description" maxlength="50" placeholder="A brief description of your content helps your readers get a gist of what to expect in the main content" oninput="updateCountdown()">{{ old('description') }}</textarea>
-                    <small id="description-countdown" class="flex justify-end text-sm">50 characters remaining</small>
+                     id="description" name="description" maxlength="150" placeholder="A brief description of your content helps your readers get a gist of what to expect in the main content" oninput="updateCountdown()">{{ old('description') }}</textarea>
+                    <small id="description-countdown" class="flex justify-end text-sm">150 characters remaining</small>
 
                     @if ($errors->has('description'))
                         <span class="text-sm text-red-600">
@@ -94,19 +94,20 @@
                     @endif
                 </div>
 
-                <!-- Chapter-wise -->
-                <div class="mt-4">
-                    <label for="is_chapter" class="inline-flex items-center">
-                        <input id="is_chapter" type="checkbox" name="is_chapter" title="Only check if your content will be based on chapters" class="text-indigo-600 border-gray-500 rounded shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-70">
-                        <span class="ml-2 text-sm text-gray-700">{{ __('Chapter-wise') }}</span>
-                    </label>
+            <!-- Chapter-wise -->
+            <div class="mt-4">
+                <input type="hidden" name="is_chapter" value="0">
+                <label for="is_chapter" class="inline-flex items-center">
+                    <input id="is_chapter" type="checkbox" name="is_chapter" value="1" title="Only check if your content will be based on chapters" class="text-indigo-600 border-gray-500 rounded shadow-sm focus:border-indigo-400 focus:ring focus:ring-indigo-300 focus:ring-opacity-70">
+                    <span class="ml-2 text-sm text-gray-700">{{ __('Chapter-wise') }}</span>
+                </label>
 
-                    @if ($errors->has('is_chapter'))
-                        <span class="text-sm text-red-600">
-                            {{ $errors->first('is_chapter') }}
-                        </span>
-                    @endif
-                </div>
+                @if ($errors->has('is_chapter'))
+                    <span class="text-sm text-red-600">
+                        {{ $errors->first('is_chapter') }}
+                    </span>
+                @endif
+            </div>
 
                 <div class="flex justify-center mt-4">
                     <x-button>
@@ -122,7 +123,7 @@
         function updateCountdown() {
             const textarea = document.getElementById('description');
             const countdown = document.getElementById('description-countdown');
-            const maxLength = 50;
+            const maxLength = 150;
             const remaining = maxLength - textarea.value.length;
             countdown.textContent = `${remaining} characters remaining`;
         }

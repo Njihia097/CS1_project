@@ -60,6 +60,15 @@ Route::middleware(['auth', 'verified', 'role:student'])
         Route::post('/Content-setup', [ContentController::class, 'store'])->name('Content-setup');
         Route::get('/content/{ContentID}/edit', [ContentController::class, 'edit'])->name('editContent');
         Route::put('/content/{ContentID}', [ContentController::class, 'update'])->name('updateContent');
+
+        // Merged routes from both conflicting changes
+        Route::get('/home/about', [StudentController::class, 'showAbout'])->name('home.about');
+        Route::get('/home/artwork', [StudentController::class, 'showArtwork'])->name('home.artwork');
+        Route::get('/home/readingList', [StudentController::class, 'showReadingList'])->name('home.readingList');
+        Route::get('/home/content', [StudentController::class, 'showContent'])->name('home.content');
+        Route::get('/contentDetails/{content}', [ContentController::class, 'showContentDetails'])->name('contentDetails');
+        Route::post('/contentDetails/{content}', [ContentController::class, 'saveContentDetails'])->name('saveContentDetails');
+        Route::get('/api/contentDetails/{contentId}', [ContentController::class, 'getContentDetails']);
     });
 
 // Additional routes

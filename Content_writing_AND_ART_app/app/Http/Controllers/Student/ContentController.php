@@ -27,7 +27,7 @@ class ContentController extends Controller
         $request->validate([
             'cover_page' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:50',
+            'description' => 'nullable|string|max:150',
             'category' => 'required|exists:category_content,CategoryID',
             'keywords' => 'required|string',
             'is_chapter' => 'sometimes|boolean',
@@ -60,8 +60,19 @@ class ContentController extends Controller
             'keywords' => $keywords,
         ]);
 
+        // If the content is a chapter, create an entry in the chapter table
+        if ($content->IsChapter) {
+            $nextChapterNumber = $this->getNextChapterNumber($content->ContentID);
+            $chapterTitle = 'Part ' . $this->numberToWord($nextChapterNumber);
+            Chapter::create([
+                'ContentID' => $content->ContentID,
+                'ChapterNumber' => $nextChapterNumber,
+                'Title' => $chapterTitle,  
+            ]);
+        }
+
         // Redirect to text formatting form
-        return redirect()->route('student.editContent', $content->ContentID);
+        return redirect()->route('student.editContent', $content->ContentID)->with('success', 'Content created successfully.');
        
 
 
@@ -75,12 +86,19 @@ class ContentController extends Controller
     public function edit($id)
     {
         $content = Content::findOrFail($id);
+        $chapterTitle = null;
+    
         if ($content->IsChapter) {
-            $nextChapterNumber = $this->getNextChapterNumber($content->ContentID);
-            $content->Title = 'Part ' . $this->numberToWord($nextChapterNumber);
+            $chapter = Chapter::where('ContentID', $content->ContentID)->first();
+            if ($chapter) {
+                $chapterTitle = $chapter->Title; // Correct field name should be Title
+            }
         }
-        return view('student.editContent', compact('content'));
+    
+        return view('student.editContent', compact('content', 'chapterTitle'));
     }
+    
+    
     
 
     public function update(Request $request, $id)
@@ -89,6 +107,7 @@ class ContentController extends Controller
             'title' => 'required|string|max:255',
             'content_delta' => 'required|string',
             'action' => 'required|string|in:save,publish',
+            'chapter_title' => 'nullable|string|max:255',
         ]);
     
         try {
@@ -113,15 +132,14 @@ class ContentController extends Controller
 
     
             if ($content->IsChapter) {
-                $chapterNumber = $this->getNextChapterNumber($content->ContentID);
-                $chapter = new Chapter();
-                $chapter->ContentID = $content->ContentID;
-                $chapter->Title = $request->title ?: 'Part ' . $this->numberToWord($chapterNumber);
-                $chapter->Body = $textFilePath;
-                $chapter->content_delta = $mediaFilePath;
-                $chapter->ChapterNumber = $chapterNumber;
-    
-                $chapter->save();
+                // Update the existing chapter
+                $chapter = Chapter::where('ContentID', $content->ContentID)->first();
+                if ($chapter) {
+                    $chapter->Title = $request->chapter_title ?: 'Part ' . $this->numberToWord($chapter->ChapterNumber);
+                    $chapter->Body = $textFilePath;
+                    $chapter->content_delta = $mediaFilePath;
+                    $chapter->save();
+                }
             } else {
                   // Save file paths in the database
                 $content->ContentBody = $textFilePath;
@@ -202,6 +220,123 @@ class ContentController extends Controller
         }
         return $mediaContent;
     }
+
+ public function showContentDetails(Request $request, $contentId)
+{
+    $content = Content::with('chapters')->findOrFail($contentId);
+    $categories = CategoryContent::all();
+    $selectedCategoryId = $content->CategoryID;
+
+    // Convert JSON keywords back to comma-separated string
+    $keywords = json_decode($content->keywords, true);
+    $keywordsString = implode(', ', $keywords);
+
+    $chapters = $content->chapters->map(function($chapter) {
+        return [
+            'title' => $chapter->Title,
+            'lastModified' => $chapter->updated_at->diffForHumans(),
+            'comments' => 5, // Dummy data
+            'thumbsUp' => 10, // Dummy data
+            'thumbsDown' => 3, // Dummy data
+            'views' => 4, // Dummy data for views
+            'likes' => 6 // Dummy data for likes
+        ];
+    });
+
+    $contentDetails = [
+        'title' => $content->Title,
+        'lastModified' => $content->updated_at->diffForHumans(),
+        'comments' => 5, // Dummy data
+        'thumbsUp' => 10, // Dummy data
+        'thumbsDown' => 3 // Dummy data
+    ];
+
+    return view('student.contentDetails', compact('content', 'categories', 'selectedCategoryId', 'keywordsString', 'chapters', 'contentDetails'));
+}
+
+    
+    public function getContentDetails($contentId)
+    {
+        $content = Content::with('chapters')->find($contentId);
+        
+        if (!$content) {
+            \Log::error("Content with ID $contentId not found");
+            return response()->json(['error' => 'Content not found'], 404);
+        }
+    
+        $chapters = $content->chapters->map(function($chapter) {
+            return [
+                'title' => $chapter->Title,
+                'lastModified' => $chapter->updated_at->diffForHumans(),
+                'comments' => 5, // Dummy data
+                'thumbsUp' => 10, // Dummy data
+                'thumbsDown' => 3 // Dummy data
+            ];
+        });
+    
+        $contentDetails = [
+            'title' => $content->Title,
+            'lastModified' => $content->updated_at->diffForHumans(),
+            'comments' => 5, // Dummy data
+            'thumbsUp' => 10, // Dummy data
+            'thumbsDown' => 3 // Dummy data
+        ];
+        \Log::info('Fetched content details:', ['content' => $contentDetails, 'chapters' => $chapters]);
+    
+        return response()->json([
+            'content' => $contentDetails,
+            'chapters' => $chapters
+        ]);
+    }
+     
+
+
+    public function saveContentDetails (Request $request, $contentId)
+    {
+        $content = Content::findOrFail($contentId);
+
+
+        $request->validate([
+            'cover_page' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:150',
+            'category' => 'required|exists:category_content,CategoryID',
+            'keywords' => 'required|string',
+            'is_chapter' => 'sometimes|boolean',
+        ]);
+
+        try {
+            // Manage file upload
+            if($request->hasFile('cover_page')) {
+                //delete the old thumbnail if it exists
+                if ($content->thumbnail && file_exists(public_path('cover_images/' . $content->thumbnail))) {
+                    unlink(public_path('cover_images/' . $content->thumbnail));
+                }
+
+                $coverImage = $request->file('cover_page');
+                $imageName = time().'.'.$coverImage->extension();
+                $coverImage->move(public_path('cover_images'), $imageName);
+                $content->thumbnail = $imageName;
+            }
+
+            // Convert keywords to JSON
+            $keywords = json_encode(array_map('trim', explode(',', $request->keywords)));
+
+            $content->Title = $request->title;
+            $content->CategoryID = $request->category;
+            $content->Description = $request->description;
+            $content->keywords = $keywords;
+
+            $content->save();
+
+
+            return redirect()->route('student.contentDetails', ['content' => $contentId])->with('success', 'Content details updated successfully.');
+        } catch (Exception $e) {
+            Log::error('Failed to update content: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to update content. Please try again.');
+        }
+    }
+        
 
     
 }

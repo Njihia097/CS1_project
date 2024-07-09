@@ -19,6 +19,9 @@ export default {
             zIndex: {
                 '1000': '1000',
             },
+            width: {
+                '128': '32rem',
+            },
         },
     },
 
