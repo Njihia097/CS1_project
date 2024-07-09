@@ -42,6 +42,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         Route::post('/register-editor', [Admin_EditorController::class, 'store'])->name('registerEditor');
 });
 
+
+
 // Editor routes
 Route::middleware(['auth', 'verified', 'role:editor'])
     ->prefix('editor')
