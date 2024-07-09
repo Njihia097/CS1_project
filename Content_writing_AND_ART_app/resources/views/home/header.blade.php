@@ -77,50 +77,46 @@
                         <li class="cart-icon">
                             <a href="#">
                                 <i class="icon_bag_alt"></i>
-                                <span>3</span>
+                                <span>{{ count(session('cart', [])) }}</span>
                             </a>
                             <div class="cart-hover">
                                 <div class="select-items">
                                     <table>
                                         <tbody>
+                                            @foreach(session('cart', []) as $id => $item)
                                             <tr>
-                                                <td class="si-pic"><img src="img/select-product-1.jpg" alt=""></td>
+                                                <td class="si-pic"><img src="{{ $item['image'] ?? 'default-image.jpg' }}" alt=""></td> <!-- Assuming you have an image field or a default image -->
                                                 <td class="si-text">
                                                     <div class="product-selected">
-                                                        <p>$60.00 x 1</p>
-                                                        <h6>Kabino Bedside Table</h6>
+                                                        <p>${{ $item['price'] }} x {{ $item['quantity'] }}</p>
+                                                        <h6>{{ $item['title'] }}</h6>
                                                     </div>
                                                 </td>
                                                 <td class="si-close">
-                                                    <i class="ti-close"></i>
+                                                    <i class="ti-close" data-id="{{ $id }}"></i> <!-- You can add JavaScript to handle removal -->
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td class="si-pic"><img src="img/select-product-2.jpg" alt=""></td>
-                                                <td class="si-text">
-                                                    <div class="product-selected">
-                                                        <p>$60.00 x 1</p>
-                                                        <h6>Kabino Bedside Table</h6>
-                                                    </div>
-                                                </td>
-                                                <td class="si-close">
-                                                    <i class="ti-close"></i>
-                                                </td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="select-total">
                                     <span>total:</span>
-                                    <h5>$120.00</h5>
+                                    <h5>${{ array_reduce(session('cart', []), function($carry, $item) {
+                                        return $carry + ($item['price'] * $item['quantity']);
+                                    }, 0) }}</h5>
                                 </div>
                                 <div class="select-button">
-                                    <a href="#" class="primary-btn view-card">VIEW CARD</a>
+                                    <a href="#" class="primary-btn view-card">VIEW CART</a>
                                     <a href="#" class="primary-btn checkout-btn">CHECK OUT</a>
                                 </div>
                             </div>
                         </li>
-                        <li class="cart-price">$150.00</li>
+                        <li class="cart-price">
+                            ${{ array_reduce(session('cart', []), function($carry, $item) {
+                                return $carry + ($item['price'] * $item['quantity']);
+                            }, 0) }}
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -167,7 +163,7 @@
                             <li><a href="./check-out.html">Checkout</a></li>
                             <li><a href="./faq.html">Faq</a></li>
                             <li><a href="./register.html">Register</a></li>
-                            <li><a href="./login.html">Login</a></li>
+                            <li><a href="{{url('')}}">Login</a></li>
                         </ul>
                     </li>
                 </ul>
