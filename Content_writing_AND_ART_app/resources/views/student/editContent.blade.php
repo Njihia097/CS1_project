@@ -70,6 +70,8 @@
     <!-- Editor container -->
     <div class="flex flex-col items-center px-6 mb-0">
         <input type="hidden" name="content_delta" id="content-delta">
+        <!-- Hidden input for chapter_id -->
+        <input type="hidden" id="chapter-id" name="chapter_id" value="{{ $chapterId ?? '' }}">
         <input type="hidden" name="action" id="action" value="">
         <div id="editor-container" class="w-full mb-6"></div>
     </div>
