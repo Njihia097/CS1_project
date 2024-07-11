@@ -1,14 +1,20 @@
 @php
     $dashboardRoute = '#';
-    if (auth()->user()->hasRole('admin')) {
-    $dashboardRoute = route('admin.adminHome');
-    }
-    elseif (auth()->user()->hasRole('editor')) {
-    $dashboardRoute = route('editor.editorHome');
-    } elseif (auth()->user()->hasRole('student')) {
-    $dashboardRoute = route('student.studentHome');
-    }
 @endphp
+
+@auth
+    @php
+        $user = auth()->user();
+        if ($user->hasRole('admin')) {
+            $dashboardRoute = route('admin.adminHome');
+        } elseif ($user->hasRole('editor')) {
+            $dashboardRoute = route('editor.editorHome');
+        } elseif ($user->hasRole('student')) {
+            $dashboardRoute = route('student.studentHome');
+        }
+    @endphp
+@endauth
+
 
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100 top-0 z-[1000] w-full fixed">
     <!-- Primary Navigation Menu -->
@@ -47,7 +53,7 @@
                     </x-nav-link>
                 </div> -->
             </div>
-
+         @auth
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Create Content Dropdown -->
                  @auth
@@ -200,15 +206,30 @@
                     </svg>
                 </button>
             </div>
+            @endauth
+            @guest
+                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                    <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 border border-gray-400 rounded-md shadow-sm hover:bg-gray-400 ">
+                        {{ __('Log in') }}
+                    </a>
+                    <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 ml-4 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700">
+                        {{ __('Sign up') }}
+                    </a>
+                </div>
+            @endguest
+
         </div>
     </div>
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+        @auth
         <div class="pt-2 pb-3 space-y-1">
+            @auth
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @endauth
         </div>
 
         <!-- Responsive Create Content Dropdown -->
@@ -296,5 +317,16 @@
                 @endif
             </div>
         </div>
+        @else
+                <!-- Guest Links -->
+            <div class="pt-2 pb-3 space-y-1">
+                <x-responsive-nav-link href="{{ route('login') }}">
+                    {{ __('Login') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('register') }}">
+                    {{ __('Register') }}
+                </x-responsive-nav-link>
+            </div>
+        @endauth
     </div>
 </nav>
