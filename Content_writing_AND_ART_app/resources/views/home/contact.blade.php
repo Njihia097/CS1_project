@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
 
+<x-app-layout>
 <body>
     <!-- Page Preloder -->
     <div id="preloder">
@@ -82,7 +83,7 @@
                             </form>
                         </div>
                     </div>
-                    <div class="col-lg-3 text-right col-md-3">
+                    <div class="text-right col-lg-3 col-md-3">
                         <ul class="nav-right">
                             <li class="heart-icon"><a href="#">
                                     <i class="icon_heart_alt"></i>
@@ -408,5 +409,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/main.js"></script>
 </body>
+</x-app-layout>
 
 </html>

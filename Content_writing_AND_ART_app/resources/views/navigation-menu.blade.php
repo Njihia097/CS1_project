@@ -16,7 +16,7 @@
         <div class="flex justify-between h-16">
             <div class="flex items-center">
                 <!-- Logo -->
-                <a href="{{ route('welcome') }}" class="flex items-center">
+                <a href="{{ url('/') }}" class="flex items-center">
                     <!-- SVG Logo with Application Name -->
                     <svg class="h-10 mr-2 sm:h-10 md:h-10 lg:h-12 xl:h-12" viewBox="0 0 512 512">
                         <!-- Background Rectangle -->
