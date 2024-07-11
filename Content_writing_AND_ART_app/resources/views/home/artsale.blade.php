@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="{{ asset('home/css/style.css') }}" type="text/css">
 </head>
 
+<x-app-layout>
 <body>
     <!-- Page Preloder -->
     <div id="preloder">
@@ -54,7 +55,7 @@
     <section class="product-shop spad">
         <div class="container">
             <div class="row">
-                <div class="col-lg-11 order-1 order-lg-2">
+                <div class="order-1 col-lg-11 order-lg-2">
                     <div class="product-show-option">
                         <div class="row">
                             <div class="col-lg-7 col-md-7">
@@ -67,36 +68,36 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-5 col-md-5 text-right">
+                            <div class="text-right col-lg-5 col-md-5">
                                 <p>Show 01- 09 Of 36 Product</p>
                             </div>
                         </div>
                     </div>
                     <div class="row"> <!-- Added this row div -->
-                        @foreach($artist as $artist)
+                        @foreach($artist as $artists)
                             <div class="col-lg-4 col-sm-6"> <!-- Ensure this div is within the row div -->
                                 <div class="product-item">
                                     <div class="pi-pic">
                                         
-                                        <img src="{{ asset('storage/' . $artist->image_path)}}" alt="">
+                                        <img src="{{ asset('storage/' . $artists->image_path)}}" alt="">
                                         <div class="icon">
                                             <i class="icon_heart_alt"></i>
                                         </div>
                                         <ul>
-                                            <li class="w-icon active"><a href="{{url('add_cart',$artist->id)}}"><i class="icon_bag_alt"></i></a></li>
+                                            <li class="w-icon active"><a href="{{url('add_cart',$artists->id)}}"><i class="icon_bag_alt"></i></a></li>
                                             <li class="quick-view"><a href="#">+ Quick View</a></li>
                                             <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
                                         </ul>
                                         
                                     </div>
                                     <div class="pi-text">
-                                        <div class="catagory-name">{{ $artist->medium }}</div>
-                                        <div class="catagory-name">{{ $artist->width }} by {{ $artist->height }}</div>
+                                        <div class="catagory-name">{{ $artists->medium }}</div>
+                                        <div class="catagory-name">{{ $artists->width }} by {{ $artists->height }}</div>
                                         <a href="#">
-                                            <h5>{{ $artist->title }}</h5>
+                                            <h5>{{ $artists->title }}</h5>
                                         </a>
                                         <div class="product-price">
-                                            {{ $artist->price }}
+                                            {{ $artists->price }}
                                             <span>$35.00</span>
                                         </div>
                                     </div>
@@ -201,5 +202,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="{{ asset('home/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('home/js/main.js') }}"></script>
 </body>
+</x-app-layout>
 
 </html>

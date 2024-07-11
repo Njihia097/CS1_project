@@ -22,6 +22,8 @@ const quill = new Quill('#editor-container', {
     placeholder: 'Start writing here...',
 });
 
+const uniqueID = chapterID ? `${contentID}-${chapterID}` : contentID;
+
 const contentType = document.getElementById('content_type').value;
 const chapterTitleContainer = document.getElementById('chapter-title-container');
 const storyTitleContainer = document.getElementById('story-title-container');
@@ -59,14 +61,14 @@ function showSaved() {
 
 // Load content from local storage if available
 window.onload = function () {
-    if (localStorage.getItem(`content_delta_${contentID}`)) {
-        quill.setContents(JSON.parse(localStorage.getItem(`content_delta_${contentID}`)));
+    if (localStorage.getItem(`content_delta_${uniqueID}`)) {
+        quill.setContents(JSON.parse(localStorage.getItem(`content_delta_${uniqueID}`)));
     }
-    if (localStorage.getItem(`title_${contentID}`)) {
-        document.getElementById('title').value = localStorage.getItem(`title_${contentID}`);
+    if (localStorage.getItem(`title_${uniqueID}`)) {
+        document.getElementById('title').value = localStorage.getItem(`title_${uniqueID}`);
     }
-    if (localStorage.getItem(`chapter_title_${contentID}`)) {
-        document.getElementById('chapter_title').value = localStorage.getItem(`chapter_title_${contentID}`);
+    if (localStorage.getItem(`chapter_title_${uniqueID}`)) {
+        document.getElementById('chapter_title').value = localStorage.getItem(`chapter_title_${uniqueID}`);
     }
     showSaved();
 };
@@ -74,7 +76,7 @@ window.onload = function () {
 // Save content to local storage on change
 quill.on('text-change', function() {
     if (quill.getText().trim() !== '') {
-        localStorage.setItem(`content_delta_${contentID}`, JSON.stringify(quill.getContents()));
+        localStorage.setItem(`content_delta_${uniqueID}`, JSON.stringify(quill.getContents()));
         debounceSave();
         isContentChanged = true;
     }
@@ -82,7 +84,7 @@ quill.on('text-change', function() {
 
 document.getElementById('title').addEventListener('input', function() {
     if (document.getElementById('title').value.trim() !== '') {
-        localStorage.setItem(`title_${contentID}`, document.getElementById('title').value);
+        localStorage.setItem(`title_${uniqueID}`, document.getElementById('title').value);
         debounceSave();
         isContentChanged = true;
     }
@@ -90,7 +92,7 @@ document.getElementById('title').addEventListener('input', function() {
 
 document.getElementById('chapter_title').addEventListener('input', function() {
     if (document.getElementById('chapter_title').value.trim() !== '') {
-        localStorage.setItem(`chapter_title_${contentID}`, document.getElementById('chapter_title').value);
+        localStorage.setItem(`chapter_title_${uniqueID}`, document.getElementById('chapter_title').value);
         debounceSave();
         isContentChanged = true;
     }

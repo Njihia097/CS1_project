@@ -1,48 +1,5 @@
 <header class="header-section">
-    <div class="header-top">
-        <div class="container">
-            <div class="ht-left">
-                <div class="mail-service">
-                    <i class=" fa fa-envelope"></i>
-                    creativehub@gmail.com
-                </div>
-                <div class="phone-service">
-                    <i class=" fa fa-phone"></i>
-                    +254 712 345 678
-                </div>
-            </div>
-            <div class="ht-right">
-                @if (Route::has('login'))
-                @auth
-                <li class="login-panel">
-                <x-app-layout>
 
-                </x-app-layout>
-            </li>
-
-                @else
-                <a href="{{ route('login') }}" class="login-panel"><i class="fa fa-user"></i>Login</a>
-                
-                <a href="{{ route('register') }}" class="login-panel"><i class="fa fa-user"></i>Register</a>
-                @endauth
-                @endif
-                <div class="lan-selector">
-                    <select class="language_drop" name="countries" id="countries" style="width:300px;">
-                        <option value='yt' data-image="img/flag-1.jpg" data-imagecss="flag yt"
-                            data-title="English">English</option>
-                        <option value='yu' data-image="img/flag-2.jpg" data-imagecss="flag yu"
-                            data-title="Bangladesh">German </option>
-                    </select>
-                </div>
-                <div class="top-social">
-                    <a href="https://bit.ly/sai4ull"><i class="ti-facebook"></i></a>
-                    <a href="https://twitter.com/i/flow/signup"><i class="ti-twitter-alt"></i></a>
-                    <a href="#"><i class="ti-linkedin"></i></a>
-                    <a href="https://www.pinterest.com/login/"><i class="ti-pinterest"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="container">
         <div class="inner-header">
             <div class="row">
@@ -66,7 +23,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 text-right col-md-3">
+                <div class="text-right col-lg-3 col-md-3">
                     <ul class="nav-right">
                         <li class="heart-icon">
                             <a href="#">

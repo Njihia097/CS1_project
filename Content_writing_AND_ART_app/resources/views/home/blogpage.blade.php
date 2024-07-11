@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="home/css/style.css" type="text/css">
 </head>
 
+<x-app-layout>
 <body>
     <!-- Page Preloder -->
     <div id="preloder">
@@ -82,7 +83,7 @@
                             </form>
                         </div>
                     </div>
-                    <div class="col-lg-3 text-right col-md-3">
+                    <div class="text-right col-lg-3 col-md-3">
                         <ul class="nav-right">
                             <li class="heart-icon"><a href="#">
                                     <i class="icon_heart_alt"></i>
@@ -208,7 +209,7 @@
     <section class="blog-section spad">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-8 order-2 order-lg-1">
+                <div class="order-2 col-lg-3 col-md-6 col-sm-8 order-lg-1">
                     <div class="blog-sidebar">
                         <div class="search-form">
                             <h4>Search</h4>
@@ -281,7 +282,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-9 order-1 order-lg-2">
+                <div class="order-1 col-lg-9 order-lg-2">
                     <div class="row">
                         <div class="col-lg-6 col-sm-6">
                             <div class="blog-item">
@@ -497,5 +498,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     <script src="home/js/owl.carousel.min.js"></script>
     <script src="home/js/main.js"></script>
 </body>
+</x-app-layout>
 
 </html>

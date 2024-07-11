@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Content</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
@@ -139,13 +140,15 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function() {
     const contentId = '{{ $content->ContentID }}';
     const isChapter = '{{ $content->IsChapter }}';
     const tableOfContentsContainer = document.getElementById('tableOfContents');
     const newPartButton = document.getElementById('newPartButton');
 
     fetchContentDetails(contentId, isChapter);
+
+    newPartButton.addEventListener('click', createNewPart);
 
     async function fetchContentDetails(contentId, isChapter) {
         try {
@@ -167,13 +170,13 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     function displayStandaloneContent(content) {
-        const listItem = createListItem(content.title, content.lastModified, 5, 10, 3, contentId, false, null); // Dummy data
+        const listItem = createListItem(content.title, content.lastModified, 5, 10, 3, contentId, false, null);
         tableOfContentsContainer.appendChild(listItem);
     }
 
     function displayChapters(chapters) {
         chapters.forEach(chapter => {
-            const listItem = createListItem(chapter.title, chapter.lastModified, 5, 10, 3, contentId, true, chapter.ChapterID); // Make sure ChapterID is correct
+            const listItem = createListItem(chapter.title, chapter.lastModified, 5, 10, 3, contentId, true, chapter.ChapterID);
             tableOfContentsContainer.appendChild(listItem);
         });
     }
@@ -206,21 +209,37 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     window.continueWriting = function(contentId, isChapter, chapterId) {
-        console.log("Content ID:", contentId);
-        console.log("Is Chapter:", isChapter);
-        console.log("Chapter ID:", chapterId);
-
         let editUrl = `/student/content/${contentId}/edit`;
         if (isChapter) {
             editUrl += `?chapterId=${chapterId}`;
         }
-        console.log("Edit URL:", editUrl);
         window.location.href = editUrl;
     }
+
+    async function createNewPart() {
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const response = await fetch(`/student/content/${contentId}/new-chapter`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const newChapter = await response.json();
+            const listItem = createListItem(newChapter.title, newChapter.lastModified, 5, 10, 3, contentId, true, newChapter.chapterId);
+            tableOfContentsContainer.appendChild(listItem);
+            continueWriting(contentId, true, newChapter.chapterId);
+        } catch (error) {
+            console.error('Error creating new chapter:', error);
+        }
+    }
+
 });
 </script>
-
-
 
     <script>
        

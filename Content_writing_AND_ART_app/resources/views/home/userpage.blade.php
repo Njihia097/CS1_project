@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="home/css/style.css" type="text/css">
 </head>
 
+<x-app-layout>
 <body>
     <!-- Page Preloder -->
     <div id="preloder">
@@ -82,5 +83,6 @@
     <script src="home/js/owl.carousel.min.js"></script>
     <script src="home/js/main.js"></script>
 </body>
+</x-app-layout>
 
 </html>

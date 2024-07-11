@@ -50,6 +50,7 @@
         }
     </style>
 </head>
+<x-app-layout>
 
 <body>
     <!-- Other content of the user page -->
@@ -71,5 +72,6 @@
 
     <!-- Other content of the user page -->
 </body>
+</x-app-layout>
 
 </html>

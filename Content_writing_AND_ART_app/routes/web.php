@@ -12,15 +12,16 @@ use App\Http\Controllers\Student\HomeController;
 use App\Http\Controllers\Student\ArtistController;
 use App\Http\Controllers\Student\CartController;
 
-// Root route
-Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Authentication and role-based routes
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::get('/', function () {
+   
+    return view('home.userpage');
 });
+
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
 
 Route::get('/roles', [LoginController::class, 'authenticated']);
 
@@ -71,6 +72,8 @@ Route::middleware(['auth', 'verified', 'role:student'])
         Route::get('/contentDetails/{content}', [ContentController::class, 'showContentDetails'])->name('contentDetails');
         Route::post('/contentDetails/{content}', [ContentController::class, 'saveContentDetails'])->name('saveContentDetails');
         Route::get('/api/contentDetails/{contentId}', [ContentController::class, 'getContentDetails']);
+        Route::post('/content/{ContentID}/new-chapter', [ContentController::class, 'createNewChapter'])->name('createNewChapter');
+    
     });
 
 // Additional routes

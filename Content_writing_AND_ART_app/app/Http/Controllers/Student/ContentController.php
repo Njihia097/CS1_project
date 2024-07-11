@@ -82,7 +82,7 @@ class ContentController extends Controller
         }
 
     }
-    
+
     public function edit($id, Request $request)
     {
         \Log::info('Edit Method Called');
@@ -117,8 +117,9 @@ class ContentController extends Controller
             return redirect()->back()->with('error', 'Failed to retrieve content');
         }
     
-        return view('student.editContent', compact('content', 'chapterTitle', 'chapterContent'));
+        return view('student.editContent', compact('content', 'chapterTitle', 'chapterContent', 'chapterId'));
     }
+    
     
     
     
@@ -183,6 +184,39 @@ class ContentController extends Controller
 
         }
     }
+
+    public function createNewChapter($contentId, Request $request)
+    {
+        \Log::info('Create New Chapter Method Called');
+        \Log::info('Content ID: ' . $contentId);
+        
+        $content = Content::findOrFail($contentId);
+        
+        $nextChapterNumber = $this->getNextChapterNumber($content->ContentID);
+        $chapterTitle = 'Part ' . $this->numberToWord($nextChapterNumber);
+    
+        $chapter = Chapter::create([
+            'ContentID' => $content->ContentID,
+            'ChapterNumber' => $nextChapterNumber,
+            'Title' => $chapterTitle,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+    
+        $newChapterDetails = [
+            'title' => $chapter->Title,
+            'lastModified' => $chapter->updated_at->diffForHumans(),
+            'chapterId' => $chapter->ChapterID,
+            'comments' => 0,
+            'thumbsUp' => 0,
+            'thumbsDown' => 0
+        ];
+        
+        \Log::info('New Chapter Created:', $newChapterDetails);
+        
+        return response()->json($newChapterDetails);
+    }
+    
         
     private function getNextChapterNumber($contentID)
     {

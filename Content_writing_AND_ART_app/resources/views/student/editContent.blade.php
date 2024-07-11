@@ -52,30 +52,29 @@
                 </div>
             @endif
             <div class="pt-16">
-                    <!-- Title input field moved here -->
-                
-                <input type="hidden" id="content_type" value="{{ $content->IsChapter ? 'chapter' : 'story' }}">
+    <!-- Title input field moved here -->
+    <input type="hidden" id="content_type" value="{{ $content->IsChapter ? 'chapter' : 'story' }}">
 
-                <div class="flex flex-col items-center justify-center w-full px-6 mt-6 mb-2" id="chapter-title-container">
-                    <input type="text" name="chapter_title" id="chapter_title" 
-                    value="{{ $chapterTitle }}" 
-                    class="flex items-center justify-center w-2/4 mb-4 text-3xl font-semibold text-gray-700 border-none focus:outline-none" style="background: transparent;">
-                </div>
+    <div class="flex flex-col items-center justify-center w-full px-6 mt-6 mb-2" id="chapter-title-container">
+        <input type="text" name="chapter_title" id="chapter_title" 
+        value="{{ $chapterTitle }}" 
+        class="flex items-center justify-center w-2/4 mb-4 text-3xl font-semibold text-gray-700 border-none focus:outline-none" style="background: transparent;">
+    </div>
 
-                <div class="flex flex-col items-center justify-center w-full px-6 mt-6 mb-2" id="story-title-container">
-                    <input type="text" name="title" id="title" 
-                    value="{{ $content->Title }}" 
-                    class="flex items-center justify-center w-2/4 mb-4 text-3xl font-semibold text-gray-700 border-none focus:outline-none" style="background: transparent;">
-                </div>
-              
+    <div class="flex flex-col items-center justify-center w-full px-6 mt-6 mb-2" id="story-title-container">
+        <input type="text" name="title" id="title" 
+        value="{{ $content->Title }}" 
+        class="flex items-center justify-center w-2/4 mb-4 text-3xl font-semibold text-gray-700 border-none focus:outline-none" style="background: transparent;">
+    </div>
 
-                <!-- Editor container -->
-                <div class="flex flex-col items-center px-6 mb-0">
-                    <input type="hidden" name="content_delta" id="content-delta">
-                    <input type="hidden" name="action" id="action" value="">
-                    <div id="editor-container" class="w-full mb-6"></div>
-                </div>
-            </div>
+    <!-- Editor container -->
+    <div class="flex flex-col items-center px-6 mb-0">
+        <input type="hidden" name="content_delta" id="content-delta">
+        <input type="hidden" name="action" id="action" value="">
+        <div id="editor-container" class="w-full mb-6"></div>
+    </div>
+</div>
+
         </form>
     </x-app-layout>
 
@@ -91,6 +90,7 @@
     <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
     <script>
         const contentID = '{{ $content->ContentID }}';
+        const chapterID = '{{ $chapterId ?? '' }}';
     </script>
   
     <script>
