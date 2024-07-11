@@ -1,7 +1,9 @@
-@extends('layouts.editor')
+<x-admin-layout>
 
 @section('content')
 <div>
-    <h4>Editor's content goes here!</h4>
+    @include('admin/partials.body')
 </div>
 @endsection
+
+</x-admin-layout>

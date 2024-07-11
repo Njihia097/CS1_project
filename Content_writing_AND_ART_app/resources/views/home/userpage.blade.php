@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="home/css/jquery-ui.min.css" type="text/css">
     <link rel="stylesheet" href="home/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="home/css/style.css" type="text/css">
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <x-app-layout>

@@ -25,7 +25,7 @@
                     </label>
                     <label class="flex items-center mt-2">
                         <input type="checkbox" name="types[]" value="Saved" class="w-4 h-4 text-gray-600 form-checkbox">
-                        <span class="ml-2 text-gray-700">Saved</span>
+                        <span class="ml-2 text-gray-700">Draft</span>
                     </label>
                 </div>
 
