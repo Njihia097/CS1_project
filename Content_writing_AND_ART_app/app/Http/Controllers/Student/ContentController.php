@@ -60,19 +60,23 @@ class ContentController extends Controller
             'keywords' => $keywords,
         ]);
 
+        $redirectUrl = route('student.editContent', $content->ContentID);
+
         // If the content is a chapter, create an entry in the chapter table
         if ($content->IsChapter) {
             $nextChapterNumber = $this->getNextChapterNumber($content->ContentID);
             $chapterTitle = 'Part ' . $this->numberToWord($nextChapterNumber);
-            Chapter::create([
+            $chapter = Chapter::create([
                 'ContentID' => $content->ContentID,
                 'ChapterNumber' => $nextChapterNumber,
                 'Title' => $chapterTitle,  
             ]);
+            $redirectUrl .= '?chapterId=' . $chapter->ChapterID;
         }
 
         // Redirect to text formatting form
-        return redirect()->route('student.editContent', $content->ContentID)->with('success', 'Content created successfully.');
+        // Redirect to text formatting form
+        return redirect($redirectUrl)->with('success', 'Content set up successfully.');
        
 
 
@@ -92,10 +96,10 @@ class ContentController extends Controller
         $content = Content::findOrFail($id);
         $chapterTitle = null;
         $chapterContent = null;
+        $chapterId = $request->input('chapterId');
     
         try {
-            if ($content->IsChapter || $request->has('chapterId')) {
-                $chapterId = $request->input('chapterId');
+            if ($content->IsChapter || $chapterId) {
                 $chapter = Chapter::where('ChapterID', $chapterId)->first();
                 if ($chapter) {
                     $chapterTitle = $chapter->Title;
@@ -124,6 +128,7 @@ class ContentController extends Controller
     
     
     
+    
 
     public function update(Request $request, $id)
     {
@@ -132,6 +137,7 @@ class ContentController extends Controller
             'content_delta' => 'required|string',
             'action' => 'required|string|in:save,publish',
             'chapter_title' => 'nullable|string|max:255',
+            'chapter_id' => 'nullable|integer|exists:chapter,ChapterID' // Update table name here
         ]);
     
         try {
@@ -153,11 +159,9 @@ class ContentController extends Controller
             Storage::disk('local')->put($textFilePath, $pureText);
             Storage::disk('local')->put($mediaFilePath, $mediaContent);
     
-
-    
             if ($content->IsChapter) {
-                // Update the existing chapter
-                $chapter = Chapter::where('ContentID', $content->ContentID)->first();
+                // Update the existing chapter based on ChapterID
+                $chapter = Chapter::where('ChapterID', $request->chapter_id)->first();
                 if ($chapter) {
                     $chapter->Title = $request->chapter_title ?: 'Part ' . $this->numberToWord($chapter->ChapterNumber);
                     $chapter->Body = $textFilePath;
@@ -165,7 +169,7 @@ class ContentController extends Controller
                     $chapter->save();
                 }
             } else {
-                  // Save file paths in the database
+                // Save file paths in the database
                 $content->ContentBody = $textFilePath;
                 $content->content_delta = $mediaFilePath;
                 $content->Status = $request->action === 'save' ? 'draft' : 'pending';
@@ -175,16 +179,19 @@ class ContentController extends Controller
                 $content->save();
             }
     
-            return redirect()->route('student.editContent', $content->ContentID)->with('success', 'Content saved successfully.');
-
+            $redirectUrl = route('student.editContent', ['id' => $content->ContentID]);
+            if ($request->has('chapter_id')) {
+                $redirectUrl .= '?chapterId=' . $request->chapter_id;
+            }
+    
+            return redirect($redirectUrl)->with('success', 'Content saved successfully.');
         } catch (\Throwable $th) {
-
             Log::error('Failed to save Content: ' . $th->getMessage());
             return redirect()->back()->with('error', 'Failed to Save content');
-
         }
     }
-
+    
+    
     public function createNewChapter($contentId, Request $request)
     {
         \Log::info('Create New Chapter Method Called');

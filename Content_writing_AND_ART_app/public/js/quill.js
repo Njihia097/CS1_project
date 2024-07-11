@@ -108,6 +108,10 @@ function setAction(action) {
 function saveContent() {
     const contentDelta = JSON.stringify(quill.getContents());
     document.getElementById('content-delta').value = contentDelta;
+
+    // Add chapter_id to the form
+    document.getElementById('chapter-id').value = chapterID;
+
     showLoader();
     setTimeout(() => {
         showSaved();
@@ -124,7 +128,6 @@ function debounce(func, wait) {
     };
 }
 
-
 // Debounced save function
 const debounceSave = debounce(() => {
     if (document.getElementById('title').value.trim() !== '' || quill.getText().trim() !== '') {
@@ -136,6 +139,7 @@ const debounceSave = debounce(() => {
 }, 1000);
 
 setInterval(debounceSave, 30000); // Auto-save content every 30 seconds
+
 
 
 
