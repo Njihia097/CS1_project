@@ -223,7 +223,40 @@ class ContentController extends Controller
         
         return response()->json($newChapterDetails);
     }
+
+    public function destroy($id)
+    {
+        Log::info('Destroy Method Called');
+        Log::info('Content ID: ' . $id);
+        try {
+            $content = Content::findOrFail($id);
     
+            if ($content->IsChapter) {
+                return response()->json(['error' => 'Cannot delete chapter-wise content via this method.'], 400);
+            }
+    
+            $content->delete();
+            return redirect()->route('student.home.content')->with('success', 'Content deleted successfully.');
+        } catch (Exception $e) {
+            Log::error('Failed to delete content: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to delete content. Please try again.');
+        }
+    }
+    
+    public function destroyChapter($contentId, $chapterId)
+    {
+        Log::info('DestroyChapter Method Called');
+        Log::info('Content ID: ' . $chapterId);
+        try {
+            $chapter = Chapter::where('ContentID', $contentId)->where('ChapterID', $chapterId)->firstOrFail();
+            $chapter->delete();
+    
+            return response()->json(['success' => 'Chapter deleted successfully.']);
+        } catch (Exception $e) {
+            Log::error('Failed to delete chapter: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to delete chapter. Please try again.'], 500);
+        }
+    }
         
     private function getNextChapterNumber($contentID)
     {

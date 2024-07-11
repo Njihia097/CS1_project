@@ -73,6 +73,9 @@ Route::middleware(['auth', 'verified', 'role:student'])
         Route::post('/contentDetails/{content}', [ContentController::class, 'saveContentDetails'])->name('saveContentDetails');
         Route::get('/api/contentDetails/{contentId}', [ContentController::class, 'getContentDetails']);
         Route::post('/content/{ContentID}/new-chapter', [ContentController::class, 'createNewChapter'])->name('createNewChapter');
+        Route::delete('/content/{id}', [ContentController::class, 'destroy'])->name('content.destroy');
+        Route::delete('/content/{contentId}/chapter/{chapterId}', [ContentController::class, 'destroyChapter'])->name('content.destroyChapter');     
+
     
     });
 

@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <li><a class="dropdown-item" href="#" onclick="continueWriting('${contentId}', ${isChapter}, '${chapterId}')">Continue Writing</a></li>
-                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="deleteContent('${contentId}', ${isChapter}, '${chapterId}')">Delete</a></li>
                         <li><a class="dropdown-item" href="#">Move</a></li>
                     </ul>
                 </div>
@@ -237,8 +237,43 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error creating new chapter:', error);
         }
     }
+    
+
 
 });
+
+function deleteContent(contentId, isChapter, chapterId) {
+    if (confirm("Are you sure you want to delete this content?")) {
+        const url = isChapter ? `/student/content/${contentId}/chapter/${chapterId}` : `/student/content/${contentId}`;
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        console.log('Sending DELETE request to:', url); // Log the request URL
+
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json' // Ensure the content type is set
+            }
+        })
+        .then(response => {
+            console.log('Response status:', response.status); // Log the response status
+            if (response.ok) {
+                alert('Content deleted successfully.');
+                location.reload();
+            } else {
+                alert('Failed to delete content.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to delete content.');
+        });
+    }
+}
+
+
+
 </script>
 
     <script>
