@@ -28,8 +28,7 @@
         </div>
     </div>
     <div class="mt-6 text-gray-700">
-        <p>{{ $content->Description }}</p>
-        <p class="mt-4">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p class="px-4 mt-2">{{ $content->Description }}</p>
     </div>
     <div class="mt-6 text-center">
         <a href="{{ route('publicView.startReading', ['id' => $content->ContentID]) }}" class="px-6 py-3 text-white bg-blue-600 rounded-full hover:bg-blue-700">Start Reading</a>

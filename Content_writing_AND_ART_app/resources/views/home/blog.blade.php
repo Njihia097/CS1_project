@@ -12,25 +12,30 @@
 
             <div class="col-lg-4 col-md-6">
                 <div class="single-latest-blog">
-                    <img src="{{ asset('cover_images/' . $content->thumbnail) }}" alt="Content thumbnail">
+                    <img 
+                        src="{{ asset('cover_images/' . $content->thumbnail) }}" 
+                        alt="Content thumbnail" 
+                        class="object-cover w-full rounded-sm h-60"
+                    >
                     <div class="text-gray-800 latest-text hover:text-gray-600">
-                        <div class="tag-list">
-                            <div class="tag-item">
+                        <div class="flex space-x-4 tag-list">
+                            <div class="flex items-center space-x-2 tag-item">
                                 <i class="fa fa-calendar-o"></i>
-                                {{ \Carbon\Carbon::parse($content->PublicationDate)->format('M d, Y') }}
+                                <span>{{ \Carbon\Carbon::parse($content->PublicationDate)->format('M d, Y') }}</span>
                             </div>
-                            <div class="tag-item">
+                            <div class="flex items-center space-x-2 tag-item">
                                 <i class="fa fa-comment-o"></i>
-                                5
+                                <span>5</span>
                             </div>
                         </div>
                         <a href="{{ route('publicView.contentDescription', [$content->ContentID])}}">
-                            <h4>{{ $content->Title }}</h4>
+                            <h4 class="mt-2 text-lg font-semibold">{{ $content->Title }}</h4>
                         </a>
-                        <p>{{ Str::limit($content->Description, 100) }}</p>
+                        <p class="mt-1 text-sm">{{ Str::limit($content->Description, 100) }}</p>
                     </div>
                 </div>
             </div>
+
             
             @endforeach
 

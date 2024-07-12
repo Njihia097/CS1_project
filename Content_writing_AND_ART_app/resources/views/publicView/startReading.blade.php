@@ -3,7 +3,6 @@
     <div class="max-w-4xl p-6 mx-auto bg-white rounded-lg shadow-md">
         <div class="text-center">
             <h2 class="text-3xl font-bold">{{ $content->Title }}</h2>
-            <p class="mt-2 text-gray-500">{{ $content->Description }}</p>
         </div>
 
         @if ($content->IsChapter && isset($firstChapter))

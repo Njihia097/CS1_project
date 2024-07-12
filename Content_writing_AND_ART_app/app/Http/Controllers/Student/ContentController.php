@@ -27,7 +27,7 @@ class ContentController extends Controller
         $request->validate([
             'cover_page' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:150',
+            'description' => 'nullable|string|max:1000',
             'category' => 'required|exists:category_content,CategoryID',
             'keywords' => 'required|string',
             'is_chapter' => 'sometimes|boolean',
@@ -51,7 +51,7 @@ class ContentController extends Controller
             'thumbnail' => $imageName,
             'Description' => $request->description,
             'ContentBody' => null,
-            'IsChapter' => $request->has('is_chapter'),
+            'IsChapter' => $request->has('is_chapter') ? $request->input('is_chapter') : false,
             'IsPublished' => false,
             'PublicationDate' => null,
             'Status' => 'draft',
@@ -140,28 +140,22 @@ class ContentController extends Controller
             $content = Content::findOrFail($id);
             $content->Title = $request->title;
     
-            // Parse the JSON content delta
-            $contentDelta = json_decode($request->content_delta, true);
-    
-            // Extract pure text and media/embedded content
-            $pureText = $this->extractPureText($contentDelta);
-            $mediaContent = json_encode($this->extractMediaContent($contentDelta));
-    
-            // Generate file paths
-            $textFilePath = 'content/text/' . Str::uuid() . '.txt';
-            $mediaFilePath = 'content/media/' . Str::uuid() . '.json';
-    
-            // Store files
-            Storage::disk('local')->put($textFilePath, $pureText);
-            Storage::disk('local')->put($mediaFilePath, $mediaContent);
+            // Directly save the content delta
+            $contentDelta = $request->content_delta;
+
+            // Generate file path for content delta
+            $deltaFilePath = 'content/delta/' . Str::uuid() . '.json';
+
+            // Store content delta as JSON
+            Storage::disk('local')->put($deltaFilePath, $contentDelta);
     
             if ($content->IsChapter) {
                 // Update the existing chapter based on ChapterID
                 $chapter = Chapter::where('ChapterID', $request->chapter_id)->first();
                 if ($chapter) {
                     $chapter->Title = $request->chapter_title ?: 'Part ' . $this->numberToWord($chapter->ChapterNumber);
-                    $chapter->Body = $textFilePath;
-                    $chapter->content_delta = $mediaFilePath;
+                    $chapter->Body = null;
+                    $chapter->content_delta = $deltaFilePath;
                     $chapter->IsPublished = $request->action == 'publish' ? true : false;
                     $chapter->publication_date = $request->action == 'publish' ? now() : null;
                     $chapter->Status = $request->action === 'save' ? 'draft' : ($request->action === 'unpublish' ? 'draft' : 'pending');
@@ -169,8 +163,8 @@ class ContentController extends Controller
                 }
             } else {
                 // Save file paths in the database
-                $content->ContentBody = $textFilePath;
-                $content->content_delta = $mediaFilePath;
+                $content->ContentBody = null;
+                $content->content_delta = $deltaFilePath;
                 $content->Status = $request->action === 'save' ? 'draft' : ($request->action === 'unpublish' ? 'draft' : 'pending');
                 $content->IsPublished = $request->action === 'publish' ? true : false;
                 $content->PublicationDate = $request->action === 'publish' ? now() : null;
@@ -188,6 +182,10 @@ class ContentController extends Controller
             Log::error('Failed to save Content: ' . $th->getMessage());
             return redirect()->back()->with('error', 'Failed to Save content');
         }
+    }
+    private function getContentDelta($filePath)
+    {
+        return json_decode(Storage::disk('local')->get($filePath), true);
     }
     
     
@@ -399,7 +397,7 @@ class ContentController extends Controller
         $request->validate([
             'cover_page' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:150',
+            'description' => 'nullable|string|max:1000',
             'category' => 'required|exists:category_content,CategoryID',
             'keywords' => 'required|string',
             'is_chapter' => 'sometimes|boolean',
@@ -473,10 +471,10 @@ class ContentController extends Controller
 
         if ($content->IsChapter && $content->chapters->isNotEmpty()) {
             $firstChapter = $content->chapters->first();
-            $combinedContentDelta = $this->combineContent($firstChapter->Body, $firstChapter->content_delta);
+            $combinedContentDelta = $this->getContentDelta($firstChapter->content_delta);
             return view('publicView.startReading', compact('content', 'firstChapter', 'combinedContentDelta'));
         } else {
-            $combinedContentDelta = $this->combineContent($content->ContentBody, $content->content_delta);
+            $combinedContentDelta = $this->getContentDelta($content->content_delta);
 
             return view('publicView.startReading', compact('content', 'combinedContentDelta'));
         }
@@ -485,7 +483,7 @@ class ContentController extends Controller
     public function viewChapter($id)
     {
         $chapter = Chapter::with('content')->where('IsPublished', 1)->findOrFail($id);
-        $combinedChapterContentDelta = $this->combineContent($chapter->Body, $chapter->content_delta);
+        $combinedChapterContentDelta = $this->getContentDelta($chapter->content_delta);
 
         return view('publicView.chapter', compact('chapter', 'combinedChapterContentDelta'));
     }
