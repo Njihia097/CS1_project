@@ -15,7 +15,7 @@
             <div class="flex items-center mb-2 space-x-4 md:mb-0">
                 <a href="#"><i class="text-3xl fa-solid fa-chevron-left"></i></a> 
                 <div class="flex-shrink-0">
-                    <img src="{{  $content->thumbnail ? asset('cover_images/' . $content->thumbnail) : 'img/banner-3.jpg' }}" alt="Content's coverpage" class="object-contain w-20 h-20 rounded-lg">
+                    <img src="{{  $content->thumbnail ? asset('cover_images/' . $content->thumbnail) : 'img/banner-3.jpg' }}" alt="Content's coverpage" class="object-cover w-full h-24 py-2 rounded-md">
                 </div>
                 <div class="relative">
                     <div class="flex items-center">
