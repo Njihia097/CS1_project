@@ -11,7 +11,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="single-latest-blog">
                     <img src="img/latest-1.jpg" alt="">
-                    <div class="latest-text">
+                    <div class="text-gray-800 latest-text hover:text-gray-600">
                         <div class="tag-list">
                             <div class="tag-item">
                                 <i class="fa fa-calendar-o"></i>
@@ -22,7 +22,7 @@
                                 5
                             </div>
                         </div>
-                        <a href="#">
+                        <a href="{{ route('publicView.contentView')}}">
                             <h4>The Best Street Style From London Fashion Week</h4>
                         </a>
                         <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>

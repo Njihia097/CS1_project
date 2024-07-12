@@ -434,6 +434,12 @@ class ContentController extends Controller
             return redirect()->back()->with('error', 'Failed to update content. Please try again.');
         }
     }
+
+    public function viewContent (Request $request) 
+    {
+        return view('publicView.contentView');
+
+    }
         
 
     
