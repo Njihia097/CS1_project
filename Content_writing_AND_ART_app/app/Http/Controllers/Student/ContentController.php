@@ -437,11 +437,84 @@ class ContentController extends Controller
         }
     }
 
-    public function viewContent (Request $request) 
+    public function viewContent(Request $request, $id)
     {
-        return view('publicView.contentView');
-
+        $content = Content::with(['author', 'chapters' => function($query) {
+            $query->where('IsPublished', 1);
+        }])->findOrFail($id);
+    
+        return view('publicView.contentDescription', compact('content'));
     }
+
+    private function combineContent($textFilePath, $mediaFilePath)
+    {
+        // Retrieve stored pure text and media content
+        $pureText = Storage::disk('local')->get($textFilePath);
+        $mediaContent = json_decode(Storage::disk('local')->get($mediaFilePath), true);
+
+        // Initialize the combined content with pure text
+        $combinedContent = [['insert' => $pureText]];
+
+        // Append media content
+        foreach ($mediaContent as $media) {
+            if (isset($media['insert'])) {
+                $combinedContent[] = $media;
+            }
+        }
+
+        return $combinedContent;
+    }
+
+    public function startReading($id)
+    {
+        $content = Content::with(['author', 'chapters' => function($query) {
+            $query->where('IsPublished', 1)->orderBy('ChapterNumber');
+        }])->findOrFail($id);
+
+        if ($content->IsChapter && $content->chapters->isNotEmpty()) {
+            $firstChapter = $content->chapters->first();
+            $combinedContentDelta = $this->combineContent($firstChapter->Body, $firstChapter->content_delta);
+            return view('publicView.startReading', compact('content', 'firstChapter', 'combinedContentDelta'));
+        } else {
+            $combinedContentDelta = $this->combineContent($content->ContentBody, $content->content_delta);
+
+            return view('publicView.startReading', compact('content', 'combinedContentDelta'));
+        }
+    }
+
+    public function viewChapter($id)
+    {
+        $chapter = Chapter::with('content')->where('IsPublished', 1)->findOrFail($id);
+        $combinedChapterContentDelta = $this->combineContent($chapter->Body, $chapter->content_delta);
+
+        return view('publicView.chapter', compact('chapter', 'combinedChapterContentDelta'));
+    }
+    private function renderCombinedContent($combinedContent)
+    {
+        $renderedContent = '';
+        foreach ($combinedContent as $op) {
+            if (isset($op['insert']) && is_string($op['insert'])) {
+                $renderedContent .= nl2br(e($op['insert']));
+            } elseif (isset($op['insert']) && !is_string($op['insert'])) {
+                $renderedContent .= $this->renderMediaContent($op['insert']);
+            }
+        }
+        return $renderedContent;
+    }
+
+    
+    private function renderMediaContent($media)
+    {
+        if (isset($media['image'])) {
+            return '<img src="' . asset('storage/' . $media['image']) . '" alt="Image">';
+        }
+        // Handle other media types as needed
+        return '';
+    }
+    
+    
+    
+    
         
 
     

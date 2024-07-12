@@ -21,7 +21,7 @@ class Content extends Model
         'Description',
         'ContentBody',
         'IsChapter',
-        'IsPubished',
+        'IsPublished',
         'PublicationDate',
         'Status',
         'SuspendedUntil',

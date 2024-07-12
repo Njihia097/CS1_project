@@ -13,10 +13,7 @@ use App\Http\Controllers\Student\ArtistController;
 use App\Http\Controllers\Student\CartController;
 
 
-Route::get('/', function () {
-   
-    return view('home.userpage');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home.userpage');
 
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
@@ -77,7 +74,10 @@ Route::middleware(['auth', 'verified', 'role:student'])
         Route::delete('/content/{contentId}/chapter/{chapterId}', [ContentController::class, 'destroyChapter'])->name('content.destroyChapter');         
     });
 
-    Route::get('public/content-view', [ContentController::class, 'viewContent'])->name('publicView.contentView');
+    Route::get('public/content-view/{id}', [ContentController::class, 'viewContent'])->name('publicView.contentDescription');
+    Route::get('public/start-reading/{id}', [ContentController::class, 'startReading'])->name('publicView.startReading');
+    Route::get('public/chapter/{id}', [ContentController::class, 'viewChapter'])->name('publicView.chapter');
+
 
 // Additional routes
 Route::get('/redirect', [HomeController::class, 'redirect']);
