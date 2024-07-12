@@ -61,10 +61,10 @@
 @foreach ($contents as $content)
 <div class="grid grid-cols-1 gap-2 md:grid-cols-2 sm:flex sm:flex-col">
     <div class="flex flex-col items-center p-2 mb-4 bg-gray-200 border border-gray-400 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-200">
-        <img class="object-cover w-full rounded-t-lg h-96 md:h-44 md:w-48 md:rounded-none md:rounded-s-lg" src="{{ asset('cover_images/' . $content->thumbnail) }}" alt="{{ $content->Title }}">
+        <img class="object-cover w-full h-48 rounded-t-lg md:h-44 md:w-48 md:rounded-none md:rounded-l-lg" src="{{ asset('cover_images/' . $content->thumbnail) }}" alt="{{ $content->Title }}">
         <div class="flex flex-col justify-between p-4 leading-normal">
             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">{{ $content->Title }}</h5>
-            <p class="mb-3 font-normal text-gray-900">{{ $content->Description }}</p>
+            <p class="mb-3 font-normal text-gray-900">{{ Str::limit($content->Description, 100)}}</p>
             <div class="flex items-center space-x-4">
                 <div class="flex items-center">
                     <i class="text-gray-900 fa-regular fa-comment"></i>

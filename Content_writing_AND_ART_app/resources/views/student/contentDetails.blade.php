@@ -43,7 +43,7 @@
                 <div class="row">
                     <div class="mb-4 col-12 col-md-3">
                         <div class="card">
-                            <img src="{{ $content->thumbnail ? asset('cover_images/' . $content->thumbnail) : 'img/banner-3.jpg' }}" class="card-img-top" alt="Cover Image" id="coverImage">
+                            <img src="{{ $content->thumbnail ? asset('cover_images/' . $content->thumbnail) : 'img/banner-3.jpg' }}" class="object-cover w-full h-48 rounded-sm card-img-top" alt="Cover Image" id="coverImage">
                             <div class="text-center card-body">
                                 <button type="button" class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 disabled:opacity-50" 
                                 onclick="document.getElementById('coverImageInput').click()">Change Cover</button>
