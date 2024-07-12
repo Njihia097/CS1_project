@@ -74,10 +74,10 @@ Route::middleware(['auth', 'verified', 'role:student'])
         Route::get('/api/contentDetails/{contentId}', [ContentController::class, 'getContentDetails']);
         Route::post('/content/{ContentID}/new-chapter', [ContentController::class, 'createNewChapter'])->name('createNewChapter');
         Route::delete('/content/{id}', [ContentController::class, 'destroy'])->name('content.destroy');
-        Route::delete('/content/{contentId}/chapter/{chapterId}', [ContentController::class, 'destroyChapter'])->name('content.destroyChapter');     
-
-    
+        Route::delete('/content/{contentId}/chapter/{chapterId}', [ContentController::class, 'destroyChapter'])->name('content.destroyChapter');         
     });
+
+    Route::get('public/content-view', [ContentController::class, 'viewContent'])->name('publicView.contentView');
 
 // Additional routes
 Route::get('/redirect', [HomeController::class, 'redirect']);
