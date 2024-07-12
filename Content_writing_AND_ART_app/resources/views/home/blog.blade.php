@@ -8,27 +8,32 @@
             </div>
         </div>
         <div class="row">
+            @foreach ($contents as $content)
+
             <div class="col-lg-4 col-md-6">
                 <div class="single-latest-blog">
-                    <img src="img/latest-1.jpg" alt="">
+                    <img src="{{ asset('cover_images/' . $content->thumbnail) }}" alt="Content thumbnail">
                     <div class="text-gray-800 latest-text hover:text-gray-600">
                         <div class="tag-list">
                             <div class="tag-item">
                                 <i class="fa fa-calendar-o"></i>
-                                May 4,2019
+                                {{ \Carbon\Carbon::parse($content->PublicationDate)->format('M d, Y') }}
                             </div>
                             <div class="tag-item">
                                 <i class="fa fa-comment-o"></i>
                                 5
                             </div>
                         </div>
-                        <a href="{{ route('publicView.contentView')}}">
-                            <h4>The Best Street Style From London Fashion Week</h4>
+                        <a href="{{ route('publicView.contentDescription', [$content->ContentID])}}">
+                            <h4>{{ $content->Title }}</h4>
                         </a>
-                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
+                        <p>{{ Str::limit($content->Description, 100) }}</p>
                     </div>
                 </div>
             </div>
+            
+            @endforeach
+
             <div class="col-lg-4 col-md-6">
                 <div class="single-latest-blog">
                     <img src="img/latest-2.jpg" alt="">

@@ -7,12 +7,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Artist;
 use App\Models\User;
+use App\Models\Content;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        return view('home.userpage');
+        // Fetch published contents
+        $contents = Content::where('IsPublished', 1)
+            ->orWhere(function ($query) {
+                $query->where('IsChapter', 1)
+                      ->whereHas('chapters', function ($query) {
+                          $query->where('IsPublished', 1);
+                      });
+            })
+            ->get();
+
+        return view('home.userpage', compact('contents'));
     }
 
     public function redirect()
