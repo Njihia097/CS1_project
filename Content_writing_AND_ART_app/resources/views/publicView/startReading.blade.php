@@ -10,10 +10,12 @@
                 <h3 class="text-2xl font-semibold">Chapter 1: {{ $firstChapter->Title }}</h3>
                 <div id="content-container" class="mt-4 text-gray-700"></div>
             </div>
+            <livewire:comments :model="$firstChapter"/>
         @else
             <div class="mt-6 text-gray-700">
                 <div id="content-container" class="text-gray-700"></div>
             </div>
+            <livewire:comments :model="$content"/>
         @endif
 
         @if ($content->IsChapter && $content->chapters->count() > 1)
