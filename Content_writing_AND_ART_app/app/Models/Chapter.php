@@ -16,6 +16,9 @@ class Chapter extends Model
         'Title',
         'Body',
         'ChapterNumber',
+        'IsPublished',
+        'publication_date',
+        'Status',
         'content_delta'
     ];
     protected $casts = [

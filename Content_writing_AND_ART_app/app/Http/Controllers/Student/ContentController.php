@@ -69,12 +69,14 @@ class ContentController extends Controller
             $chapter = Chapter::create([
                 'ContentID' => $content->ContentID,
                 'ChapterNumber' => $nextChapterNumber,
-                'Title' => $chapterTitle,  
+                'Title' => $chapterTitle, 
+                'IsPublished' => false,
+                'publication_date' => null, 
+                'Status' => 'draft',
             ]);
             $redirectUrl .= '?chapterId=' . $chapter->ChapterID;
         }
 
-        // Redirect to text formatting form
         // Redirect to text formatting form
         return redirect($redirectUrl)->with('success', 'Content set up successfully.');
        
@@ -123,19 +125,13 @@ class ContentController extends Controller
     
         return view('student.editContent', compact('content', 'chapterTitle', 'chapterContent', 'chapterId'));
     }
-    
-    
-    
-    
-    
-    
 
     public function update(Request $request, $id)
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'content_delta' => 'required|string',
-            'action' => 'required|string|in:save,publish',
+            'action' => 'required|string|in:save,publish,unpublish',
             'chapter_title' => 'nullable|string|max:255',
             'chapter_id' => 'nullable|integer|exists:chapter,ChapterID' // Update table name here
         ]);
@@ -166,13 +162,16 @@ class ContentController extends Controller
                     $chapter->Title = $request->chapter_title ?: 'Part ' . $this->numberToWord($chapter->ChapterNumber);
                     $chapter->Body = $textFilePath;
                     $chapter->content_delta = $mediaFilePath;
+                    $chapter->IsPublished = $request->action == 'publish' ? true : false;
+                    $chapter->publication_date = $request->action == 'publish' ? now() : null;
+                    $chapter->Status = $request->action === 'save' ? 'draft' : ($request->action === 'unpublish' ? 'draft' : 'pending');
                     $chapter->save();
                 }
             } else {
                 // Save file paths in the database
                 $content->ContentBody = $textFilePath;
                 $content->content_delta = $mediaFilePath;
-                $content->Status = $request->action === 'save' ? 'draft' : 'pending';
+                $content->Status = $request->action === 'save' ? 'draft' : ($request->action === 'unpublish' ? 'draft' : 'pending');
                 $content->IsPublished = $request->action === 'publish' ? true : false;
                 $content->PublicationDate = $request->action === 'publish' ? now() : null;
     
@@ -206,6 +205,9 @@ class ContentController extends Controller
             'ContentID' => $content->ContentID,
             'ChapterNumber' => $nextChapterNumber,
             'Title' => $chapterTitle,
+            'IsPublished' => false,
+            'publication_date' => null,
+            'Status' => 'draft',
             'created_at' => now(),
             'updated_at' => now()
         ]);
