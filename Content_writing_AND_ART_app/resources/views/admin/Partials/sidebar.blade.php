@@ -122,19 +122,28 @@
           </a>
         </li>
         <li class="nav-item menu-items">
-          <a class="nav-link" href="{{asset('admin/pages/tables/basic-table.html')}}">
+          <a class="nav-link" href="{{url('order')}}">
             <span class="menu-icon">
               <i class="mdi mdi-table-large"></i>
             </span>
-            <span class="menu-title">Tables</span>
+            <span class="menu-title">Orders</span>
           </a>
         </li>
         <li class="nav-item menu-items">
-          <a class="nav-link" href="{{asset('admin/pages/charts/chartjs.html')}}">
+          <a class="nav-link" href="{{ url('charts') }}">
             <span class="menu-icon">
               <i class="mdi mdi-chart-bar"></i>
             </span>
-            <span class="menu-title">Charts</span>
+            <span class="menu-title">User Charts</span>
+          </a>
+        </li>
+
+        <li class="nav-item menu-items">
+          <a class="nav-link" href="{{ url('category_chart') }}">
+            <span class="menu-icon">
+              <i class="mdi mdi-chart-bar"></i>
+            </span>
+            <span class="menu-title">Category Charts</span>
           </a>
         </li>
         <li class="nav-item menu-items">

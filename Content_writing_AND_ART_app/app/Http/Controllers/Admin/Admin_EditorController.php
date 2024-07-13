@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Actions\Fortify\CreateNewEditor;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 
 class Admin_EditorController extends Controller
@@ -35,17 +36,17 @@ class Admin_EditorController extends Controller
         return redirect()->back()->withErrors($validator)->withInput();
     }
 
-    \Log::info('Store method called with data: ', $request->all());
+    Log::info('Store method called with data: ', $request->all());
     try {
         // Call the CreateNewEditor action's create method, passing the form data to it
         $editorName = $request->input('name');
         $this->createNewEditor->create($request->all());
-        \Log::info('Editor created successfully.');
+        Log::info('Editor created successfully.');
 
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Editor ' . $editorName . ' has been registered successfully!.');
     } catch (\Exception $e) {
-        \Log::error('Error creating editor: ', ['error' => $e->getMessage()]);
+        Log::error('Error creating editor: ', ['error' => $e->getMessage()]);
         return redirect()->back()->with('error', 'Failed to register editor.');
     }
 }

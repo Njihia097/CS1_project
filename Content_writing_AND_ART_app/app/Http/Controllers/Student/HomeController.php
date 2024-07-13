@@ -17,6 +17,7 @@ class HomeController extends Controller
 
     public function redirect()
     {
+        
         $usertype=Auth::user()->usertype;
         if($usertype=='1')
         {
@@ -36,6 +37,7 @@ class HomeController extends Controller
 
     public function view_userpage()
     {
+        $artist=artist::all();
         return view('home.userpage');
     }
 

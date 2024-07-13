@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class GoogleController extends Controller
 {
@@ -52,7 +53,7 @@ class GoogleController extends Controller
 
 
         }catch (\Throwable $th) {
-            \Log::error('Something went wrong'. $th->getMessage());
+            Log::error('Something went wrong'. $th->getMessage());
             return redirect()->route('login')->with('error', 'Something went wrong while logging in with Google');
 
         }

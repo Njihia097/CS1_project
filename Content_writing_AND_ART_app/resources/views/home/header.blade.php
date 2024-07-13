@@ -32,7 +32,7 @@
                             </a>
                         </li>
                         <li class="cart-icon">
-                            <a href="#">
+                            <a href="{{ url('show_cart') }}">
                                 <i class="icon_bag_alt"></i>
                                 <span>{{ count(session('cart', [])) }}</span>
                             </a>
@@ -42,15 +42,15 @@
                                         <tbody>
                                             @foreach(session('cart', []) as $id => $item)
                                             <tr>
-                                                <td class="si-pic"><img src="{{ $item['image'] ?? 'default-image.jpg' }}" alt=""></td> <!-- Assuming you have an image field or a default image -->
+                                                <td class="si-pic"><img src="{{ $item['image'] ?? 'default-image.jpg' }}" alt=""></td>
                                                 <td class="si-text">
                                                     <div class="product-selected">
                                                         <p>${{ $item['price'] }} x {{ $item['quantity'] }}</p>
-                                                        <h6>{{ $item['title'] }}</h6>
+                                                        <h6>{{ $item['art_title'] }}</h6>
                                                     </div>
                                                 </td>
                                                 <td class="si-close">
-                                                    <i class="ti-close" data-id="{{ $id }}"></i> <!-- You can add JavaScript to handle removal -->
+                                                    <i class="ti-close" data-id="{{ $id }}"></i>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -58,7 +58,7 @@
                                     </table>
                                 </div>
                                 <div class="select-total">
-                                    <span>total:</span>
+                                    <span>Total:</span>
                                     <h5>${{ array_reduce(session('cart', []), function($carry, $item) {
                                         return $carry + ($item['price'] * $item['quantity']);
                                     }, 0) }}</h5>
@@ -74,6 +74,7 @@
                                 return $carry + ($item['price'] * $item['quantity']);
                             }, 0) }}
                         </li>
+                        
                     </ul>
                 </div>
             </div>
@@ -107,20 +108,19 @@
                     <li><a href="#">Collection</a>
                         <ul class="dropdown">
                             <li><a href="#">Content writng</a></li>
-                            <li><a href="#">art selling</a></li>
+                            <li><a href="#">arts</a></li>
                             <li><a href="#">Poetry</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{url ('/view_blogpage')}}">Blog</a></li>
+                    <li><a href="{{ url('show_cart') }}">Shopping Cart</a></li>
                     <li><a href="{{url ('/view_contact')}}">Contact</a></li>
                     <li><a href="#">Pages</a>
                         <ul class="dropdown">
-                            <li><a href="./blog-details.html">Blog Details</a></li>
-                            <li><a href="./shopping-cart.html">Shopping Cart</a></li>
-                            <li><a href="./check-out.html">Checkout</a></li>
+                            <li><a href="{{url('show_order')}}">Orders</a></li>
+                            <li><a href="{{url ('/view_blogpage')}}">Blog</a></li>
                             <li><a href="./faq.html">Faq</a></li>
-                            <li><a href="./register.html">Register</a></li>
-                            <li><a href="{{url('')}}">Login</a></li>
+                            <li><a href="{{url('register')}}">Register</a></li>
+                            <li><a href="{{url('login')}}">Login</a></li>
                         </ul>
                     </li>
                 </ul>

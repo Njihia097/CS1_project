@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 
+
 class ContentController extends Controller
 {
     public function view (Request $request)
@@ -89,9 +90,9 @@ class ContentController extends Controller
 
     public function edit($id, Request $request)
     {
-        \Log::info('Edit Method Called');
-        \Log::info('Content ID: ' . $id);
-        \Log::info('Request Data: ' . json_encode($request->all()));
+        Log::info('Edit Method Called');
+        Log::info('Content ID: ' . $id);
+        Log::info('Request Data: ' . json_encode($request->all()));
     
         $content = Content::findOrFail($id);
         $chapterTitle = null;
@@ -117,7 +118,7 @@ class ContentController extends Controller
                 ];
             }
         } catch (Exception $e) {
-            \Log::error('Failed to retrieve content: ' . $e->getMessage());
+            Log::error('Failed to retrieve content: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to retrieve content');
         }
     
@@ -194,8 +195,8 @@ class ContentController extends Controller
     
     public function createNewChapter($contentId, Request $request)
     {
-        \Log::info('Create New Chapter Method Called');
-        \Log::info('Content ID: ' . $contentId);
+        Log::info('Create New Chapter Method Called');
+        Log::info('Content ID: ' . $contentId);
         
         $content = Content::findOrFail($contentId);
         
@@ -219,7 +220,7 @@ class ContentController extends Controller
             'thumbsDown' => 0
         ];
         
-        \Log::info('New Chapter Created:', $newChapterDetails);
+        Log::info('New Chapter Created:', $newChapterDetails);
         
         return response()->json($newChapterDetails);
     }
@@ -357,7 +358,7 @@ class ContentController extends Controller
         $content = Content::with('chapters')->find($contentId);
         
         if (!$content) {
-            \Log::error("Content with ID $contentId not found");
+            Log::error("Content with ID $contentId not found");
             return response()->json(['error' => 'Content not found'], 404);
         }
     
@@ -379,7 +380,7 @@ class ContentController extends Controller
             'thumbsUp' => 10, // Dummy data
             'thumbsDown' => 3 // Dummy data
         ];
-        \Log::info('Fetched content details:', ['content' => $contentDetails, 'chapters' => $chapters]);
+        Log::info('Fetched content details:', ['content' => $contentDetails, 'chapters' => $chapters]);
     
         return response()->json([
             'content' => $contentDetails,
