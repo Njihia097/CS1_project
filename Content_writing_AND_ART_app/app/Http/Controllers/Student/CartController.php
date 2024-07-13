@@ -5,63 +5,117 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Artist;
+use App\Models\Cart;
+use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function add_cart($id)
+    public function add_cart(Request $request, $id)
     {
-        $cart = session()->get('cart', []);
 
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity']++;
-        } else {
-            $artist = Artist::findOrFail($id);
+        if(Auth::id())
+        {
 
-            $cart[$id] = [
-                "title" => $artist->title,
-                "width" => $artist->width,
-                "height" => $artist->height,
-                "price" => $artist->price,
-                "quantity" => 1,
-                "image" => $artist->image_path,  // Use image_path
-            ];
+            $user=Auth::user();
+            
+            $artist= artist::find($id);
+
+            $cart=new cart;
+
+            $cart->name=$user->name;
+            $cart->email=$user->email;
+            $cart->phone=$user->phone;
+            $cart->user_id=$user->id;
+
+            $cart->art_title=$artist->title;
+            $cart->price=$artist->price;
+            $cart->image=$artist->image_path;
+            $cart->art_id=$artist->id;
+            $cart->quantity=1;
+
+            $cart->save();
+
+            return redirect()->back();
+
+
         }
 
-        session()->put('cart', $cart);
-
-        return redirect()->back()->with('success', 'Item added to cart successfully');
+        else{
+            return redirect('login');
+        }
     }
 
     public function show_cart()
     {
-        $cartItems = session()->get('cart', []);
-        return view('home.cart', compact('cartItems'));
-    }
+        if(Auth::id())
+        {
+        $id=Auth::user()->id;
 
-    public function remove_item($id)
+        $cart=cart::where('user_id', '=',$id)->get();
+        return view('home.shopcart', compact('cart'));
+    }else{
+        return redirect('login');
+    }
+}
+
+public function remove_cart($id)
+{
+    $cart=cart::find($id);
+    $cart->delete();
+
+    return redirect()->back();
+}
+
+public function cash_order()
+{
+
+    $user=Auth::user();
+    $userid=$user->id;
+
+    $data=cart::where('user_id', '=', $userid)->get();
+
+    foreach($data as $item)
     {
-        $cart = session()->get('cart', []);
-        
-        if (isset($cart[$id])) {
-            unset($cart[$id]);
-            session()->put('cart', $cart);
-        }
+        $order=new order;
 
-        return redirect()->back()->with('success', 'Item removed from cart successfully');
+        $order->name=$item->name;
+        $order->email=$item->email;
+        $order->phone=$item->phone;
+        $order->user_id=$item->user_id;
+        $order->art_title=$item->art_title;
+        $order->price=$item->price;
+        $order->quantity=$item->quantity;
+        $order->image=$item->image;
+        $order->art_id=$item->art_id;
+
+        $order->payment_status='cash on delivery';
+        $order->delivery_status='processing';
+        $order->save();
+
+        $cart_id=$data->id;
+        $cart=cart::find($cart_id);
+        $cart->delete();
+
+
+
     }
 
-    public function update_cart(Request $request)
+    return redirect()->back()->with('message','Order received and is being processed');
+
+}
+
+public function show_order()
+{
+    if(Auth::id())
     {
-        $cart = session()->get('cart', []);
-        
-        foreach ($request->items as $id => $data) {
-            if (isset($cart[$id])) {
-                $cart[$id]['quantity'] = $data['quantity'] ?? 1; // Default to 1 if quantity is not set
-            }
-        }
-        
-        session()->put('cart', $cart);
+    $id=Auth::user()->id;
 
-        return redirect()->back()->with('success', 'Cart updated successfully');
-    }
+    $order=order::where('user_id', '=',$id)->get();
+    return view('home.order', compact('order'));
+}else{
+    return redirect('login');
+}
+}
+
 }

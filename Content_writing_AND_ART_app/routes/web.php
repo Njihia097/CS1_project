@@ -92,7 +92,17 @@ Route::get('/artists/create', [ArtistController::class, 'create'])->name('artist
 Route::post('/artists', [ArtistController::class, 'store'])->name('artists.store');
 Route::get('/artists', [ArtistController::class, 'index'])->name('artists.index');
 
-Route::get('/cart', [CartController::class, 'show_cart'])->name('cart.show');
+
 Route::get('/add_cart/{id}', [CartController::class, 'add_cart'])->name('add_cart');
-Route::patch('/cart/update', [CartController::class, 'update_cart'])->name('cart.update');
-Route::delete('/cart/remove/{id}', [CartController::class, 'remove_item'])->name('cart.remove');
+Route::get('/show_cart', [CartController::class, 'show_cart'])->name('show_cart');
+Route::get('/remove_cart/{id}', [CartController::class, 'remove_cart'])->name('remove_cart');
+
+Route::get('/show_order',[CartController::class, 'show_order']);
+Route::get('/cash_order',[CartController::class, 'cash_order']);
+
+Route::get('/charts', [AdminController::class, 'charts']);
+Route::get('/category_chart', [AdminController::class, 'category_Chart']);
+Route::get('/content', [AdminController::class, 'content']);
+
+Route::get('/order', [AdminController::class,'order']);
+
