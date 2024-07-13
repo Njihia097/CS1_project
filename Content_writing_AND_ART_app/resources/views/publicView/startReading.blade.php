@@ -1,5 +1,5 @@
 <x-content-layout :content="$content">
-    @section('content')
+@section('content')
     <div class="max-w-4xl p-6 mx-auto bg-white rounded-lg shadow-md">
         <div class="text-center">
             <h2 class="text-3xl font-bold">{{ $content->Title }}</h2>
@@ -11,22 +11,7 @@
                 <div id="content-container" class="mt-4 text-gray-700"></div>
             </div>
 
-            <!-- Interaction icons -->
-            <div class="flex items-center justify-between mt-8 mb-4">
-                <div class="flex items-center space-x-4">
-                    <div class="flex items-center">
-                        <i class="text-gray-900 fa-regular fa-thumbs-up"></i>
-                        <span class="ml-1 text-gray-900">5</span>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="text-gray-900 fa-regular fa-thumbs-down"></i>
-                        <span class="ml-1 text-gray-900">2</span>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="text-gray-900 fa-regular fa-bookmark"></i>
-                    </div>
-                </div>
-            </div>
+            <livewire:reactions :model="$firstChapter"/>
 
             <!-- Comment section for the first chapter -->
             <div class="mt-8">
@@ -37,22 +22,7 @@
                 <div id="content-container" class="text-gray-700"></div>
             </div>
 
-            <!-- Interaction icons -->
-            <div class="flex items-center justify-between mt-8 mb-4">
-                <div class="flex items-center space-x-4">
-                    <div class="flex items-center">
-                        <i class="text-gray-900 fa-regular fa-thumbs-up"></i>
-                        <span class="ml-1 text-gray-900">5</span>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="text-gray-900 fa-regular fa-thumbs-down"></i>
-                        <span class="ml-1 text-gray-900">2</span>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="text-gray-900 fa-regular fa-bookmark"></i>
-                    </div>
-                </div>
-            </div>
+            <livewire:reactions :model="$content"/>
 
             <!-- Comment section for standalone content -->
             <div class="mt-8">
@@ -87,5 +57,5 @@
         const contentDelta = {!! json_encode($combinedContentDelta) !!};
         quill.setContents(contentDelta);
     </script>
-    @endsection
+@endsection
 </x-content-layout>
