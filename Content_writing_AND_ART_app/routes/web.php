@@ -50,6 +50,9 @@ Route::middleware(['auth', 'verified', 'role:editor'])
         Route::get('/home', [EditorController::class, 'editorHome'])->name('editorHome');
         Route::get('/content-categories', [EditorController::class, 'showCategories'])->name('showCategories');
         Route::put('/content-categories/{id}', [EditorController::class, 'update']);
+        Route::post('/content-categories', [EditorController::class, 'store']);
+        Route::delete('/content-categories/{id}', [EditorController::class, 'destroy']);
+
 
     });
 
