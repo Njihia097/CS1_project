@@ -11,15 +11,15 @@
         <div class="flex items-center space-x-4">
             <div class="flex items-center">
                 <i class="text-gray-500 fa-regular fa-comment"></i>
-                <span class="ml-1 text-gray-500">10</span>
+                <span class="ml-1 text-gray-500">{{ $content->commentCount ?? 0 }}</span>
             </div>
             <div class="flex items-center">
                 <i class="text-gray-500 fa-regular fa-thumbs-up"></i>
-                <span class="ml-1 text-gray-500">5</span>
+                <span class="ml-1 text-gray-500">{{ $content->thumbsUpCount ?? 0 }}</span>
             </div>
             <div class="flex items-center">
                 <i class="text-gray-500 fa-regular fa-thumbs-down"></i>
-                <span class="ml-1 text-gray-500">2</span>
+                <span class="ml-1 text-gray-500">{{ $content->thumbsDownCount ?? 0 }}</span>
             </div>
         </div>
         <div class="flex flex-col items-center col-span-1 space-x-4 ">

@@ -68,20 +68,22 @@
             <div class="flex items-center space-x-4">
                 <div class="flex items-center">
                     <i class="text-gray-900 fa-regular fa-comment"></i>
-                    <span class="ml-1 text-gray-900">10</span>
+                    <span class="ml-1 text-gray-900">{{ $content->commentCount ?? 0 }}</span>
                 </div>
                 <div class="flex items-center">
                     <i class="text-gray-900 fa-regular fa-thumbs-up"></i>
-                    <span class="ml-1 text-gray-900">5</span>
+                    <span class="ml-1 text-gray-900">{{ $content->thumbsUpCount ?? 0  }}</span>
                 </div>
                 <div class="flex items-center">
                     <i class="text-gray-900 fa-regular fa-thumbs-down"></i>
-                    <span class="ml-1 text-gray-900">2</span>
+                    <span class="ml-1 text-gray-900">{{ $content->thumbsDownCount ?? 0 }}</span>
                 </div>
+                @if ($content->IsChapter)
                 <div class="flex items-center">
                     <i class="fa-solid fa-list"></i>
-                    <span class="ml-1 text-gray-900">2</span>
+                    <span class="ml-1 text-gray-900">{{ $content->chapterCount ?? 0 }}</span>
                 </div>
+                @endif
             </div>
             <a href="{{ route('student.contentDetails', ['content' => $content->ContentID]) }}" class="inline-block w-48 px-6 py-2 mt-4 text-sm font-semibold text-center text-white bg-black rounded hover:bg-gray-700">Content Details</a>
         </div>

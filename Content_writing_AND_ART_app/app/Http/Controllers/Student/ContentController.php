@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use App\Models\Reaction;
+use Usamamuneerchaudhary\Commentify\Models\Comment;
 
 class ContentController extends Controller
 {
@@ -332,20 +333,19 @@ class ContentController extends Controller
         return [
             'title' => $chapter->Title,
             'lastModified' => $chapter->updated_at->diffForHumans(),
-            'comments' => 5, // Dummy data
-            'thumbsUp' => 10, // Dummy data
-            'thumbsDown' => 3, // Dummy data
-            'views' => 4, // Dummy data for views
-            'likes' => 6 // Dummy data for likes
+            'comments' => $chapter->comments()->count(),
+            'thumbsUp' => Reaction::where('chapter_id', $chapter->ChapterID)->where('type', 'thumbs_up')->count(),
+            'thumbsDown' => Reaction::where('chapter_id', $chapter->ChapterID)->where('type', 'thumbs_down')->count(),
+            'ChapterID' => $chapter->ChapterID
         ];
     });
 
     $contentDetails = [
         'title' => $content->Title,
         'lastModified' => $content->updated_at->diffForHumans(),
-        'comments' => 5, // Dummy data
-        'thumbsUp' => 10, // Dummy data
-        'thumbsDown' => 3 // Dummy data
+        'comments' => $content->comments()->count(),
+        'thumbsUp' => Reaction::where('content_id', $content->ContentID)->where('type', 'thumbs_up')->count(),
+        'thumbsDown' => Reaction::where('content_id', $content->ContentID)->where('type', 'thumbs_down')->count()
     ];
 
     return view('student.contentDetails', compact('content', 'categories', 'selectedCategoryId', 'keywordsString', 'chapters', 'contentDetails'));
@@ -366,18 +366,18 @@ class ContentController extends Controller
                 'title' => $chapter->Title,
                 'lastModified' => $chapter->updated_at->diffForHumans(),
                 'ChapterID' => $chapter->ChapterID,
-                'comments' => 5, // Dummy data
-                'thumbsUp' => 10, // Dummy data
-                'thumbsDown' => 3 // Dummy data
+                'comments' => $chapter->comments()->count(),
+                'thumbsUp' => Reaction::where('chapter_id', $chapter->ChapterID)->where('type', 'thumbs_up')->count(),
+                'thumbsDown' => Reaction::where('chapter_id', $chapter->ChapterID)->where('type', 'thumbs_down')->count()
             ];
         });
     
         $contentDetails = [
             'title' => $content->Title,
             'lastModified' => $content->updated_at->diffForHumans(),
-            'comments' => 5, // Dummy data
-            'thumbsUp' => 10, // Dummy data
-            'thumbsDown' => 3 // Dummy data
+            'comments' => $content->comments()->count(),
+            'thumbsUp' => Reaction::where('content_id', $content->ContentID)->where('type', 'thumbs_up')->count(),
+            'thumbsDown' => Reaction::where('content_id', $content->ContentID)->where('type', 'thumbs_down')->count()
         ];
         \Log::info('Fetched content details:', ['content' => $contentDetails, 'chapters' => $chapters]);
     
@@ -435,14 +435,32 @@ class ContentController extends Controller
         }
     }
 
+
     public function viewContent(Request $request, $id)
     {
         $content = Content::with(['author', 'chapters' => function($query) {
             $query->where('IsPublished', 1);
         }])->findOrFail($id);
     
+        // Calculate reactions, chapter count, and comment count for the content
+        if ($content->IsChapter) {
+            $chapterIds = $content->chapters->pluck('ChapterID');
+            $content->thumbsUpCount = Reaction::whereIn('chapter_id', $chapterIds)->where('type', 'thumbs_up')->count();
+            $content->thumbsDownCount = Reaction::whereIn('chapter_id', $chapterIds)->where('type', 'thumbs_down')->count();
+            $content->chapterCount = $content->chapters->count();
+            $content->commentCount = Comment::whereIn('commentable_id', $chapterIds)
+                                            ->where('commentable_type', 'App\Models\Chapter')
+                                            ->count();
+        } else {
+            $content->thumbsUpCount = Reaction::where('content_id', $content->ContentID)->where('type', 'thumbs_up')->count();
+            $content->thumbsDownCount = Reaction::where('content_id', $content->ContentID)->where('type', 'thumbs_down')->count();
+            $content->chapterCount = 0;
+            $content->commentCount = $content->comments()->count();
+        }
+    
         return view('publicView.contentDescription', compact('content'));
     }
+    
 
     private function combineContent($textFilePath, $mediaFilePath)
     {
