@@ -18,16 +18,25 @@
                         class="object-cover w-full rounded-sm h-60"
                     >
                     <div class="text-gray-800 latest-text hover:text-gray-600">
-                        <div class="flex space-x-4 tag-list">
-                            <div class="flex items-center space-x-2 tag-item">
-                                <i class="fa fa-calendar-o"></i>
-                                <span>{{ \Carbon\Carbon::parse($content->PublicationDate)->format('M d, Y') }}</span>
-                            </div>
-                            <div class="flex items-center space-x-2 tag-item">
-                                <i class="fa fa-comment-o"></i>
-                                <span>5</span>
-                            </div>
+                    <div class="flex items-center space-x-2 tag-list">
+                        <div class="flex items-center space-x-2 text-gray-600 tag-item">
+                            <i class="fa fa-calendar-o"></i>
+                            <span>{{ \Carbon\Carbon::parse($content->PublicationDate)->format('M d, Y') }}</span>
                         </div>
+                        <div class="flex items-center space-x-2 text-gray-600 tag-item">
+                            <i class="fa fa-comment-o"></i>
+                            <span>{{ $content->commentCount ?? 0 }}</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-gray-600 tag-item">
+                            <i class="fa fa-thumbs-up"></i>
+                            <span>{{ $content->thumbsUpCount ?? 0 }}</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-gray-600 tag-item">
+                            <i class="fa fa-thumbs-down"></i>
+                            <span>{{ $content->thumbsDownCount ?? 0 }}</span>
+                        </div>
+                    </div>
+
                         <a href="{{ route('publicView.contentDescription', [$content->ContentID])}}">
                             <h4 class="mt-2 text-lg font-semibold">{{ $content->Title }}</h4>
                         </a>

@@ -170,13 +170,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayStandaloneContent(content) {
-        const listItem = createListItem(content.title, content.lastModified, 5, 10, 3, contentId, false, null);
+        const listItem = createListItem(content.title, content.lastModified, content.comments, content.thumbsUp, content.thumbsDown, contentId, false, null);
         tableOfContentsContainer.appendChild(listItem);
     }
 
     function displayChapters(chapters) {
         chapters.forEach(chapter => {
-            const listItem = createListItem(chapter.title, chapter.lastModified, 5, 10, 3, contentId, true, chapter.ChapterID);
+            const listItem = createListItem(chapter.title, chapter.lastModified, chapter.comments, chapter.thumbsUp, chapter.thumbsDown, contentId, true, chapter.ChapterID);
             tableOfContentsContainer.appendChild(listItem);
         });
     }
@@ -192,7 +192,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="flex items-center space-x-4">
                 <span class="badge bg-secondary rounded-pill">${thumbsUp} <i class="text-gray-900 fa-regular fa-thumbs-up"></i></span>
                 <span class="badge bg-secondary rounded-pill">${thumbsDown} <i class="text-gray-900 fa-regular fa-thumbs-down"></i></span>
-                <span class="badge bg-secondary rounded-pill">${comments} <i class="text-gray-900 fa-regular fa-comment"></i></span>
+                <span class="badge bg-secondary rounded-pill">${comments} <i class="text-gray-900 fa-regular fa-comment"></i></span>           
+
                 <div class="dropdown">
                     <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-ellipsis"></i>
