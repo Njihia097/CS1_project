@@ -9,7 +9,7 @@
             <span class="ml-1 text-gray-900">{{ $thumbsDownCount }}</span>
         </div>
         <div class="flex items-center" wire:click="toggleFavorite">
-            <i class="text-gray-900 fa-regular fa-bookmark cursor-pointer {{ $isFavorite ? 'text-yellow-500' : '' }}"></i>
+            <i class="text-gray-900 fa-regular fa-bookmark cursor-pointer {{ $isFavorite ? 'text-blue-500' : '' }}"></i>
         </div>
     </div>
 </div>

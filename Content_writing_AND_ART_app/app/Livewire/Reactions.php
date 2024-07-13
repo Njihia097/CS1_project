@@ -16,6 +16,11 @@ class Reactions extends Component
     }
     public function react($type)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+
         $reaction = Reaction::where('user_id', Auth::id())
         ->where(function($query) {
             $query->where('content_id', $this->model->ContentID)
@@ -42,6 +47,10 @@ class Reactions extends Component
 
     public function toggleFavorite()
     {
+
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
         $favorite = Favorite::where('UserID', Auth::id())
             ->where('ContentID', $this->model->ContentID)
             ->first();
