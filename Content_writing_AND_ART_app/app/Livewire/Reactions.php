@@ -36,7 +36,7 @@ class Reactions extends Component
             ]);
         }
 
-        $this->emit('reactionUpdated');
+        $this->dispatch('reactionUpdated');
     }
     
     public function render()
