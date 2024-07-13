@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Reaction;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Favorite;
 
 class Reactions extends Component
 {
@@ -38,13 +39,34 @@ class Reactions extends Component
 
         $this->dispatch('reactionUpdated');
     }
+
+    public function toggleFavorite()
+    {
+        $favorite = Favorite::where('UserID', Auth::id())
+            ->where('ContentID', $this->model->ContentID)
+            ->first();
+
+        if ($favorite) {
+            $favorite->delete();
+        } else {
+            Favorite::create([
+                'UserID' => Auth::id(),
+                'ContentID' => $this->model->ContentID,
+                'Title' => $this->model->Title,
+                'FavoriteDate' => now(),
+            ]);
+        }
+
+        $this->dispatch('favoriteUpdated');
+    }
     
     public function render()
     {
         return view('livewire.reactions', [
             'thumbsUpCount' => $this->model->reactions()->where('type', 'thumbs_up')->count(),
             'thumbsDownCount' => $this->model->reactions()->where('type', 'thumbs_down')->count(),
-            'userReaction' => $this->model->reactions()->where('user_id', Auth::id())->first()
+            'userReaction' => $this->model->reactions()->where('user_id', Auth::id())->first(),
+            'isFavorite' => Favorite::where('UserID', Auth::id())->where('ContentID', $this->model->ContentID)->exists()
         ]);
     }
 }
