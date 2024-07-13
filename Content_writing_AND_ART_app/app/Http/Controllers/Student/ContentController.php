@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use App\Models\Reaction;
+use Usamamuneerchaudhary\Commentify\Models\Comment;
 
 
 class ContentController extends Controller
@@ -28,7 +29,7 @@ class ContentController extends Controller
         $request->validate([
             'cover_page' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:150',
+            'description' => 'nullable|string|max:1000',
             'category' => 'required|exists:category_content,CategoryID',
             'keywords' => 'required|string',
             'is_chapter' => 'sometimes|boolean',
@@ -52,7 +53,7 @@ class ContentController extends Controller
             'thumbnail' => $imageName,
             'Description' => $request->description,
             'ContentBody' => null,
-            'IsChapter' => $request->has('is_chapter'),
+            'IsChapter' => $request->has('is_chapter') ? $request->input('is_chapter') : false,
             'IsPublished' => false,
             'PublicationDate' => null,
             'Status' => 'draft',
@@ -70,12 +71,14 @@ class ContentController extends Controller
             $chapter = Chapter::create([
                 'ContentID' => $content->ContentID,
                 'ChapterNumber' => $nextChapterNumber,
-                'Title' => $chapterTitle,  
+                'Title' => $chapterTitle, 
+                'IsPublished' => false,
+                'publication_date' => null, 
+                'Status' => 'draft',
             ]);
             $redirectUrl .= '?chapterId=' . $chapter->ChapterID;
         }
 
-        // Redirect to text formatting form
         // Redirect to text formatting form
         return redirect($redirectUrl)->with('success', 'Content set up successfully.');
        
@@ -124,19 +127,13 @@ class ContentController extends Controller
     
         return view('student.editContent', compact('content', 'chapterTitle', 'chapterContent', 'chapterId'));
     }
-    
-    
-    
-    
-    
-    
 
     public function update(Request $request, $id)
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'content_delta' => 'required|string',
-            'action' => 'required|string|in:save,publish',
+            'action' => 'required|string|in:save,publish,unpublish',
             'chapter_title' => 'nullable|string|max:255',
             'chapter_id' => 'nullable|integer|exists:chapter,ChapterID' // Update table name here
         ]);
@@ -145,35 +142,32 @@ class ContentController extends Controller
             $content = Content::findOrFail($id);
             $content->Title = $request->title;
     
-            // Parse the JSON content delta
-            $contentDelta = json_decode($request->content_delta, true);
-    
-            // Extract pure text and media/embedded content
-            $pureText = $this->extractPureText($contentDelta);
-            $mediaContent = json_encode($this->extractMediaContent($contentDelta));
-    
-            // Generate file paths
-            $textFilePath = 'content/text/' . Str::uuid() . '.txt';
-            $mediaFilePath = 'content/media/' . Str::uuid() . '.json';
-    
-            // Store files
-            Storage::disk('local')->put($textFilePath, $pureText);
-            Storage::disk('local')->put($mediaFilePath, $mediaContent);
+            // Directly save the content delta
+            $contentDelta = $request->content_delta;
+
+            // Generate file path for content delta
+            $deltaFilePath = 'content/delta/' . Str::uuid() . '.json';
+
+            // Store content delta as JSON
+            Storage::disk('local')->put($deltaFilePath, $contentDelta);
     
             if ($content->IsChapter) {
                 // Update the existing chapter based on ChapterID
                 $chapter = Chapter::where('ChapterID', $request->chapter_id)->first();
                 if ($chapter) {
                     $chapter->Title = $request->chapter_title ?: 'Part ' . $this->numberToWord($chapter->ChapterNumber);
-                    $chapter->Body = $textFilePath;
-                    $chapter->content_delta = $mediaFilePath;
+                    $chapter->Body = null;
+                    $chapter->content_delta = $deltaFilePath;
+                    $chapter->IsPublished = $request->action == 'publish' ? true : false;
+                    $chapter->publication_date = $request->action == 'publish' ? now() : null;
+                    $chapter->Status = $request->action === 'save' ? 'draft' : ($request->action === 'unpublish' ? 'draft' : 'pending');
                     $chapter->save();
                 }
             } else {
                 // Save file paths in the database
-                $content->ContentBody = $textFilePath;
-                $content->content_delta = $mediaFilePath;
-                $content->Status = $request->action === 'save' ? 'draft' : 'pending';
+                $content->ContentBody = null;
+                $content->content_delta = $deltaFilePath;
+                $content->Status = $request->action === 'save' ? 'draft' : ($request->action === 'unpublish' ? 'draft' : 'pending');
                 $content->IsPublished = $request->action === 'publish' ? true : false;
                 $content->PublicationDate = $request->action === 'publish' ? now() : null;
     
@@ -191,6 +185,10 @@ class ContentController extends Controller
             return redirect()->back()->with('error', 'Failed to Save content');
         }
     }
+    private function getContentDelta($filePath)
+    {
+        return json_decode(Storage::disk('local')->get($filePath), true);
+    }
     
     
     public function createNewChapter($contentId, Request $request)
@@ -207,6 +205,9 @@ class ContentController extends Controller
             'ContentID' => $content->ContentID,
             'ChapterNumber' => $nextChapterNumber,
             'Title' => $chapterTitle,
+            'IsPublished' => false,
+            'publication_date' => null,
+            'Status' => 'draft',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -333,20 +334,19 @@ class ContentController extends Controller
         return [
             'title' => $chapter->Title,
             'lastModified' => $chapter->updated_at->diffForHumans(),
-            'comments' => 5, // Dummy data
-            'thumbsUp' => 10, // Dummy data
-            'thumbsDown' => 3, // Dummy data
-            'views' => 4, // Dummy data for views
-            'likes' => 6 // Dummy data for likes
+            'comments' => $chapter->comments()->count(),
+            'thumbsUp' => Reaction::where('chapter_id', $chapter->ChapterID)->where('type', 'thumbs_up')->count(),
+            'thumbsDown' => Reaction::where('chapter_id', $chapter->ChapterID)->where('type', 'thumbs_down')->count(),
+            'ChapterID' => $chapter->ChapterID
         ];
     });
 
     $contentDetails = [
         'title' => $content->Title,
         'lastModified' => $content->updated_at->diffForHumans(),
-        'comments' => 5, // Dummy data
-        'thumbsUp' => 10, // Dummy data
-        'thumbsDown' => 3 // Dummy data
+        'comments' => $content->comments()->count(),
+        'thumbsUp' => Reaction::where('content_id', $content->ContentID)->where('type', 'thumbs_up')->count(),
+        'thumbsDown' => Reaction::where('content_id', $content->ContentID)->where('type', 'thumbs_down')->count()
     ];
 
     return view('student.contentDetails', compact('content', 'categories', 'selectedCategoryId', 'keywordsString', 'chapters', 'contentDetails'));
@@ -367,18 +367,18 @@ class ContentController extends Controller
                 'title' => $chapter->Title,
                 'lastModified' => $chapter->updated_at->diffForHumans(),
                 'ChapterID' => $chapter->ChapterID,
-                'comments' => 5, // Dummy data
-                'thumbsUp' => 10, // Dummy data
-                'thumbsDown' => 3 // Dummy data
+                'comments' => $chapter->comments()->count(),
+                'thumbsUp' => Reaction::where('chapter_id', $chapter->ChapterID)->where('type', 'thumbs_up')->count(),
+                'thumbsDown' => Reaction::where('chapter_id', $chapter->ChapterID)->where('type', 'thumbs_down')->count()
             ];
         });
     
         $contentDetails = [
             'title' => $content->Title,
             'lastModified' => $content->updated_at->diffForHumans(),
-            'comments' => 5, // Dummy data
-            'thumbsUp' => 10, // Dummy data
-            'thumbsDown' => 3 // Dummy data
+            'comments' => $content->comments()->count(),
+            'thumbsUp' => Reaction::where('content_id', $content->ContentID)->where('type', 'thumbs_up')->count(),
+            'thumbsDown' => Reaction::where('content_id', $content->ContentID)->where('type', 'thumbs_down')->count()
         ];
         Log::info('Fetched content details:', ['content' => $contentDetails, 'chapters' => $chapters]);
     
@@ -398,7 +398,7 @@ class ContentController extends Controller
         $request->validate([
             'cover_page' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:150',
+            'description' => 'nullable|string|max:1000',
             'category' => 'required|exists:category_content,CategoryID',
             'keywords' => 'required|string',
             'is_chapter' => 'sometimes|boolean',
@@ -435,6 +435,103 @@ class ContentController extends Controller
             return redirect()->back()->with('error', 'Failed to update content. Please try again.');
         }
     }
+
+
+    public function viewContent(Request $request, $id)
+    {
+        $content = Content::with(['author', 'chapters' => function($query) {
+            $query->where('IsPublished', 1);
+        }])->findOrFail($id);
+    
+        // Calculate reactions, chapter count, and comment count for the content
+        if ($content->IsChapter) {
+            $chapterIds = $content->chapters->pluck('ChapterID');
+            $content->thumbsUpCount = Reaction::whereIn('chapter_id', $chapterIds)->where('type', 'thumbs_up')->count();
+            $content->thumbsDownCount = Reaction::whereIn('chapter_id', $chapterIds)->where('type', 'thumbs_down')->count();
+            $content->chapterCount = $content->chapters->count();
+            $content->commentCount = Comment::whereIn('commentable_id', $chapterIds)
+                                            ->where('commentable_type', 'App\Models\Chapter')
+                                            ->count();
+        } else {
+            $content->thumbsUpCount = Reaction::where('content_id', $content->ContentID)->where('type', 'thumbs_up')->count();
+            $content->thumbsDownCount = Reaction::where('content_id', $content->ContentID)->where('type', 'thumbs_down')->count();
+            $content->chapterCount = 0;
+            $content->commentCount = $content->comments()->count();
+        }
+    
+        return view('publicView.contentDescription', compact('content'));
+    }
+    
+
+    private function combineContent($textFilePath, $mediaFilePath)
+    {
+        // Retrieve stored pure text and media content
+        $pureText = Storage::disk('local')->get($textFilePath);
+        $mediaContent = json_decode(Storage::disk('local')->get($mediaFilePath), true);
+
+        // Initialize the combined content with pure text
+        $combinedContent = [['insert' => $pureText]];
+
+        // Append media content
+        foreach ($mediaContent as $media) {
+            if (isset($media['insert'])) {
+                $combinedContent[] = $media;
+            }
+        }
+
+        return $combinedContent;
+    }
+
+    public function startReading($id)
+    {
+        $content = Content::with(['author', 'chapters' => function($query) {
+            $query->where('IsPublished', 1)->orderBy('ChapterNumber');
+        }])->findOrFail($id);
+
+        if ($content->IsChapter && $content->chapters->isNotEmpty()) {
+            $firstChapter = $content->chapters->first();
+            $combinedContentDelta = $this->getContentDelta($firstChapter->content_delta);
+            return view('publicView.startReading', compact('content', 'firstChapter', 'combinedContentDelta'));
+        } else {
+            $combinedContentDelta = $this->getContentDelta($content->content_delta);
+
+            return view('publicView.startReading', compact('content', 'combinedContentDelta'));
+        }
+    }
+
+    public function viewChapter($id)
+    {
+        $chapter = Chapter::with('content')->where('IsPublished', 1)->findOrFail($id);
+        $combinedChapterContentDelta = $this->getContentDelta($chapter->content_delta);
+
+        return view('publicView.chapter', compact('chapter', 'combinedChapterContentDelta'));
+    }
+    private function renderCombinedContent($combinedContent)
+    {
+        $renderedContent = '';
+        foreach ($combinedContent as $op) {
+            if (isset($op['insert']) && is_string($op['insert'])) {
+                $renderedContent .= nl2br(e($op['insert']));
+            } elseif (isset($op['insert']) && !is_string($op['insert'])) {
+                $renderedContent .= $this->renderMediaContent($op['insert']);
+            }
+        }
+        return $renderedContent;
+    }
+
+    
+    private function renderMediaContent($media)
+    {
+        if (isset($media['image'])) {
+            return '<img src="' . asset('storage/' . $media['image']) . '" alt="Image">';
+        }
+        // Handle other media types as needed
+        return '';
+    }
+    
+    
+    
+    
         
 
     

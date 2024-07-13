@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Usamamuneerchaudhary\Commentify\Traits\Commentable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Chapter extends Model
 {
     use HasFactory;
+    use Commentable;
 
     protected $table = 'chapter';
     protected $primaryKey = 'ChapterID';
@@ -16,6 +19,9 @@ class Chapter extends Model
         'Title',
         'Body',
         'ChapterNumber',
+        'IsPublished',
+        'publication_date',
+        'Status',
         'content_delta'
     ];
     protected $casts = [
@@ -26,5 +32,9 @@ class Chapter extends Model
     public function content()
     {
         return $this->belongsTo(Content::class, 'ContentID');
+    }
+    public function reactions(): HasMany
+    {
+        return $this->hasMany(Reaction::class, 'chapter_id');
     }
 }
