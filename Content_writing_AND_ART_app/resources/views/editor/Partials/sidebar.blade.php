@@ -14,6 +14,7 @@
                 <span class="count bg-success"></span>
               </div>
               <div class="profile-name">
+
                 <h5 class="mb-0 font-weight-normal">Henry Klein</h5>
                 <span>Gold Member</span>
               </div>
@@ -112,13 +113,12 @@
             </ul>
           </div>
         </li>
-        
         <li class="nav-item menu-items">
-          <a class="nav-link" href="{{ route('admin.register-editor') }}">
+          <a class="nav-link" href="{{route('editor.showCategories')}}">
             <span class="menu-icon">
-              <i class="mdi mdi-playlist-play"></i>
+              <i class="mdi mdi-table-large"></i>
             </span>
-            <span class="menu-title">Registration </span>
+            <span class="menu-title">Categories</span>
           </a>
         </li>
         <li class="nav-item menu-items">

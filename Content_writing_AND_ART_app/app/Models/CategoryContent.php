@@ -10,10 +10,10 @@ class CategoryContent extends Model
     use HasFactory;
 
     protected $table = 'category_content';
-    protected $primaryKey = 'CategoryId';
+    protected $primaryKey = 'CategoryID';
 
     protected $fillable =  [
-        'categoryName'
+        'CategoryName', 'Description'
     ];
 
     public function content()
