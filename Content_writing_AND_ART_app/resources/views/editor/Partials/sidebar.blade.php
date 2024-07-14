@@ -71,24 +71,13 @@
 
         <!-- Editor management -->
         <li class="nav-item menu-items">
-        <a class="cursor-pointer nav-link" data-toggle="collapsed" href="#editor-management" aria-expanded="false" aria-controls="editor-management">
-          <span class="menu-icon">
-            <i class="mdi mdi-laptop"></i>
-          </span>
-          <span class="menu-title">Editor Management</span>
-          <i class="menu-arrow mdi mdi-chevron-down"></i>
-        </a>
-        <div class="hidden collapse" id="editor-management">
-          <ul class="nav flex-column sub-menu">
-            <li class="nav-item">
-              <a class="nav-link" href="#">Category</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Manage</a>
-            </li>
-          </ul>
-        </div>
-      </li>
+          <a class="nav-link" href="{{route('editor.showManageContent')}}">
+            <span class="menu-icon">
+              <i class="mdi mdi-table-large"></i>
+            </span>
+            <span class="menu-title">Manage Content</span>
+          </a>
+        </li>
         <!-- End of editor management -->      
 
         <li class="nav-item menu-items">
@@ -118,7 +107,7 @@
             <span class="menu-icon">
               <i class="mdi mdi-table-large"></i>
             </span>
-            <span class="menu-title">Categories</span>
+            <span class="menu-title">Manage Category</span>
           </a>
         </li>
         <li class="nav-item menu-items">

@@ -56,19 +56,21 @@ $counts = $users->pluck('count');
         $contentData = Content::selectRaw('COUNT(ContentID) as count, CategoryID')
                         ->groupBy('CategoryID')
                         ->get();
-
+    
         $categories = CategoryContent::whereIn('CategoryID', $contentData->pluck('CategoryID'))->get()->keyBy('CategoryID');
-
+    
         $categoryNames = [];
         $counts = [];
-
+    
         foreach ($contentData as $data) {
             $categoryNames[] = $categories[$data->CategoryID]->name; // Adjust field 'name' if different
             $counts[] = $data->count;
         }
 
+    
         return view('admin.categorychart', compact('categoryNames', 'counts'));
     }
+    
     
     public function order()
     {

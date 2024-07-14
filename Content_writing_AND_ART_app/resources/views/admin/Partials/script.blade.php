@@ -16,3 +16,7 @@
   <!-- endinject -->
   <!-- Custom js for this page -->
   <script src="{{asset('admin/assets/js/dashboard.js')}}"></script>
+
+  <!-- chart JS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ 

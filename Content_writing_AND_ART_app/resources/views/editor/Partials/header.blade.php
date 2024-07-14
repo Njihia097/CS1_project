@@ -117,49 +117,33 @@
                 <i class="mdi mdi-bell"></i>
                 <span class="count bg-danger"></span>
               </a>
+
+              <!-- Notifications -->
+              
               <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                aria-labelledby="notificationDropdown">
-                <h6 class="p-3 mb-0">Notifications</h6>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-dark rounded-circle">
-                      <i class="mdi mdi-calendar text-success"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content">
-                    <p class="mb-1 preview-subject">Event today</p>
-                    <p class="mb-0 text-muted ellipsis"> Just a reminder that you have an event today </p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-dark rounded-circle">
-                      <i class="mdi mdi-settings text-danger"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content">
-                    <p class="mb-1 preview-subject">Settings</p>
-                    <p class="mb-0 text-muted ellipsis"> Update dashboard </p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-dark rounded-circle">
-                      <i class="mdi mdi-link-variant text-warning"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content">
-                    <p class="mb-1 preview-subject">Launch Admin</p>
-                    <p class="mb-0 text-muted ellipsis"> New admin wow! </p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <p class="p-3 mb-0 text-center">See all notifications</p>
-              </div>
+                    aria-labelledby="notificationDropdown">
+                    <h6 class="p-3 mb-0">Notifications</h6>
+                    <div class="dropdown-divider"></div>
+                    @foreach(auth()->user()->unreadNotifications as $notification)
+                        <a href="#" class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                                <div class="preview-icon bg-dark rounded-circle">
+                                    <i class="mdi mdi-alert-circle text-info"></i>
+                                </div>
+                            </div>
+                            <div class="preview-item-content">
+                                <p class="mb-1 preview-subject">{{ $notification->data['title'] }}</p>
+                                <p class="mb-0 text-muted ellipsis">{{ $notification->data['message'] }}</p>
+                            </div>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                    @endforeach
+                    <p class="p-3 mb-0 text-center">See all notifications</p>
+                </div>
+
+              <!-- Notifications -->
             </li>
+
             
             <div class="relative ms-3">
     <x-dropdown align="right" width="48">
