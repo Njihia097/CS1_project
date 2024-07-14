@@ -68,8 +68,9 @@ class HomeController extends Controller
 
     public function view_userpage()
     {
-        $artist=artist::all();
-        return view('home.userpage');
+        $artist = Artist::all(); // Make sure 'Artist' is correctly referenced
+        $contents = Content::all();
+        return view('home.userpage', compact('contents', 'artist'));
     }
 
 

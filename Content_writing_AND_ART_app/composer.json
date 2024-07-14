@@ -14,6 +14,7 @@
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.5",
         "livewire/livewire": "^3.0",
+        "safaricom/mpesa": "^1.0",
         "spatie/laravel-permission": "^6.7",
         "usamamuneerchaudhary/commentify": "^1.5"
     },

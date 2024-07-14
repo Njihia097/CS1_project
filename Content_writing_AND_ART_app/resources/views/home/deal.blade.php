@@ -1,12 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- categories.blade.php -->
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><h4>Categories</h4></title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}"> 
+<section class="category-section">
+    <div class="container">
+        <h1>Categories</h1>
+        <div class="category-container">
+            <!-- Sample category boxes -->
+            <div class="category-box"><a href="#"><u>Category 1</u></a></div>
+            <div class="category-box"><a href="#"><u>Category 2</u></a></div>
+            <div class="category-box"><a href="#"><u>Category 3</u></a></div>
+            <div class="category-box"><a href="#"><u>Category 4</u></a></div>
+            <div class="category-box"><a href="#"><u>Category 5</u></a></div>
+            <div class="category-box"><a href="#"><u>Category 6</u></a></div>
+        </div>
+    </div>
+
     <style>
+        /* CSS styles specific to the categories section */
         .category-container {
             display: flex;
             flex-wrap: wrap;
@@ -49,29 +58,4 @@
             }
         }
     </style>
-</head>
-<x-app-layout>
-
-<body>
-    <!-- Other content of the user page -->
-
-    <section class="category-section">
-        <div class="container">
-            <h1>Categories</h1>
-            <div class="category-container">
-                <!-- Sample category boxes -->
-                <div class="category-box"><a href="#"><u>Category 1</u></a></div>
-                <div class="category-box"><a href="#"><u>Category 2</u></a></div>
-                <div class="category-box"><a href="#"><u>Category 3</u></a></div>
-                <div class="category-box"><a href="#"><u>Category 4</u></a></div>
-                <div class="category-box"><a href="#"><u>Category 5</u></a></div>
-                <div class="category-box"><a href="#"><u>Category 6</u></a></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Other content of the user page -->
-</body>
-</x-app-layout>
-
-</html>
+</section>

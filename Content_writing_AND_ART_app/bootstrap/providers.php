@@ -6,6 +6,7 @@ return [
     App\Providers\JetstreamServiceProvider::class,
   
     Usamamuneerchaudhary\Commentify\Providers\CommentifyServiceProvider::class,
+    
 
     
 
