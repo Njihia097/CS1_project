@@ -118,4 +118,12 @@ public function show_order()
 }
 }
 
+public function remove_order($id)
+{
+    $order=order::find($id);
+    $order->delete();
+
+    return redirect()->back();
+}
+
 }

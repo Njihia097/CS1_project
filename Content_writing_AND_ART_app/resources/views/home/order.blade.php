@@ -77,6 +77,7 @@
         <td><img class="img_deg" src="/storage/{{$order->image}}"></td>
         <td>{{$order->quantity}}</td>
         <td>{{$order->price}}</td>
+        <td><a class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this order?')" href="{{url('/remove_order', $order->id)}}">Cancel</a></td>
         </tr>
         @endforeach
     </table>
