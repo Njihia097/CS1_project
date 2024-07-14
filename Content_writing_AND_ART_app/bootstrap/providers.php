@@ -7,4 +7,6 @@ return [
   
     Usamamuneerchaudhary\Commentify\Providers\CommentifyServiceProvider::class,
 
+    
+
 ];
