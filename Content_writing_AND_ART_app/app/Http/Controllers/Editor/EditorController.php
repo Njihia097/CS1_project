@@ -80,9 +80,11 @@ class EditorController extends Controller
             }])
             ->get()
             ->map(function ($content) {
-                // Set status to 'pending' if it is a chapter-wise content with published chapters
+                // Check parent content status before setting it to 'pending'
                 if ($content->IsChapter && $content->chapters->isNotEmpty()) {
-                    $content->Status = 'pending';
+                    if ($content->Status !== 'flagged' && $content->Status !== 'suspended' && $content->Status !== 'approved') {
+                        $content->Status = 'pending';
+                    }
                 }
                 return $content;
             });

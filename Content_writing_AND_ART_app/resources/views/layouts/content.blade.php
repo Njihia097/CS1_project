@@ -44,8 +44,7 @@
 
                 </div>
             </div>
-            <!-- Success and Error Messages -->
-            <div id="message" class="fixed hidden p-4 rounded shadow-lg z-1000" role="alert"></div>
+
 
             @if (Auth::check() && Auth::id() == $content->AuthorID)
             <div class="flex items-center space-x-2 space-y-2">
@@ -53,20 +52,34 @@
             </div>           
             @endif
             @if (Auth::check() && Auth::user()->hasRole('editor'))
-                    <div class="flex space-x-2">
-                        @if ($content->Status == 'pending' || ($content->IsChapter && $content->chapters->contains('Status', 'pending')))
-                            <button class="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded approve-btn hover:bg-green-600 hover:text-white"
-                                data-id="{{ $content->ContentID }}">Approve</button>
-                            <button class="px-4 py-2 text-sm font-bold text-white bg-red-500 rounded flag-btn hover:bg-red-600 hover:text-white"
-                                data-id="{{ $content->ContentID }}">Flag</button>
-                        @else
-                            <span class="px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded">Reviewed</span>
-                        @endif
-                    </div>
-                @endif
+                <div class="flex space-x-2">
+                    @if ($content->Status == 'pending')
+                        <button class="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded approve-btn hover:bg-green-600 hover:text-white"
+                            data-id="{{ $content->ContentID }}">Approve</button>
+                        <button class="px-4 py-2 text-sm font-bold text-white bg-red-500 rounded flag-btn hover:bg-red-600 hover:text-white"
+                            data-id="{{ $content->ContentID }}">Flag</button>
+                    @else
+                        <span class="px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded">Reviewed</span>
+                    @endif
+                </div>
+            @endif
+            @if (Auth::check() && Auth::user()->hasRole('admin'))
+                <div class="flex space-x-2">
+                    @if ($content->Status == 'flagged')
+                        <button class="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded approve-btn hover:bg-green-600 hover:text-white"
+                            data-id="{{ $content->ContentID }}">Approve</button>
+                        <button class="px-4 py-2 text-sm font-bold text-white bg-red-500 rounded suspend-btn hover:bg-red-600 hover:text-white"
+                            data-id="{{ $content->ContentID }}">Suspend</button>
+                    @else
+                        <span class="px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded">Reviewed</span>
+                    @endif
+                </div>
+            @endif
 
 
         </div>
+        <!-- Success and Error Messages -->
+        <div id="message" class="fixed hidden p-4 rounded shadow-lg z-1000" role="alert"></div>
 
         <div class="pt-20">
             @if(session('error'))
@@ -97,52 +110,62 @@
             menu.classList.toggle('hidden');
         });
     </script>
-        <script>
-        document.querySelectorAll('.approve-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const contentId = this.dataset.id;
-                updateContentStatus(contentId, 'approved');
-            });
+<script>
+    document.querySelectorAll('.approve-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const contentId = this.dataset.id;
+            updateContentStatus(contentId, 'approved', this);
         });
+    });
 
-        document.querySelectorAll('.flag-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const contentId = this.dataset.id;
-                updateContentStatus(contentId, 'flagged');
-            });
+    document.querySelectorAll('.flag-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const contentId = this.dataset.id;
+            updateContentStatus(contentId, 'flagged', this);
         });
+    });
 
-        function updateContentStatus(contentId, status) {
-            fetch(`/editor/content/${contentId}/status`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ status: status })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        displayMessage('success', `Content ${status} successfully!`);
-                    } else {
-                        displayMessage('error', `Failed to ${status} content!`);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+    document.querySelectorAll('.suspend-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const contentId = this.dataset.id;
+            updateContentStatus(contentId, 'suspend', this);
+        });
+    });
+
+    function updateContentStatus(contentId, status, button) {
+        fetch(`/editor/content/${contentId}/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ status: status })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayMessage('success', `Content ${status} successfully!`);
+                    // Update the button to show 'Reviewed' status
+                    const parentDiv = button.closest('.flex');
+                    parentDiv.innerHTML = '<span class="px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded">Reviewed</span>';
+                } else {
                     displayMessage('error', `Failed to ${status} content!`);
-                });
-        }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                displayMessage('error', `Failed to ${status} content!`);
+            });
+    }
 
-        function displayMessage(type, message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `fixed p-4 rounded shadow-lg z-1000 ${type == 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`;
-            messageDiv.textContent = message;
-            document.body.appendChild(messageDiv);
-            setTimeout(() => {
-                document.body.removeChild(messageDiv);
-            }, 3000);
-        }
+    function displayMessage(type, message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `fixed p-4 rounded shadow-lg z-1000 ${type == 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`;
+        messageDiv.textContent = message;
+        document.body.appendChild(messageDiv);
+        setTimeout(() => {
+            document.body.removeChild(messageDiv);
+        }, 3000);
+    }
     </script>
 </html>

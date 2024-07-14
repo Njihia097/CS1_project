@@ -77,6 +77,28 @@ $counts = $users->pluck('count');
         $orders = Order::all();
         return view('admin.order',compact('orders'));
     }
+    public function manageContentView()
+    {
+        $flaggedContents = Content::where('status', 'flagged')->get();
+        return view('admin.adminManageContent', compact('flaggedContents'));
+    }
+
+    public function updateContentStatus(Request $request, $contentId)
+    {
+        $content = Content::findOrFail($contentId);
+        $content->status = $request->status;
+        $content->save();
+
+        return response()->json(['success' => true, 'content' => $content]);
+    }
+    public function contentDetailsView ($id)
+    {
+        $content = Content::with(['author', 'chapters' => function ($query) {
+            $query->where('IsPublished', 1);
+        }])->findOrFail($id);
+
+        return view('admin.detailedContentView', compact('content'));
+    }
 
     
 }
