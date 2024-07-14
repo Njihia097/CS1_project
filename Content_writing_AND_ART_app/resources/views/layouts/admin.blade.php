@@ -10,7 +10,25 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     
+  <style>
+    .filter-checkbox {
+      accent-color: #4A5568; /* Adjust the checkbox color to match the dark theme */
+    }
 
+    #filterDropdown ul {
+      list-style-type: none;
+    }
+
+    #filterDropdown label {
+      color: #E2E8F0; /* Text color */
+    }
+
+    #filterDropdown {
+      background-color: #2D3748; /* Dark background */
+      border-color: #4A5568; /* Border color */
+    }
+
+  </style>
   @livewireStyles
 </head>
 

@@ -39,22 +39,26 @@
                 </thead>
                 <tbody id="contentTable" class="items-center">
                     @foreach ($contents as $content)
-                        <tr class="items-center bg-gray-800 border-b border-gray-700 hover:bg-gray-700">
-                            <th scope="row" class="px-6 py-4 font-medium text-white whitespace-nowrap">
-                                {{ $loop->iteration }}</th>
-                            <td class="px-6 py-4">{{ $content->Title }}</td>
-                            <td class="w-full px-6 py-4">{{ Str::limit($content->Description, 200) }}</td>
-                            <td
-                                class="px-6 py-4 {{ $content->Status == 'pending' ? 'text-yellow-400' : ($content->Status == 'flagged' ? 'text-red-400' : ($content->Status == 'approved' ? 'text-green-400' : 'bg-gray-400')) }}">
-                                {{ ucfirst($content->Status) }}</td>
-                            <td class="flex gap-2 px-6 py-4">
-                            <a href="{{ route('editor.displayContentDetails', ['id' => $content->ContentID]) }}" class="font-medium text-blue-500 view-btn hover:underline">View</a>
-                                <button class="font-medium text-green-500 approve-btn hover:underline"
-                                    data-id="{{ $content->ContentID }}">Approve</button>
-                                <button class="font-medium text-red-500 flag-btn hover:underline"
-                                    data-id="{{ $content->ContentID }}">Flag</button>
-                            </td>
-                        </tr>
+                                        <tr class="items-center bg-gray-800 border-b border-gray-700 hover:bg-gray-700">
+                                            <th scope="row" class="px-6 py-4 font-medium text-white whitespace-nowrap">
+                                                {{ $loop->iteration }}
+                                            </th>
+                                            <td class="px-6 py-4">{{ $content->Title }}</td>
+                                            <td class="w-full px-6 py-4">{{ Str::limit($content->Description, 200) }}</td>
+                                            <td class="px-6 py-4
+                        {{ $content->Status == 'pending' ? 'text-yellow-400' :
+                            ($content->Status == 'flagged' ? 'text-red-400' :
+                                ($content->Status == 'approved' ? 'text-green-400' :
+                                    ($content->Status == 'suspended' ? 'text-orange-400' :
+                                        'bg-gray-400'))) }}">
+                                                {{ ucfirst($content->Status) }}
+                                            </td>
+
+                                            <td class="flex gap-2 px-6 py-4">
+                                                <a href="{{ route('editor.displayContentDetails', ['id' => $content->ContentID]) }}"
+                                                    class="font-medium text-blue-500 view-btn hover:underline">View</a>
+                                            </td>
+                                        </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -74,65 +78,65 @@
         </div>
     </div>
     <script>
-            // Approve and Flag button click events
-            document.querySelectorAll('.approve-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const contentId = this.dataset.id;
-                    updateContentStatus(contentId, 'approved');
+        // Approve and Flag button click events
+        document.querySelectorAll('.approve-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const contentId = this.dataset.id;
+                updateContentStatus(contentId, 'approved');
+            });
+        });
+
+        document.querySelectorAll('.flag-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const contentId = this.dataset.id;
+                updateContentStatus(contentId, 'flagged');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            window.Echo.channel('content-status')
+                .listen('ContentStatusUpdated', (event) => {
+                    const content = event.content;
+                    displayMessage('info', `Content "${content.Title}" status updated to ${event.status}.`);
                 });
-            });
-
-            document.querySelectorAll('.flag-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const contentId = this.dataset.id;
-                    updateContentStatus(contentId, 'flagged');
-                });
-            });
-
-            document.addEventListener('DOMContentLoaded', function () {
-                window.Echo.channel('content-status')
-                    .listen('ContentStatusUpdated', (event) => {
-                        const content = event.content;
-                        displayMessage('info', `Content "${content.Title}" status updated to ${event.status}.`);
-                    });
-            });
+        });
 
 
-            function updateContentStatus(contentId, status) {
-                fetch(`/editor/content/${contentId}/status`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ status: status })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            const row = document.querySelector(`.approve-btn[data-id='${contentId}']`).closest('tr');
-                            row.querySelector('td:nth-child(4)').textContent = status.charAt(0).toUpperCase() + status.slice(1);
-                            row.querySelector('td:nth-child(4)').className = `px-6 py-4 ${status == 'approved' ? 'text-green-400' : 'text-red-400'}`;
-                            displayMessage('success', `Content ${status} successfully!`);
-                        } else {
-                            displayMessage('error', `Failed to ${status} content!`);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
+        function updateContentStatus(contentId, status) {
+            fetch(`/editor/content/${contentId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ status: status })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const row = document.querySelector(`.approve-btn[data-id='${contentId}']`).closest('tr');
+                        row.querySelector('td:nth-child(4)').textContent = status.charAt(0).toUpperCase() + status.slice(1);
+                        row.querySelector('td:nth-child(4)').className = `px-6 py-4 ${status == 'approved' ? 'text-green-400' : 'text-red-400'}`;
+                        displayMessage('success', `Content ${status} successfully!`);
+                    } else {
                         displayMessage('error', `Failed to ${status} content!`);
-                    });
-            }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    displayMessage('error', `Failed to ${status} content!`);
+                });
+        }
 
-            function displayMessage(type, message) {
-                const messageDiv = document.getElementById('message');
-                messageDiv.className = `fixed p-4 rounded shadow-lg z-1000 ${type == 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`;
-                messageDiv.textContent = message;
-                messageDiv.classList.remove('hidden');
-                setTimeout(() => {
-                    messageDiv.classList.add('hidden');
-                }, 3000);
-            }
+        function displayMessage(type, message) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.className = `fixed p-4 rounded shadow-lg z-1000 ${type == 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`;
+            messageDiv.textContent = message;
+            messageDiv.classList.remove('hidden');
+            setTimeout(() => {
+                messageDiv.classList.add('hidden');
+            }, 3000);
+        }
 
     </script>
     @endsection

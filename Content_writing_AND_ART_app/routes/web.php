@@ -38,6 +38,10 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         Route::get('/home', [AdminController::class, 'adminHome'])->name('adminHome');
         Route::get('/register-editor', [Admin_EditorController::class, 'view'])->name('register-editor');
         Route::post('/register-editor', [Admin_EditorController::class, 'store'])->name('registerEditor');
+        Route::get('/manage-content', [AdminController::class, 'manageContentView'])->name('manageContentView');
+        Route::put('/content/{id}/status', [AdminController::class, 'updateContentStatus'])->name('updateContentStatus');
+        Route::get('/content-details/{id}', [AdminController::class, 'contentDetailsView'])->name('contentDetailsView');
+        Route::post('/filter-contents', [AdminController::class, 'filterContents'])->name('filterContents'); 
 });
 
 
