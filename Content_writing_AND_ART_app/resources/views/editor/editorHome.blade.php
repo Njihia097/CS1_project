@@ -1,9 +1,9 @@
-<x-admin-layout>
+<x-editor-layout>
 
 @section('content')
 <div>
-    @include('admin/partials.body')
+    @include('editor/Partials.body')
 </div>
 @endsection
 
-</x-admin-layout>
+</x-editor-layout>

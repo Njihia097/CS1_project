@@ -54,8 +54,8 @@
                 <div class="mt-4">
                     <x-label for="description" value="{{ __('Description') }}" />
                     <textarea class="block w-full h-[50px] md:h-[100px] lg:h-[100px] resize-none rounded border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700"
-                     id="description" name="description" maxlength="150" placeholder="A brief description of your content helps your readers get a gist of what to expect in the main content" oninput="updateCountdown()">{{ old('description') }}</textarea>
-                    <small id="description-countdown" class="flex justify-end text-sm">150 characters remaining</small>
+                     id="description" name="description" maxlength="1000" placeholder="A brief description of your content helps your readers get a gist of what to expect in the main content" oninput="updateCountdown()">{{ old('description') }}</textarea>
+                    <small id="description-countdown" class="flex justify-end text-sm">1000 characters remaining</small>
 
                     @if ($errors->has('description'))
                         <span class="text-sm text-red-600">
@@ -123,7 +123,7 @@
         function updateCountdown() {
             const textarea = document.getElementById('description');
             const countdown = document.getElementById('description-countdown');
-            const maxLength = 150;
+            const maxLength = 1000;
             const remaining = maxLength - textarea.value.length;
             countdown.textContent = `${remaining} characters remaining`;
         }

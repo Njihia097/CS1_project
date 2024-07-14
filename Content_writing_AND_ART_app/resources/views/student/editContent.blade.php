@@ -13,6 +13,14 @@
         <form method="POST" id="content-form" action="{{ route('student.updateContent', $content->ContentID) }}">
             @csrf
             @method('PUT')
+
+            <!-- IsPublished check -->
+            @php
+                $isPublished = $content->IsChapter && request()->has('chapterId')
+                                ? \App\Models\Chapter::where('ChapterID', request()->get('chapterId'))->first()->IsPublished
+                                : $content->IsPublished;
+            @endphp
+
             <div class="fixed z-40 flex items-center justify-between w-full px-4 pt-2 mx-auto mt-0 bg-gray-100 max-w-7xl">
                 <div class="flex items-center">
                     <a href="{{ route('student.contentDetails', ['content' => $content->ContentID])}}"><i class="text-3xl fa-solid fa-chevron-left size-8"></i></a> 
@@ -35,10 +43,12 @@
                     <x-button type="button" onclick="setAction('save')">
                         {{ __('Save Content') }}
                     </x-button>
-                    <button type="button" onclick="setAction('publish')" class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-blue-800 border border-transparent rounded-md hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50">
-                        Publish
+                    <button type="button" onclick="setAction('{{ $isPublished ? 'unpublish' : 'publish' }}')" 
+                            class="inline-flex items-center px-4 py-2 ml-4 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 {{ $isPublished ? 'bg-gray-500 hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-600' : 'bg-blue-800 hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900' }}">
+                        {{ $isPublished ? 'UnPublish' : 'Publish' }}
                     </button>
                 </div>
+                
             </div>
 
             @if(session('error'))
@@ -52,49 +62,41 @@
                 </div>
             @endif
             <div class="pt-16">
-    <!-- Title input field moved here -->
-    <input type="hidden" id="content_type" value="{{ $content->IsChapter ? 'chapter' : 'story' }}">
+                <!-- Title input field moved here -->
+                <input type="hidden" id="content_type" value="{{ $content->IsChapter ? 'chapter' : 'story' }}">
 
-    <div class="flex flex-col items-center justify-center w-full px-6 mt-6 mb-2" id="chapter-title-container">
-        <input type="text" name="chapter_title" id="chapter_title" 
-        value="{{ $chapterTitle }}" 
-        class="flex items-center justify-center w-2/4 mb-4 text-3xl font-semibold text-gray-700 border-none focus:outline-none" style="background: transparent;">
-    </div>
+                <div class="flex flex-col items-center justify-center w-full px-6 mt-6 mb-2" id="chapter-title-container">
+                    <input type="text" name="chapter_title" id="chapter_title" 
+                    value="{{ $chapterTitle }}" 
+                    class="flex items-center justify-center w-2/4 mb-4 text-3xl font-semibold text-gray-700 border-none focus:outline-none" style="background: transparent;">
+                </div>
 
-    <div class="flex flex-col items-center justify-center w-full px-6 mt-6 mb-2" id="story-title-container">
-        <input type="text" name="title" id="title" 
-        value="{{ $content->Title }}" 
-        class="flex items-center justify-center w-2/4 mb-4 text-3xl font-semibold text-gray-700 border-none focus:outline-none" style="background: transparent;">
-    </div>
+                <div class="flex flex-col items-center justify-center w-full px-6 mt-6 mb-2" id="story-title-container">
+                    <input type="text" name="title" id="title" 
+                    value="{{ $content->Title }}" 
+                    class="flex items-center justify-center w-2/4 mb-4 text-3xl font-semibold text-gray-700 border-none focus:outline-none" style="background: transparent;">
+                </div>
 
-    <!-- Editor container -->
-    <div class="flex flex-col items-center px-6 mb-0">
-        <input type="hidden" name="content_delta" id="content-delta">
-        <!-- Hidden input for chapter_id -->
-        <input type="hidden" id="chapter-id" name="chapter_id" value="{{ $chapterId ?? '' }}">
-        <input type="hidden" name="action" id="action" value="">
-        <div id="editor-container" class="w-full mb-6"></div>
-    </div>
-</div>
-
+                <!-- Editor container -->
+                <div class="flex flex-col items-center px-6 mb-0">
+                    <input type="hidden" name="content_delta" id="content-delta">
+                    <!-- Hidden input for chapter_id -->
+                    <input type="hidden" id="chapter-id" name="chapter_id" value="{{ $chapterId ?? '' }}">
+                    <input type="hidden" name="action" id="action" value="">
+                    <div id="editor-container" class="w-full mb-6"></div>
+                </div>
+            </div>
         </form>
     </x-app-layout>
 
-
-   
         <div class="image-loader" id="image-loader"></div>
  
-        
-    
-
-
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
     <script>
         const contentID = '{{ $content->ContentID }}';
         const chapterID = '{{ $chapterId ?? '' }}';
     </script>
-  
     <script>
         let isContentChanged = false;
 
@@ -106,6 +108,5 @@
         }
     </script>
     <script src="{{ asset('js/quill.js') }}"></script>
-
 </body>
 </html>

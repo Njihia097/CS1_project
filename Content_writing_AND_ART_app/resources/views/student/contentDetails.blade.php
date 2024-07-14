@@ -43,7 +43,7 @@
                 <div class="row">
                     <div class="mb-4 col-12 col-md-3">
                         <div class="card">
-                            <img src="{{ $content->thumbnail ? asset('cover_images/' . $content->thumbnail) : 'cover_image.jpg' }}" class="card-img-top" alt="Cover Image" id="coverImage">
+                            <img src="{{ $content->thumbnail ? asset('cover_images/' . $content->thumbnail) : 'img/banner-3.jpg' }}" class="object-cover w-full h-48 rounded-sm card-img-top" alt="Cover Image" id="coverImage">
                             <div class="text-center card-body">
                                 <button type="button" class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 disabled:opacity-50" 
                                 onclick="document.getElementById('coverImageInput').click()">Change Cover</button>
@@ -75,8 +75,8 @@
                                 <div class="mt-4">
                                     <x-label for="description" value="{{ __('Description') }}" />
                                     <textarea class="block w-full h-[50px] md:h-[100px] lg:h-[100px] resize-none rounded border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700"
-                                    id="description" name="description" maxlength="150" placeholder="A brief description of your content helps your readers get a gist of what to expect in the main content" oninput="updateCountdown()">{{ $content->Description }}</textarea>
-                                    <small id="description-countdown" class="flex justify-end text-sm">150 characters remaining</small>
+                                    id="description" name="description" maxlength="1000" placeholder="A brief description of your content helps your readers get a gist of what to expect in the main content" oninput="updateCountdown()">{{ $content->Description }}</textarea>
+                                    <small id="description-countdown" class="flex justify-end text-sm">1000 characters remaining</small>
 
                                     @if ($errors->has('description'))
                                         <span class="text-sm text-red-600">
@@ -170,13 +170,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayStandaloneContent(content) {
-        const listItem = createListItem(content.title, content.lastModified, 5, 10, 3, contentId, false, null);
+        const listItem = createListItem(content.title, content.lastModified, content.comments, content.thumbsUp, content.thumbsDown, contentId, false, null);
         tableOfContentsContainer.appendChild(listItem);
     }
 
     function displayChapters(chapters) {
         chapters.forEach(chapter => {
-            const listItem = createListItem(chapter.title, chapter.lastModified, 5, 10, 3, contentId, true, chapter.ChapterID);
+            const listItem = createListItem(chapter.title, chapter.lastModified, chapter.comments, chapter.thumbsUp, chapter.thumbsDown, contentId, true, chapter.ChapterID);
             tableOfContentsContainer.appendChild(listItem);
         });
     }
@@ -192,7 +192,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="flex items-center space-x-4">
                 <span class="badge bg-secondary rounded-pill">${thumbsUp} <i class="text-gray-900 fa-regular fa-thumbs-up"></i></span>
                 <span class="badge bg-secondary rounded-pill">${thumbsDown} <i class="text-gray-900 fa-regular fa-thumbs-down"></i></span>
-                <span class="badge bg-secondary rounded-pill">${comments} <i class="text-gray-900 fa-regular fa-comment"></i></span>
+                <span class="badge bg-secondary rounded-pill">${comments} <i class="text-gray-900 fa-regular fa-comment"></i></span>           
+
                 <div class="dropdown">
                     <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-ellipsis"></i>
@@ -299,7 +300,7 @@ function deleteContent(contentId, isChapter, chapterId) {
         function updateCountdown() {
             const textarea = document.getElementById('description');
             const countdown = document.getElementById('description-countdown');
-            const maxLength = 150;
+            const maxLength = 1000;
             const remaining = maxLength - textarea.value.length;
             countdown.textContent = `${remaining} characters remaining`;
         }

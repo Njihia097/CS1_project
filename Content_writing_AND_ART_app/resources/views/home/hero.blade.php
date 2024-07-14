@@ -1,39 +1,82 @@
-<section class="hero-section">
-    <div class="hero-items owl-carousel">
-        <!-- Hero Item 1 -->
-        <div class="single-hero-items set-bg" data-setbg="{{ asset('img/hero-1.jpg') }}">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 hero-box">
-                        <div class="hero-content">
-                            <span></span>
-                            <h1>Creative Hub</h1>
-                            <p>Join other creators and share your creativity with the world.</p>
-                            <a href="{{ route('register') }}" class="primary-btn">Start Writing</a>
+@auth
+    @if (Auth::user()->hasRole('student'))
+        <section class="hero-section">
+            <div class="hero-items owl-carousel">
+                <!-- Hero Item 1 -->
+                <div class="single-hero-items set-bg" data-setbg="{{ asset('img/hero-1.jpg') }}">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 hero-box">
+                                <div class="hero-content">
+                                    <span></span>
+                                    <h1>Creative Hub</h1>
+                                    <p>Join other creators and share your creativity with the world.</p>
+                                    <a href="{{ route('student.Content-setup') }}" class="primary-btn">Start Writing</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Hero Item 2 -->
-        <div class="single-hero-items set-bg" data-setbg="{{ asset('img/hero-2.jpg') }}">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 hero-box">
-                        <div class="hero-content">
-                            <span></span>
-                            <h1>Art Shop</h1>
-                            <p style="color: black;">Take this opportunity to find art that speaks to you and purchase it. 
-                                Take a step further and register with us to sell your art easily.</p>
-                            <a href="{{ url('/view_artsale') }}" class="primary-btn">Shop Now</a>
+                <!-- Hero Item 2 -->
+                <div class="single-hero-items set-bg" data-setbg="{{ asset('img/hero-2.jpg') }}">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 hero-box">
+                                <div class="hero-content">
+                                    <span></span>
+                                    <h1>Art Shop</h1>
+                                    <p style="color: black;">Take this opportunity to find art that speaks to you and purchase it. 
+                                        Take a step further and register with us to sell your art easily.</p>
+                                    <a href="{{ url('/view_artsale') }}" class="primary-btn">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    @endif
+@else
+    <section class="hero-section">
+        <div class="hero-items owl-carousel">
+            <!-- Hero Item 1 -->
+            <div class="single-hero-items set-bg" data-setbg="{{ asset('img/hero-1.jpg') }}">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8 hero-box">
+                            <div class="hero-content">
+                                <span></span>
+                                <h1>Creative Hub</h1>
+                                <p>Join other creators and share your creativity with the world.</p>
+                                <a href="{{ route('register') }}" class="primary-btn">Start Writing</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Item 2 -->
+            <div class="single-hero-items set-bg" data-setbg="{{ asset('img/hero-2.jpg') }}">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8 hero-box">
+                            <div class="hero-content">
+                                <span></span>
+                                <h1>Art Shop</h1>
+                                <p style="color: black;">Take this opportunity to find art that speaks to you and purchase it. 
+                                    Take a step further and register with us to sell your art easily.</p>
+                                <a href="{{ route('register') }}" class="primary-btn">Shop Now</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+@endauth
+
 
 <!-- Include necessary CSS and JS files -->
 <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
