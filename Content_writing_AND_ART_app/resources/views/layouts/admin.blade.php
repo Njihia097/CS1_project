@@ -49,6 +49,8 @@
   @include('admin/partials.script')
   <script src="{{ mix('js/app.js') }}" defer></script>
 
+
+
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.2/alpine.js" integrity="sha512-CJqnUsEMUTIbFuxtSCyjjC3ZQ1Y1Oo+/lh4Dw/D5RBvDZVtx6+O37NcRaEkXfDXI2O0GRNEfivHQ/l+G6m2Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     document.addEventListener('alpine:init', () => {

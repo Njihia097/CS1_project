@@ -78,7 +78,7 @@
                                     <x-dropdown-link href="{{ route('student.Content-setup')}}">
                                         {{ __('Create a new story') }}
                                     </x-dropdown-link>
-                                    <x-dropdown-link href="{{url('home.artform')}}">
+                                    <x-dropdown-link href="{{route('artform')}}">
                                         {{ __('Post new artwork') }}
                                     </x-dropdown-link>
                                 </x-slot>

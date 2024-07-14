@@ -41,7 +41,7 @@ class ArtistController extends Controller
             'price' => $validatedData['price'],
         ]);
 
-        return redirect()->route('home.artsale')->with('success', 'Art piece posted successfully!');
+        return redirect()->route('artsale')->with('success', 'Art piece posted successfully!');
     }
 
     public function index()

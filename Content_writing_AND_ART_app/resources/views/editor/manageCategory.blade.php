@@ -61,7 +61,7 @@
         </table>
         <!-- Pagination Links -->
         <div class="p-4">
-            {{ $categories->links() }}
+            {{ $categories->links('vendor.pagination.tailwind') }}
         </div>
     </div>
 

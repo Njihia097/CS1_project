@@ -44,11 +44,27 @@
 
                 </div>
             </div>
+            <!-- Success and Error Messages -->
+            <div id="message" class="fixed hidden p-4 rounded shadow-lg z-1000" role="alert"></div>
+
             @if (Auth::check() && Auth::id() == $content->AuthorID)
             <div class="flex items-center space-x-2 space-y-2">
                 <a href="{{ route('student.contentDetails', ['content' => $content->ContentID]) }}" class="inline-flex items-center px-4 py-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50">Edit Content</a>
             </div>           
             @endif
+            @if (Auth::check() && Auth::user()->hasRole('editor'))
+                    <div class="flex space-x-2">
+                        @if ($content->Status == 'pending' || ($content->IsChapter && $content->chapters->contains('Status', 'pending')))
+                            <button class="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded approve-btn hover:bg-green-600 hover:text-white"
+                                data-id="{{ $content->ContentID }}">Approve</button>
+                            <button class="px-4 py-2 text-sm font-bold text-white bg-red-500 rounded flag-btn hover:bg-red-600 hover:text-white"
+                                data-id="{{ $content->ContentID }}">Flag</button>
+                        @else
+                            <span class="px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded">Reviewed</span>
+                        @endif
+                    </div>
+                @endif
+
 
         </div>
 
@@ -80,5 +96,53 @@
             var menu = document.getElementById('dropdownMenu');
             menu.classList.toggle('hidden');
         });
+    </script>
+        <script>
+        document.querySelectorAll('.approve-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const contentId = this.dataset.id;
+                updateContentStatus(contentId, 'approved');
+            });
+        });
+
+        document.querySelectorAll('.flag-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const contentId = this.dataset.id;
+                updateContentStatus(contentId, 'flagged');
+            });
+        });
+
+        function updateContentStatus(contentId, status) {
+            fetch(`/editor/content/${contentId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ status: status })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayMessage('success', `Content ${status} successfully!`);
+                    } else {
+                        displayMessage('error', `Failed to ${status} content!`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    displayMessage('error', `Failed to ${status} content!`);
+                });
+        }
+
+        function displayMessage(type, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `fixed p-4 rounded shadow-lg z-1000 ${type == 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            setTimeout(() => {
+                document.body.removeChild(messageDiv);
+            }, 3000);
+        }
     </script>
 </html>

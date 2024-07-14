@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Category Chart</title>
-    <!-- Include Chart.js library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <div>
-        <canvas id="categoryChart"></canvas>
-    </div>
+<x-admin-layout : artistCount="$artistCount" contentCount="$contentCount">
+@section('content')
+<div>
+    <canvas id="categoryChart"></canvas>
+</div>
 
-    <script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
         var ctx = document.getElementById('categoryChart').getContext('2d');
         var categoryChart = new Chart(ctx, {
             type: 'bar', // Example: bar, line, pie, etc.
@@ -46,10 +42,8 @@
                 }
             }
         });
-    </script>
+    });
+</script>
 
-<div>
-    <a href="{{url('adminHome')}}" class="btn btn-info">back</a>
-</div>
-</body>
-</html>
+@endsection
+</x-admin-layout>

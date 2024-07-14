@@ -7,6 +7,14 @@ use Illuminate\View\View;
 
 class AdminLayout extends Component
 {
+    public $artistCount;
+    public $contentCount;
+
+    public function __construct($artistCount, $contentCount)
+    {
+        $this->artistCount = $artistCount;
+        $this->contentCount = $contentCount;
+    }
     /**
      * Get the view / contents that represents the component.
      */

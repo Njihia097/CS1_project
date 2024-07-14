@@ -52,7 +52,9 @@ Route::middleware(['auth', 'verified', 'role:editor'])
         Route::put('/content-categories/{id}', [EditorController::class, 'update']);
         Route::post('/content-categories', [EditorController::class, 'store']);
         Route::delete('/content-categories/{id}', [EditorController::class, 'destroy']);
-
+        Route::get('/manage-content', [EditorController::class, 'showManageContent'])->name('showManageContent');
+        Route::put('/content/{id}/status', [EditorController::class, 'updateContentStatus']);
+        Route::get('/content-view/{id}', [EditorController::class, 'displayContentDetails'])->name('displayContentDetails');
 
     });
 
