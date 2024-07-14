@@ -58,4 +58,9 @@ class HomeController extends Controller
     {
         return view('home.postart');
     }
+
+    public function view_faq()
+    {
+        return view('home.faq');
+    }
 }

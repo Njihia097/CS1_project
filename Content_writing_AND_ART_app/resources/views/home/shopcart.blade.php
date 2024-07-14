@@ -106,9 +106,10 @@
     </tbody>
     @endforeach
 
-    {{$totalprice}}
+   
 
 </table>
+<p style="align-content: center"> totalprice={{$totalprice}}</p>
 </div>
 <div>
 <a href="{{url('cash_order')}}" class="btn btn-info">Cash payment</a>

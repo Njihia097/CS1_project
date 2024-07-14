@@ -99,10 +99,13 @@ Route::get('/remove_cart/{id}', [CartController::class, 'remove_cart'])->name('r
 
 Route::get('/show_order',[CartController::class, 'show_order']);
 Route::get('/cash_order',[CartController::class, 'cash_order']);
+Route::get('/remove_order/{id}', [CartController::class, 'remove_order']);
 
 Route::get('/charts', [AdminController::class, 'charts']);
 Route::get('/category_chart', [AdminController::class, 'category_Chart']);
 Route::get('/content', [AdminController::class, 'content']);
 
 Route::get('/order', [AdminController::class,'order']);
+
+Route::get('view_faq', [HomeController::class, 'view_faq']);
 

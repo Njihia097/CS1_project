@@ -64,8 +64,8 @@
                                     }, 0) }}</h5>
                                 </div>
                                 <div class="select-button">
-                                    <a href="#" class="primary-btn view-card">VIEW CART</a>
-                                    <a href="#" class="primary-btn checkout-btn">CHECK OUT</a>
+                                    <a href="{{ url('show_cart') }}" class="primary-btn view-card">VIEW CART</a>
+                                    <a href="{{ url('show_cart') }}" class="primary-btn checkout-btn">CHECK OUT</a>
                                 </div>
                             </div>
                         </li>
@@ -74,6 +74,7 @@
                                 return $carry + ($item['price'] * $item['quantity']);
                             }, 0) }}
                         </li>
+                        
                         
                     </ul>
                 </div>
@@ -107,9 +108,9 @@
                     <li><a href="{{url ('/view_artsale')}}">Shop</a></li>
                     <li><a href="#">Collection</a>
                         <ul class="dropdown">
-                            <li><a href="#">Content writng</a></li>
+                            <li><a href="#">Content writing</a></li>
                             <li><a href="#">arts</a></li>
-                            <li><a href="#">Poetry</a></li>
+                            
                         </ul>
                     </li>
                     <li><a href="{{ url('show_cart') }}">Shopping Cart</a></li>
@@ -118,7 +119,7 @@
                         <ul class="dropdown">
                             <li><a href="{{url('show_order')}}">Orders</a></li>
                             <li><a href="{{url ('/view_blogpage')}}">Blog</a></li>
-                            <li><a href="./faq.html">Faq</a></li>
+                            <li><a href="{{url('view_faq')}}">Faq</a></li>
                             <li><a href="{{url('register')}}">Register</a></li>
                             <li><a href="{{url('login')}}">Login</a></li>
                         </ul>

@@ -93,7 +93,7 @@ public function cash_order()
         $order->delivery_status='processing';
         $order->save();
 
-        $cart_id=$data->id;
+        $cart_id=$item->id;
         $cart=cart::find($cart_id);
         $cart->delete();
 
@@ -116,6 +116,14 @@ public function show_order()
 }else{
     return redirect('login');
 }
+}
+
+public function remove_order($id)
+{
+    $order=order::find($id);
+    $order->delete();
+
+    return redirect()->back();
 }
 
 }
