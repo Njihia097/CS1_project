@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\SentimentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Admin_EditorController;
 use App\Http\Controllers\Auth\GoogleController;
@@ -59,6 +60,8 @@ Route::middleware(['auth', 'verified', 'role:editor'])
         Route::get('/manage-content', [EditorController::class, 'showManageContent'])->name('showManageContent');
         Route::put('/content/{id}/status', [EditorController::class, 'updateContentStatus']);
         Route::get('/content-view/{id}', [EditorController::class, 'displayContentDetails'])->name('displayContentDetails');
+        Route::post('/analyze-sentiment', [SentimentController::class, 'analyzeSentiment']);
+        Route::post('/analyze-sentiment', 'SentimentController@analyzeSentiment');
 
     });
 
@@ -89,6 +92,9 @@ Route::middleware(['auth', 'verified', 'role:student'])
     Route::get('public/content-view/{id}', [ContentController::class, 'viewContent'])->name('publicView.contentDescription');
     Route::get('public/start-reading/{id}', [ContentController::class, 'startReading'])->name('publicView.startReading');
     Route::get('public/chapter/{id}', [ContentController::class, 'viewChapter'])->name('publicView.chapter');
+
+
+
 
 
 // Additional routes

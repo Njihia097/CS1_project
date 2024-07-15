@@ -77,13 +77,18 @@
             @endif
             @if (Auth::check() && Auth::user()->hasRole('editor'))
                 <div class="flex space-x-2">
-                    @if ($content->Status == 'pending')
+                    @if ($content->Status == 'pending' || $content->Status == 'draft')
                         <button
                             class="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded approve-btn hover:bg-green-600 hover:text-white"
                             data-id="{{ $content->ContentID }}">Approve</button>
                         <button
                             class="px-4 py-2 text-sm font-bold text-white bg-red-500 rounded flag-btn hover:bg-red-600 hover:text-white"
                             data-id="{{ $content->ContentID }}">Flag</button>
+                            <button
+                                id="analyse-sentiment-btn"
+                                class="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600 hover:text-white"
+                                data-id="{{ $content->ContentID }}">Analyse Sentiment
+                            </button>
                     @else
                         <span class="px-4 py-2 text-sm font-medium text-white bg-gray-500 rounded">Reviewed</span>
                     @endif
@@ -139,6 +144,13 @@
     });
 </script>
 <script>
+    document.getElementById('analyse-sentiment-btn').addEventListener('click', function() {
+        this.innerHTML = '<i class="fa fa-spinner fa-spin"></i>'; // Show loading spinner
+        setTimeout(() => {
+            this.innerHTML = '<i class="text-green-500 fa fa-check"></i>'; // Show green tick after 5 seconds
+        }, 5000);
+    });
+
     document.querySelectorAll('.approve-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             const contentId = this.dataset.id;
