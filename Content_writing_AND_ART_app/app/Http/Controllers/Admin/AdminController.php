@@ -58,24 +58,48 @@ $counts = $users->pluck('count');
         $contentData = Content::selectRaw('COUNT(ContentID) as count, CategoryID')
                         ->groupBy('CategoryID')
                         ->get();
-
+    
         $categories = CategoryContent::whereIn('CategoryID', $contentData->pluck('CategoryID'))->get()->keyBy('CategoryID');
-
+    
         $categoryNames = [];
         $counts = [];
-
+    
         foreach ($contentData as $data) {
             $categoryNames[] = $categories[$data->CategoryID]->name; // Adjust field 'name' if different
             $counts[] = $data->count;
         }
 
+    
         return view('admin.categorychart', compact('categoryNames', 'counts'));
     }
+    
     
     public function order()
     {
         $orders = Order::all();
         return view('admin.order',compact('orders'));
+    }
+    public function manageContentView()
+    {
+        $flaggedContents = Content::where('status', 'flagged')->get();
+        return view('admin.adminManageContent', compact('flaggedContents'));
+    }
+
+    public function updateContentStatus(Request $request, $contentId)
+    {
+        $content = Content::findOrFail($contentId);
+        $content->status = $request->status;
+        $content->save();
+
+        return response()->json(['success' => true, 'content' => $content]);
+    }
+    public function contentDetailsView ($id)
+    {
+        $content = Content::with(['author', 'chapters' => function ($query) {
+            $query->where('IsPublished', 1);
+        }])->findOrFail($id);
+
+        return view('admin.detailedContentView', compact('content'));
     }
 
 

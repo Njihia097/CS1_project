@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Event;
 use App\Notifications\PasswordSetupNotification;
 
 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -16,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+       
     }
 
     /**

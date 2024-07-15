@@ -10,7 +10,25 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     
+  <style>
+    .filter-checkbox {
+      accent-color: #4A5568; /* Adjust the checkbox color to match the dark theme */
+    }
 
+    #filterDropdown ul {
+      list-style-type: none;
+    }
+
+    #filterDropdown label {
+      color: #E2E8F0; /* Text color */
+    }
+
+    #filterDropdown {
+      background-color: #2D3748; /* Dark background */
+      border-color: #4A5568; /* Border color */
+    }
+
+  </style>
   @livewireStyles
 </head>
 
@@ -48,6 +66,8 @@
 
   @include('admin/partials.script')
   <script src="{{ mix('js/app.js') }}" defer></script>
+
+
 
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.2/alpine.js" integrity="sha512-CJqnUsEMUTIbFuxtSCyjjC3ZQ1Y1Oo+/lh4Dw/D5RBvDZVtx6+O37NcRaEkXfDXI2O0GRNEfivHQ/l+G6m2Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>

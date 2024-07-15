@@ -117,50 +117,33 @@
                 <i class="mdi mdi-bell"></i>
                 <span class="count bg-danger"></span>
               </a>
+
+              <!-- Notifications -->
+              
               <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                aria-labelledby="notificationDropdown">
-                <h6 class="p-3 mb-0">Notifications</h6>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-dark rounded-circle">
-                      <i class="mdi mdi-calendar text-success"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content">
-                    <p class="mb-1 preview-subject">Event today</p>
-                    <p class="mb-0 text-muted ellipsis"> Just a reminder that you have an event today </p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-dark rounded-circle">
-                      <i class="mdi mdi-settings text-danger"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content">
-                    <p class="mb-1 preview-subject">Settings</p>
-                    <p class="mb-0 text-muted ellipsis"> Update dashboard </p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item preview-item">
-                  <div class="preview-thumbnail">
-                    <div class="preview-icon bg-dark rounded-circle">
-                      <i class="mdi mdi-link-variant text-warning"></i>
-                    </div>
-                  </div>
-                  <div class="preview-item-content">
-                    <p class="mb-1 preview-subject">Launch Admin</p>
-                    <p class="mb-0 text-muted ellipsis"> New admin wow! </p>
-                  </div>
-                </a>
-                <div class="dropdown-divider"></div>
-                <p class="p-3 mb-0 text-center">See all notifications</p>
-              </div>
+                    aria-labelledby="notificationDropdown">
+                    <h6 class="p-3 mb-0">Notifications</h6>
+                    <div class="dropdown-divider"></div>
+                    @foreach(auth()->user()->unreadNotifications as $notification)
+                        <a href="#" class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                                <div class="preview-icon bg-dark rounded-circle">
+                                    <i class="mdi mdi-alert-circle text-info"></i>
+                                </div>
+                            </div>
+                            <div class="preview-item-content">
+                                <p class="mb-1 preview-subject">{{ $notification->data['title'] }}</p>
+                                <p class="mb-0 text-muted ellipsis">{{ $notification->data['message'] }}</p>
+                            </div>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                    @endforeach
+                    <p class="p-3 mb-0 text-center">See all notifications</p>
+                </div>
+
+              <!-- Notifications -->
             </li>
-            
+
             <div class="relative ms-3">
     <x-dropdown align="right" width="48">
         <x-slot name="trigger">
@@ -170,9 +153,12 @@
                 </button>
             @else
                 <span class="inline-flex rounded-md">
-                    <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50">
-                        {{ Auth::user()->name }}
-
+                    <button type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none">
+                        @if (Auth::check())
+                            {{ Auth::user()->name }}
+                        @else
+                            Guest
+                        @endif
                         <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>
@@ -186,31 +172,11 @@
             <div class="block px-4 py-2 text-xs text-gray-400">
                 {{ __('Manage Account') }}
             </div>
-
-            <x-dropdown-link href="{{ route('profile.show') }}">
-                {{ __('Profile') }}
-            </x-dropdown-link>
-
-            @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                <x-dropdown-link href="{{ route('api-tokens.index') }}">
-                    {{ __('API Tokens') }}
-                </x-dropdown-link>
-            @endif
-
-            <div class="border-t border-gray-200"></div>
-
-            <!-- Authentication -->
-            <form method="POST" action="{{ route('logout') }}" x-data>
-                @csrf
-
-                <x-dropdown-link href="{{ route('logout') }}"
-                                 @click.prevent="$root.submit();">
-                    {{ __('Log Out') }}
-                </x-dropdown-link>
-            </form>
+            <!-- Add your dropdown content here -->
         </x-slot>
     </x-dropdown>
 </div>
+
 
 
             

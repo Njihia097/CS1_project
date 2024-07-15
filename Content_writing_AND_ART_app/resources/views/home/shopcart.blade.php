@@ -29,7 +29,8 @@
             border-collapse: collapse;
         }
 
-        th, td {
+        th,
+        td {
             padding: 10px;
             text-align: left;
             border-left: 1px solid #ccc;
@@ -51,94 +52,108 @@
         tbody tr td {
             border-top: 1px solid #ccc;
         }
-        .img_deg{
+
+        .img_deg {
             height: 90px;
-            width:90px;
+            width: 90px;
         }
     </style>
 </head>
 <x-app-layout>
+
     <body>
-    
- <!-- Page Preloder -->
- <div id="preloder">
-    <div class="loader"></div>
-</div>
-<div>
-<!-- Header Section Begin -->
-@include('home.header')
-<!-- Header End -->
-</div>
 
-@if (session()->has('message'))
 
-<div class="alert alert-success">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+        <!-- Page Preloder -->
+        <div id="preloder">
+            <div class="loader"></div>
+        </div>
+        <div>
+            <!-- Header Section Begin -->
+            @include('home.header')
+            <!-- Header End -->
+        </div>
 
-    {{session()->get('message')}}
-</div>
-@endif
+        @if (session()->has('message'))
 
-<div>
-<table>
-    <thead>
-    <tr>
-        <th>Art</th>
-        <th>Image</th>
-        <th>Quantity</th>
-        <th>Price</th>
-        <th>Action</th>
-    </tr>
-    <?php $totalprice=0; ?>
-    </thead>
+            <div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
 
-    @foreach($cart as $cart)
-    <tbody>
-    <tr>
-        <td>{{$cart->art_title}}</td>
-        <td><img class="img_deg" src="/storage/{{$cart->image}}"></td>
-        <td>{{$cart->quantity}}</td>
-        <td>{{$cart->price}}</td>
-        <td><a class="btn btn-danger" onclick="return confirm('Are you sure you want to remove this art?')" href="{{url('/remove_cart', $cart->id)}}">Delete</a></td>
-    </tr>
+                {{session()->get('message')}}
+            </div>
+        @endif
 
-    <?php $totalprice=$totalprice + $cart->price ?>
-    </tbody>
-    @endforeach
+        <div class="gap-2 px-6 py-4 mb-4">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Art</th>
+                        <th>Image</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php $totalprice = 0; ?>
+                </thead>
 
-   
+                @foreach($cart as $cart)
+                    <tbody>
+                        <tr>
+                            <td>{{$cart->art_title}}</td>
+                            <td><img class="img_deg" src="/storage/{{$cart->image}}"></td>
+                            <td>{{$cart->quantity}}</td>
+                            <td>{{$cart->price}}</td>
+                            <td><a class="btn btn-danger"
+                                    onclick="return confirm('Are you sure you want to remove this art?')"
+                                    href="{{url('/remove_cart', $cart->id)}}">Delete</a></td>
+                        </tr>
 
-</table>
-<p style="align-content: center"> totalprice={{$totalprice}}</p>
-</div>
-<div>
-<a href="{{url('cash_order')}}" class="btn btn-info">Cash payment</a>
+                        <?php    $totalprice = $totalprice + $cart->price ?>
+                    </tbody>
+                @endforeach
 
-<a href="{{url('mpesapay')}}" class="btn btn-info">M-Pesa payment</a>
+                
 
-</div>
+            </table>
+        </div>
+
+        <div class="left-0 flex flex-col justify-end col-span-1 gap-2 px-4 pt-2">
+        <div class="inline-block px-4">
+            <p class="items-center text-xl font-bold text-gray-800 uppercase">Total: <span class="ml-1 text-lg text-gray-800">{{$totalprice}}</span></p>
+        </div>
+        <div>
+        <a href="{{url('cash_order')}}" class="btn btn-info">Cash payment</a>
+
+        <a href="{{url('mpesapay')}}" class="btn btn-info">M-Pesa payment</a>
+        </div>
+
+
+        </div>
+
+
+
     </body>
 
 
-<!-- Footer Section End -->
+    <!-- Footer Section End -->
 
-<!-- Js Plugins -->
-<script src="{{ asset('home/js/jquery-3.3.1.min.js') }}"></script>
-<script src="{{ asset('home/js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('home/js/jquery-ui.min.js') }}"></script>
-<script src="{{ asset('home/js/jquery.countdown.min.js') }}"></script>
-<script src="{{ asset('home/js/jquery.nice-select.min.js') }}"></script>
-<script src="{{ asset('home/js/jquery.zoom.min.js') }}"></script>
-<script src="{{ asset('home/js/jquery.dd.min.js') }}"></script>
-<script src="{{ asset('home/js/jquery.slicknav.js') }}"></script>
-<script src="{{ asset('home/js/owl.carousel.min.js') }}"></script>
-<script src="{{ asset('home/js/main.js') }}"></script>
+    <!-- Js Plugins -->
+    <script src="{{ asset('home/js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('home/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('home/js/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('home/js/jquery.countdown.min.js') }}"></script>
+    <script src="{{ asset('home/js/jquery.nice-select.min.js') }}"></script>
+    <script src="{{ asset('home/js/jquery.zoom.min.js') }}"></script>
+    <script src="{{ asset('home/js/jquery.dd.min.js') }}"></script>
+    <script src="{{ asset('home/js/jquery.slicknav.js') }}"></script>
+    <script src="{{ asset('home/js/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('home/js/main.js') }}"></script>
 
-<!-- Add Bootstrap's JS and Popper.js for dropdown functionality -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Add Bootstrap's JS and Popper.js for dropdown functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-</body>
+    </body>
 </x-app-layout>
 
 </html>

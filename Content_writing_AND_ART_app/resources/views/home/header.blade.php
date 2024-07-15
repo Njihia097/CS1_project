@@ -80,7 +80,9 @@
                     <li><a href="{{url ('/view_artsale')}}">Shop</a></li>
                     <li><a href="#">Collection</a>
                         <ul class="dropdown">
-                            <li><a href="#">Content writing</a></li>
+
+                            <li><a href="{{route('student.Content-setup')}}">Content writng</a></li>
+
                             <li><a href="#">arts</a></li>
                             
                         </ul>

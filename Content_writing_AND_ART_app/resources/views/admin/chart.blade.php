@@ -5,6 +5,10 @@
     <!-- Include Chart.js library -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+<x-admin-layout : artistCount="$artistCount" contentCount="$contentCount">
+    @section('content')
+    
+
 <body>
     <div>
         <canvas id="myChart"></canvas>
@@ -47,8 +51,8 @@
             }
         });
     </script>
-<div>
-    <a href="{{url('adminHome')}}" class="btn btn-info">back</a>
-</div>
+
 </body>
+@endsection
+</x-admin-layout>
 </html>

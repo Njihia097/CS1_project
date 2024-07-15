@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\SentimentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Admin_EditorController;
 use App\Http\Controllers\Auth\GoogleController;
@@ -39,6 +40,10 @@ Route::middleware(['auth', 'verified', 'role:admin'])
         Route::get('/home', [AdminController::class, 'adminHome'])->name('adminHome');
         Route::get('/register-editor', [Admin_EditorController::class, 'view'])->name('register-editor');
         Route::post('/register-editor', [Admin_EditorController::class, 'store'])->name('registerEditor');
+        Route::get('/manage-content', [AdminController::class, 'manageContentView'])->name('manageContentView');
+        Route::put('/content/{id}/status', [AdminController::class, 'updateContentStatus'])->name('updateContentStatus');
+        Route::get('/content-details/{id}', [AdminController::class, 'contentDetailsView'])->name('contentDetailsView');
+        Route::post('/filter-contents', [AdminController::class, 'filterContents'])->name('filterContents'); 
 });
 
 
@@ -49,6 +54,16 @@ Route::middleware(['auth', 'verified', 'role:editor'])
     ->name('editor.')
     ->group(function () {
         Route::get('/home', [EditorController::class, 'editorHome'])->name('editorHome');
+        Route::get('/content-categories', [EditorController::class, 'showCategories'])->name('showCategories');
+        Route::put('/content-categories/{id}', [EditorController::class, 'update']);
+        Route::post('/content-categories', [EditorController::class, 'store']);
+        Route::delete('/content-categories/{id}', [EditorController::class, 'destroy']);
+        Route::get('/manage-content', [EditorController::class, 'showManageContent'])->name('showManageContent');
+        Route::put('/content/{id}/status', [EditorController::class, 'updateContentStatus']);
+        Route::get('/content-view/{id}', [EditorController::class, 'displayContentDetails'])->name('displayContentDetails');
+        Route::post('/analyze-sentiment', [SentimentController::class, 'analyzeSentiment']);
+        Route::post('/analyze-sentiment', 'SentimentController@analyzeSentiment');
+
     });
 
 // Student routes
@@ -78,6 +93,9 @@ Route::middleware(['auth', 'verified', 'role:student'])
     Route::get('public/content-view/{id}', [ContentController::class, 'viewContent'])->name('publicView.contentDescription');
     Route::get('public/start-reading/{id}', [ContentController::class, 'startReading'])->name('publicView.startReading');
     Route::get('public/chapter/{id}', [ContentController::class, 'viewChapter'])->name('publicView.chapter');
+
+
+
 
 
 // Additional routes

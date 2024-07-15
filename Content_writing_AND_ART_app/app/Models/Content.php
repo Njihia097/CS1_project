@@ -55,4 +55,8 @@ class Content extends Model
     {
         return $this->hasMany(Reaction::class, 'content_id');
     }
+    public function favorites(): HasMany
+    {
+        return $this->hasMany(Favorite::class, 'ContentID');
+    }
 }

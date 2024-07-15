@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-admin-layout : artistCount="$artistCount" contentCount="$contentCount">
 
     @section('content')
 

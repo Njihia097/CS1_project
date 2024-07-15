@@ -1,10 +1,6 @@
-
-
-<x-admin-layout>
-    
-    
-
+<x-admin-layout : artistCount="$artistCount" contentCount="$contentCount">
     @section('content')
+
     <div>
         @include('admin/partials.preloader')
         @include('admin/partials.header')
@@ -86,11 +82,11 @@
         </tbody>
     </table>
 </div>
+
             </div>
         </div>
     </div>
-    </div>
+
+
     @endsection
-    
-    </x-admin-layout>
-    
+</x-admin-layout>

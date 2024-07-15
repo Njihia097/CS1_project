@@ -9,6 +9,8 @@ use App\Models\CategoryContent;
 use App\Models\Reaction;
 use Illuminate\Support\Facades\DB;
 use Usamamuneerchaudhary\Commentify\Models\Comment;
+use App\Models\Favorite;
+use Illuminate\Support\Facades\Auth;
 
 
 class StudentController extends Controller
@@ -24,7 +26,8 @@ class StudentController extends Controller
     }
     public function showReadingList (Request $request) 
     {
-        return view('student.home.readingList');
+        $favorites = Favorite::with(['content.reactions', 'content.comments'])->where('UserID', Auth::id())->get();
+        return view('student.home.readingList', compact('favorites'));
     }
     public function showArtwork (Request $request) 
     {
