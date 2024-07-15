@@ -79,8 +79,8 @@ $counts = $users->pluck('count');
     }
     public function manageContentView()
     {
-        $flaggedContents = Content::where('status', 'flagged')->get();
-        return view('admin.adminManageContent', compact('flaggedContents'));
+        $contents = Content::whereIn('status', ['suspended', 'flagged', 'approved'])->get();
+        return view('admin.adminManageContent', compact('contents'));
     }
 
     public function updateContentStatus(Request $request, $contentId)
