@@ -114,3 +114,8 @@ Route::get('/pay', [PayController::class, 'stk']);
 Route::post('/mpesa/confirmation', [PayController::class, 'confirmation']);
 Route::get('/mpesapay', [PayController::class, 'mpesapay']);
 Route::get('/lipampesa',[CartController::class, 'lipampesa']);
+
+
+Route::get('/print_pdf/{id}',[AdminController::class, 'print_pdf']);
+
+Route::get('/delivered/{id}',[AdminController::class, 'delivered']);
