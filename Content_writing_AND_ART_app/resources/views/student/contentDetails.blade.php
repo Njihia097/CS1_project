@@ -61,7 +61,7 @@
                             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                                 <button class="nav-link active" id="nav-story-details-tab" data-bs-toggle="tab" data-bs-target="#nav-story-details" type="button" role="tab">Story Details</button>
                                 <button class="nav-link" id="nav-table-of-contents-tab" data-bs-toggle="tab" data-bs-target="#nav-table-of-contents" type="button" role="tab">Table of Contents</button>
-                                <button class="nav-link" id="nav-story-notes-tab" data-bs-toggle="tab" data-bs-target="#nav-story-notes" type="button" role="tab">Story Notes</button>
+
                             </div>
                         </nav>
                         <div class="w-full px-6 py-4 bg-white shadow-md tab-content sm:rounded-lg" id="nav-tabContent">
@@ -125,9 +125,7 @@
                                     <!-- List of parts will be inserted here dynamically -->
                                 </ul>
                             </div>
-                            <div class="tab-pane fade" id="nav-story-notes" role="tabpanel">
-                                <!-- Story Notes Content -->
-                            </div>
+
                         </div>
                     </div>
                 </div>
