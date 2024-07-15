@@ -484,28 +484,87 @@ class ContentController extends Controller
 
     public function startReading($id)
     {
-        $content = Content::with(['author', 'chapters' => function($query) {
+        $content = Content::with(['author', 'chapters' => function ($query) {
             $query->where('IsPublished', 1)->orderBy('ChapterNumber');
         }])->findOrFail($id);
-
+    
+        $relatedByCategory = $this->getRelatedContentByCategory($content->CategoryID, $content->ContentID);
+        $relatedByAuthor = $this->getRelatedContentByAuthor($content->AuthorID, $content->ContentID);
+        $relatedByKeywords = $this->getRelatedContentByKeywords($content->keywords, $content->ContentID);
+    
         if ($content->IsChapter && $content->chapters->isNotEmpty()) {
             $firstChapter = $content->chapters->first();
             $combinedContentDelta = $this->getContentDelta($firstChapter->content_delta);
-            return view('publicView.startReading', compact('content', 'firstChapter', 'combinedContentDelta'));
+            return view('publicView.startReading', compact('content', 'firstChapter', 'combinedContentDelta', 'relatedByCategory', 'relatedByAuthor', 'relatedByKeywords'));
         } else {
             $combinedContentDelta = $this->getContentDelta($content->content_delta);
-
-            return view('publicView.startReading', compact('content', 'combinedContentDelta'));
+            return view('publicView.startReading', compact('content', 'combinedContentDelta', 'relatedByCategory', 'relatedByAuthor', 'relatedByKeywords'));
         }
     }
+    
+
+    private function getRelatedContentByCategory($categoryId, $currentContentId)
+    {
+        return Content::where('CategoryID', $categoryId)
+            ->where('ContentID', '!=', $currentContentId)
+            ->where('IsPublished', 1)
+            ->limit(5)
+            ->get();
+    }
+
+    private function getRelatedContentByAuthor($authorId, $currentContentId)
+    {
+        return Content::where('AuthorID', $authorId)
+            ->where('ContentID', '!=', $currentContentId)
+            ->where('IsPublished', 1)
+            ->limit(5)
+            ->get();
+    }
+
+    private function getRelatedContentByKeywords($keywords, $currentContentId)
+    {
+        // Ensure that keywords is an array
+        if (is_string($keywords)) {
+            $keywords = explode(',', $keywords); // Assuming keywords are stored as a comma-separated string
+        }
+    
+        return Content::where('ContentID', '!=', $currentContentId)
+            ->where('IsPublished', 1)
+            ->where(function ($query) use ($keywords) {
+                foreach ($keywords as $keyword) {
+                    $query->orWhere('keywords', 'LIKE', "%{$keyword}%");
+                }
+            })
+            ->limit(5)
+            ->get();
+    }
+    
+
 
     public function viewChapter($id)
     {
         $chapter = Chapter::with('content')->where('IsPublished', 1)->findOrFail($id);
         $combinedChapterContentDelta = $this->getContentDelta($chapter->content_delta);
-
-        return view('publicView.chapter', compact('chapter', 'combinedChapterContentDelta'));
+        
+        $relatedByCategory = $this->getRelatedContentByCategory($chapter->content->CategoryID, $chapter->content->ContentID);
+        $relatedByAuthor = $this->getRelatedContentByAuthor($chapter->content->AuthorID, $chapter->content->ContentID);
+        $relatedByKeywords = $this->getRelatedContentByKeywords($chapter->content->keywords, $chapter->content->ContentID);
+        $relatedChapters = $this->getRelatedChapters($chapter->content->ContentID, $chapter->ChapterNumber);
+    
+        return view('publicView.chapter', compact('chapter', 'combinedChapterContentDelta', 'relatedByCategory', 'relatedByAuthor', 'relatedByKeywords', 'relatedChapters'));
     }
+    
+
+    private function getRelatedChapters($contentId, $currentChapterNumber)
+    {
+        return Chapter::where('ContentID', $contentId)
+            ->where('ChapterNumber', '!=', $currentChapterNumber)
+            ->where('IsPublished', 1)
+            ->orderBy('ChapterNumber')
+            ->limit(5)
+            ->get();
+    }
+
     private function renderCombinedContent($combinedContent)
     {
         $renderedContent = '';

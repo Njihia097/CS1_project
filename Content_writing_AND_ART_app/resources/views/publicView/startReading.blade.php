@@ -1,3 +1,5 @@
+<!-- startReading.blade.php -->
+
 <x-content-layout :content="$content">
 @section('content')
     <div class="max-w-4xl p-6 mx-auto bg-white rounded-lg shadow-md">
@@ -13,7 +15,6 @@
 
             <livewire:reactions :model="$firstChapter"/>
 
-            <!-- Comment section for the first chapter -->
             <div class="mt-8">
                 <livewire:comments :model="$firstChapter"/>
             </div>
@@ -24,7 +25,6 @@
 
             <livewire:reactions :model="$content"/>
 
-            <!-- Comment section for standalone content -->
             <div class="mt-8">
                 <livewire:comments :model="$content"/>
             </div>
@@ -41,19 +41,58 @@
             </div>
         @endif
     </div>
+    <div>
+    <!-- Recommendations Section -->
+    <div class="mt-8 ml-4">
+        <h3 class="mr-4 text-2xl font-semibold">You might also like:</h3>
+        <div class="mt-4 ml-4">
+            
+            <!-- Recommendations by Category -->
+            @if ($relatedByCategory->isNotEmpty())
+                <h4 class="text-xl font-semibold">Related by Category</h4>
+                <div class="mt-2 row">
+                    @foreach ($relatedByCategory as $relatedContent)
+                        @include('partials.content_card', ['content' => $relatedContent])
+                    @endforeach
+                </div>
+            @endif
+
+            <!-- Recommendations by Author -->
+            @if ($relatedByAuthor->isNotEmpty())
+                <h4 class="text-xl font-semibold">More from {{ $content->author->name }}</h4>
+                <div class="mt-2 row">
+                    @foreach ($relatedByAuthor as $relatedContent)
+                        @include('partials.content_card', ['content' => $relatedContent])
+                    @endforeach
+                </div>
+            @endif
+
+            <!-- Recommendations by Keywords -->
+            @if ($relatedByKeywords->isNotEmpty())
+                <h4 class="text-xl font-semibold">Related by Keywords</h4>
+                <div class="mt-2 row">
+                    @foreach ($relatedByKeywords as $relatedContent)
+                        @include('partials.content_card', ['content' => $relatedContent])
+                    @endforeach
+                </div>
+            @endif
+
+        </div>
+    </div>
+</div>
+
+        </div>
 
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
-        // Initialize Quill editor in read-only mode
         const quill = new Quill('#content-container', {
             theme: 'snow',
             readOnly: true,
             modules: {
-                toolbar: false // Hide toolbar in read-only mode
+                toolbar: false
             }
         });
 
-        // Set the content delta
         const contentDelta = {!! json_encode($combinedContentDelta) !!};
         quill.setContents(contentDelta);
     </script>
