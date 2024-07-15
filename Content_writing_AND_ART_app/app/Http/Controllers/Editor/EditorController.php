@@ -114,6 +114,7 @@ class EditorController extends Controller
 
         return response()->json(['success' => true]);
     }
+    
     public function displayContentDetails($id)
     {
         $content = Content::with(['author', 'chapters' => function ($query) {
