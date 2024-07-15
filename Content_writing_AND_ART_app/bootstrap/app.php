@@ -5,6 +5,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\RoleMiddleware;
+use Safaricom\Mpesa\MpesaServiceProvider;
+use Barryvdh\DomPDF\PDF;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,8 +20,16 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => RoleMiddleware::class,
             'check.locked' => CheckLocked::class
-        ]);
+        ]);   
     })
+   
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->create();
+
+    $app->register(Safaricom\Mpesa\MpesaServiceProvider::class);
+
+    $app->register(Barryvdh\DomPDF\ServiceProvider::class);
+
+return $app;

@@ -8,7 +8,6 @@ return [
     Usamamuneerchaudhary\Commentify\Providers\CommentifyServiceProvider::class,
     Barryvdh\DomPDF\ServiceProvider::class,
 
-
     
 
 ];

@@ -105,6 +105,41 @@ public function cash_order()
 
 }
 
+public function lipampesa()
+{
+    $user=Auth::user();
+    $userid=$user->id;
+
+    $data=cart::where('user_id', '=', $userid)->get(); 
+    
+    foreach($data as $item)
+    {
+        $order=new order;
+
+        $order->name=$item->name;
+        $order->email=$item->email;
+        $order->phone=$item->phone;
+        $order->user_id=$item->user_id;
+        $order->art_title=$item->art_title;
+        $order->price=$item->price;
+        $order->quantity=$item->quantity;
+        $order->image=$item->image;
+        $order->art_id=$item->art_id;
+
+        $order->payment_status='Mpesa Payment';
+        $order->delivery_status='processing';
+        $order->save();
+
+        $cart_id=$item->id;
+        $cart=cart::find($cart_id);
+        $cart->delete();
+
+
+
+    }
+    return redirect()->to(url('show_cart'))->with('message', 'Order received and is being processed');
+}
+
 public function show_order()
 {
     if(Auth::id())

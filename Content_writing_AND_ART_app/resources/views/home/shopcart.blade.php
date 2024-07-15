@@ -63,6 +63,7 @@
 
     <body>
 
+
         <!-- Page Preloder -->
         <div id="preloder">
             <div class="loader"></div>
@@ -123,11 +124,12 @@
         <div>
         <a href="{{url('cash_order')}}" class="btn btn-info">Cash payment</a>
 
-        <a href="" class="btn btn-info">M-Pesa payment</a>
+        <a href="{{url('mpesapay')}}" class="btn btn-info">M-Pesa payment</a>
         </div>
 
 
         </div>
+
 
 
     </body>

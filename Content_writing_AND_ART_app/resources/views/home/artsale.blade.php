@@ -85,8 +85,8 @@
                                         </div>
                                         <ul>
                                             <li class="w-icon active"><a href="{{url('add_cart',$artists->id)}}"><i class="icon_bag_alt"></i></a></li>
-                                            <li class="quick-view"><a href="#">+ Quick View</a></li>
-                                            <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
+                                            <li class="quick-view"><a href="#">Description</a></li>
+                                            
                                         </ul>
                                         
                                     </div>
@@ -98,7 +98,7 @@
                                         </a>
                                         <div class="product-price">
                                             {{ $artists->price }}
-                                            <span>$35.00</span>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -175,11 +175,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="copyright-text">
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </div>
+                       
                         <div class="payment-pic">
                             <img src="img/payment-method.png" alt="">
                         </div>

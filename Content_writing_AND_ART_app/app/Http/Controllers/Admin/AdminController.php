@@ -10,6 +10,8 @@ use App\Models\Order;
 use Carbon\Carbon;
 use App\Models\CategoryContent;
 use App\Models\Content;
+use Barryvdh\DomPDF\Facade\PDF;
+
 
 class AdminController extends Controller
 {
@@ -100,5 +102,29 @@ $counts = $users->pluck('count');
         return view('admin.detailedContentView', compact('content'));
     }
 
+
+    public function print_pdf($id)
+    {
+
+        $orderdet=order::find($id);
+
+        $pdf=PDF::loadView('admin.pdf', compact('orderdet'));
+
+        return $pdf->download('order_details');
+    }
+
+
+    public function delivered($id)
+    {
+        $order=order::find($id);
+
+        $order->delivery_status="delivered";
+
+        $order->save();
+
+        return redirect()->back();
+
+
+    }
     
 }

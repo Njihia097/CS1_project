@@ -25,55 +25,27 @@
                 </div>
                 <div class="text-right col-lg-3 col-md-3">
                     <ul class="nav-right">
-                        <li class="heart-icon">
-                            <a href="#">
-                                <i class="icon_heart_alt"></i>
-                                <span>1</span>
-                            </a>
-                        </li>
+                       
                         <li class="cart-icon">
+                            <div>
                             <a href="{{ url('show_cart') }}">
                                 <i class="icon_bag_alt"></i>
-                                <span>{{ count(session('cart', [])) }}</span>
+                                
+                               
                             </a>
+                            </div>
                             <div class="cart-hover">
                                 <div class="select-items">
-                                    <table>
-                                        <tbody>
-                                            @foreach(session('cart', []) as $id => $item)
-                                            <tr>
-                                                <td class="si-pic"><img src="{{ $item['image'] ?? 'default-image.jpg' }}" alt=""></td>
-                                                <td class="si-text">
-                                                    <div class="product-selected">
-                                                        <p>${{ $item['price'] }} x {{ $item['quantity'] }}</p>
-                                                        <h6>{{ $item['art_title'] }}</h6>
-                                                    </div>
-                                                </td>
-                                                <td class="si-close">
-                                                    <i class="ti-close" data-id="{{ $id }}"></i>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="select-total">
-                                    <span>Total:</span>
-                                    <h5>${{ array_reduce(session('cart', []), function($carry, $item) {
-                                        return $carry + ($item['price'] * $item['quantity']);
-                                    }, 0) }}</h5>
-                                </div>
+
                                 <div class="select-button">
                                     <a href="{{ url('show_cart') }}" class="primary-btn view-card">VIEW CART</a>
                                     <a href="{{ url('show_cart') }}" class="primary-btn checkout-btn">CHECK OUT</a>
                                 </div>
                             </div>
+                            </div>
                         </li>
-                        <li class="cart-price">
-                            ${{ array_reduce(session('cart', []), function($carry, $item) {
-                                return $carry + ($item['price'] * $item['quantity']);
-                            }, 0) }}
-                        </li>
+                       
+                        
                         
                         
                     </ul>
